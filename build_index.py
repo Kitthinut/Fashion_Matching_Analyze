@@ -1,8 +1,3 @@
-"""Run the trained model + pixel analysis on every image in the database folder -> index.json
-
-  python build_index.py database
-Re-running only processes new/changed images (or everything if model.pt changed).
-"""
 import argparse
 import json
 from pathlib import Path

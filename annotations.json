@@ -1,0 +1,95 @@
+{
+  "images": {
+    "blouse_3_1323/blouse_00001.jpg": {
+      "px_per_cm": null,
+      "regions": [
+        {
+          "box": [
+            25,
+            87,
+            365,
+            471
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [
+              "dot"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "beige",
+                "rgb": [
+                  215,
+                  202,
+                  172
+                ],
+                "hex": "#d7caac",
+                "fraction": 0.365
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  238,
+                  228,
+                  193
+                ],
+                "hex": "#eee4c1",
+                "fraction": 0.345
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  195,
+                  177,
+                  134
+                ],
+                "hex": "#c3b186",
+                "fraction": 0.24
+              },
+              {
+                "name": "olive",
+                "rgb": [
+                  114,
+                  96,
+                  54
+                ],
+                "hex": "#726036",
+                "fraction": 0.05
+              }
+            ],
+            "measurements": {
+              "length_px": 384,
+              "max_width_px": 340,
+              "widest_row_px": 340,
+              "width_px": {
+                "at_25pct_height": 334,
+                "at_50pct_height": 276,
+                "at_90pct_hem": 278
+              },
+              "length_to_width": 1.129,
+              "bbox": [
+                0,
+                0,
+                339,
+                383
+              ],
+              "body_length_to_width": 1.381,
+              "length_hint": "regular",
+              "body_length_ratio": 1.391
+            },
+            "neck": {
+              "type": "high-neck/collar or closed",
+              "depth_ratio": 0.0
+            }
+          }
+        }
+      ]
+    }
+  },
+  "image_root": "D:\\FIBO_Year_3\\FRA362_Studio\\AI-pytorch\\dataset"
+}

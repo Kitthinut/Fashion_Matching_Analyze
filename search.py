@@ -1,4 +1,3 @@
-"""Command-line search.   python search.py "navy v-neck striped short sleeve cropped" --export"""
 import argparse
 
 from attributes import load_schema

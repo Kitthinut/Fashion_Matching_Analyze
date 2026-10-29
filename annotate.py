@@ -1,9 +1,3 @@
-"""Pop-up annotation tool.  Browse images, drag to crop, pick attributes -> annotations.json
-
-  python annotate.py dataset
-Keys: Enter = add region | Left/Right = prev/next image | Ctrl+S = save
-Categories/options come from attributes.json (edit that file to add more).
-"""
 import argparse
 import json
 import tkinter as tk
@@ -84,12 +78,7 @@ class Annotator:
         self.rl.pack(fill="x")
         self.rl.bind("<<ListboxSelect>>", self.on_region_select)
 
-        row = tk.Frame(r)
-        row.pack(fill="x", pady=2)
-        tk.Label(row, text="Pixels per cm (optional):").pack(side="left")
-        self.ppcm = tk.Entry(row, width=8)
-        self.ppcm.pack(side="left")
-        tk.Button(row, text="Analyze crop", command=self.analyze_current).pack(side="right")
+        tk.Button(r, text="Preview colors of current crop", command=self.analyze_current).pack(fill="x", pady=2)
 
         self.info = tk.Text(r, height=8, wrap="word", font=("Consolas", 9))
         self.info.pack(fill="both", expand=True)
@@ -138,7 +127,7 @@ class Annotator:
 
     # ---------------------------------------------------------------- image
     def entry(self):
-        return self.data["images"].setdefault(self.files[self.idx], {"px_per_cm": None, "regions": []})
+        return self.data["images"].setdefault(self.files[self.idx], {"regions": []})
 
     def show_image(self):
         self.img = Image.open(self.folder / self.files[self.idx]).convert("RGB")
@@ -147,9 +136,6 @@ class Annotator:
         self.photo = ImageTk.PhotoImage(self.img.resize(
             (int(self.img.width * self.scale), int(self.img.height * self.scale))))
         self.cur_box = self.box_id = None
-        self.ppcm.delete(0, "end")
-        if self.entry().get("px_per_cm"):
-            self.ppcm.insert(0, str(self.entry()["px_per_cm"]))
         self.refresh_regions()
         self.redraw()
 
@@ -199,16 +185,9 @@ class Annotator:
         self.say(f"Crop box: {self.cur_box}\nPick attributes, then press Enter.")
 
     # -------------------------------------------------------------- regions
-    def get_ppcm(self):
-        try:
-            v = float(self.ppcm.get())
-            return v if v > 0 else None
-        except ValueError:
-            return None
-
     def run_analysis(self, box):
         crop = np.array(self.img.crop(tuple(box)))[:, :, ::-1].copy()
-        return analyze_crop(crop, px_per_cm=self.get_ppcm())
+        return analyze_crop(crop)
 
     def add_region(self):
         attrs = self.get_attributes()
@@ -221,7 +200,7 @@ class Annotator:
             analysis = self.run_analysis(box)
         except Exception as ex:                   # analysis must never block labelling
             analysis = None
-            self.say(f"(colour/size analysis skipped: {ex})")
+            self.say(f"(color analysis skipped: {ex})")
         self.win.config(cursor="")
         self.entry()["regions"].append({"box": box, "attributes": attrs, "analysis": analysis})
         self.cur_box = None
@@ -260,14 +239,8 @@ class Annotator:
             self.show_analysis(r["analysis"])
 
     def show_analysis(self, an):
-        m = an["measurements"]
         cols = ", ".join(f"{c['name']} {c['fraction']:.0%}" for c in an["colors"])
-        txt = (f"Colours: {cols}\nNeck shape (geometry): {an['neck']['type']}\n"
-               f"Length {m.get('length_px')} px, width {m.get('max_width_px')} px, "
-               f"length hint: {m.get('length_hint')}")
-        if "length_cm" in m:
-            txt += f"\nLength {m['length_cm']} cm, width {m['max_width_cm']} cm"
-        self.say(txt)
+        self.say(f"Colors: {cols}")
 
     def analyze_current(self):
         box = self.cur_box or [0, 0, self.img.width, self.img.height]
@@ -287,8 +260,7 @@ class Annotator:
         self.show_image()
 
     def save(self):
-        self.entry()["px_per_cm"] = self.get_ppcm()
-        self.data["images"] = {k: v for k, v in self.data["images"].items() if v["regions"] or v.get("px_per_cm")}
+        self.data["images"] = {k: v for k, v in self.data["images"].items() if v["regions"]}
         self.ann_path.write_text(json.dumps(self.data, indent=2), encoding="utf-8")
 
     def on_close(self):

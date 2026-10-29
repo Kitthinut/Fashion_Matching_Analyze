@@ -1,4 +1,3 @@
-"""Text-query search over index.json (used by search.py and search_app.py)."""
 import html
 import json
 import os

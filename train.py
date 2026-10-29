@@ -1,4 +1,3 @@
-"""Train the multi-head attribute model on annotations.json -> model.pt"""
 import argparse
 from collections import Counter
 

@@ -1,5 +1,3 @@
-"""Search window: type a description (and/or use the dropdowns) and see matching pictures.
-   python search_app.py [--index index.json]"""
 import argparse
 import tkinter as tk
 from pathlib import Path
