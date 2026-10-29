@@ -1,0 +1,32 @@
+{
+  "categories": [
+    {"key": "length", "title": "Length", "mode": "single", "options": [
+      {"name": "regular", "aliases": ["regular length", "normal length", "full length"]},
+      {"name": "cropped", "aliases": ["cropped length", "crop", "crop top"]}
+    ]},
+    {"key": "type", "title": "Clothes type", "mode": "single", "options": [
+      {"name": "no bottom", "aliases": ["top only"]},
+      {"name": "bottom half shirt", "aliases": ["bottom half"]},
+      {"name": "bottom down shirt", "aliases": ["bottom down", "button down", "button up", "button front"]}
+    ]},
+    {"key": "neck", "title": "Neck type", "mode": "single", "options": [
+      {"name": "crew neck", "aliases": ["crew", "round neck", "crewneck"]},
+      {"name": "v-neck", "aliases": ["vneck", "v"]},
+      {"name": "off shoulder", "aliases": ["off the shoulder", "offshoulder"]},
+      {"name": "polo neck", "aliases": ["polo", "polo collar", "collar"]}
+    ]},
+    {"key": "pattern", "title": "Pattern (tick all that apply)", "mode": "multi", "options": [
+      {"name": "dot", "aliases": ["dots", "dotted", "polka dot", "polka dots", "spotted"]},
+      {"name": "stripe", "aliases": ["stripes", "striped", "stripy"]},
+      {"name": "check", "aliases": ["checks", "checked", "checkered", "plaid", "gingham"]},
+      {"name": "corner only", "aliases": ["corner", "corner print", "corner pattern"]},
+      {"name": "graphic", "aliases": ["graphics", "print", "printed", "logo", "graphic print"]}
+    ]},
+    {"key": "sleeves", "title": "Sleeves", "mode": "single", "options": [
+      {"name": "long", "aliases": ["long sleeve", "long sleeves", "long sleeved"]},
+      {"name": "short", "aliases": ["short sleeve", "short sleeves", "short sleeved"]},
+      {"name": "sleeveless", "aliases": ["no sleeve", "no sleeves", "tank", "tank top"]},
+      {"name": "camis", "aliases": ["cami", "camisole", "spaghetti strap"]}
+    ]}
+  ]
+}
