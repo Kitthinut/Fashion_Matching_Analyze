@@ -1,19 +1,18 @@
 {
   "images": {
     "blouse_3_1323/blouse_00001.jpg": {
-      "px_per_cm": null,
       "regions": [
         {
           "box": [
-            25,
-            87,
-            365,
-            471
+            28,
+            88,
+            363,
+            472
           ],
           "attributes": {
             "length": "regular",
             "type": "no bottom",
-            "neck": "crew neck",
+            "neck": "v-neck",
             "pattern": [
               "dot"
             ],
@@ -25,10 +24,10 @@
                 "name": "beige",
                 "rgb": [
                   215,
-                  202,
-                  172
+                  203,
+                  173
                 ],
-                "hex": "#d7caac",
+                "hex": "#d7cbad",
                 "fraction": 0.365
               },
               {
@@ -39,53 +38,29 @@
                   193
                 ],
                 "hex": "#eee4c1",
-                "fraction": 0.345
+                "fraction": 0.339
               },
               {
                 "name": "khaki",
                 "rgb": [
-                  195,
+                  196,
                   177,
-                  134
+                  135
                 ],
-                "hex": "#c3b186",
-                "fraction": 0.24
+                "hex": "#c4b187",
+                "fraction": 0.249
               },
               {
                 "name": "olive",
                 "rgb": [
-                  114,
+                  113,
                   96,
-                  54
+                  53
                 ],
-                "hex": "#726036",
-                "fraction": 0.05
+                "hex": "#716035",
+                "fraction": 0.047
               }
-            ],
-            "measurements": {
-              "length_px": 384,
-              "max_width_px": 340,
-              "widest_row_px": 340,
-              "width_px": {
-                "at_25pct_height": 334,
-                "at_50pct_height": 276,
-                "at_90pct_hem": 278
-              },
-              "length_to_width": 1.129,
-              "bbox": [
-                0,
-                0,
-                339,
-                383
-              ],
-              "body_length_to_width": 1.381,
-              "length_hint": "regular",
-              "body_length_ratio": 1.391
-            },
-            "neck": {
-              "type": "high-neck/collar or closed",
-              "depth_ratio": 0.0
-            }
+            ]
           }
         }
       ]
