@@ -33,8 +33,8 @@ Label clothing photos, train a model, then search your photo folder with text li
 
 ## 2. Install
 
-1. Unzip `garment_ai.zip`.
-2. In VS Code: **File > Open Folder** and choose the `garment_ai` folder.
+1. CLone this github repo.
+2. Open the clone project in VS code.
 3. Open a terminal: **Terminal > New Terminal**.
 4. Create a virtual environment and install the packages:
 
@@ -64,7 +64,7 @@ for the steps below. Every time you reopen VS Code, activate `.venv` again.
 ## 3. Add your pictures
 
 ```
-garment_ai/
+AI-pytorch
 ├─ dataset/    <- pictures you will LABEL and TRAIN on
 └─ database/   <- pictures you want to SEARCH
 ```
