@@ -11,14 +11,29 @@ MEAN, STD = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
 
 def load_annotations(ann_file):
+    """One sample per labelled region. Regions whose picture file is missing are skipped with a warning."""
     data = json.loads(Path(ann_file).read_text(encoding="utf-8"))
     root = Path(data["image_root"])
-    out = []
+    if not root.is_dir() and Path("dataset").is_dir():      # JSON made on another computer
+        root = Path("dataset")
+    out, missing = [], []
     for rel, info in data["images"].items():
         for r in info.get("regions", []):
-            if r.get("attributes"):
-                out.append({"image": rel, "path": str(root / rel), "box": r["box"],
-                            "attributes": r["attributes"]})
+            if not r.get("attributes"):
+                continue
+            path = root / rel
+            if not path.is_file():
+                missing.append(rel)
+                continue
+            out.append({"image": rel, "path": str(path), "box": r["box"], "attributes": r["attributes"]})
+    if missing:
+        names = sorted(set(missing))
+        print(f"WARNING: skipped {len(missing)} labelled region(s) in {len(names)} picture(s) that are missing "
+              f"under '{root}':")
+        for n in names[:5]:
+            print("   ", n)
+        if len(names) > 5:
+            print(f"    ... and {len(names) - 5} more.  Repair with:  python fix_annotations.py")
     return out
 
 

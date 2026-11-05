@@ -18,11 +18,17 @@ class MultiHeadNet(nn.Module):
         feat = b.fc.in_features
         b.fc = nn.Identity()
         self.backbone, self.drop = b, nn.Dropout(0.3)
-        self.heads = nn.ModuleDict({k: nn.Linear(feat, len(c["options"])) for k, c in spec.items()})
+        self.keys = list(spec)
+        # "h_" prefix: nn.ModuleDict refuses keys that clash with built-in attributes
+        # (e.g. a category called "type"), so the real category name is never used as the key.
+        self.heads = nn.ModuleDict({f"h_{k}": nn.Linear(feat, len(c["options"])) for k, c in spec.items()})
+
+    def head(self, key):
+        return self.heads[f"h_{key}"]
 
     def forward(self, x):
         f = self.drop(self.backbone(x))
-        return {k: h(f) for k, h in self.heads.items()}
+        return {k: self.head(k)(f) for k in self.keys}
 
 
 def compute_loss(out, y, spec):
