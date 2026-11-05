@@ -64,6 +64,1913 @@
           }
         }
       ]
+    },
+    "All_blouses/blouse_00001.jpg": {
+      "regions": [
+        {
+          "box": [
+            24,
+            90,
+            380,
+            461
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [
+              "dot"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "beige",
+                "rgb": [
+                  215,
+                  205,
+                  179
+                ],
+                "hex": "#d7cdb3",
+                "fraction": 0.39
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  242,
+                  231,
+                  190
+                ],
+                "hex": "#f2e7be",
+                "fraction": 0.288
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  197,
+                  178,
+                  137
+                ],
+                "hex": "#c5b289",
+                "fraction": 0.276
+              },
+              {
+                "name": "olive",
+                "rgb": [
+                  112,
+                  95,
+                  52
+                ],
+                "hex": "#705f34",
+                "fraction": 0.047
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00003.jpg": {
+      "regions": [
+        {
+          "box": [
+            31,
+            77,
+            372,
+            431
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [
+              "stripe",
+              "graphic"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  16,
+                  13,
+                  10
+                ],
+                "hex": "#100d0a",
+                "fraction": 0.523
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  231,
+                  229,
+                  221
+                ],
+                "hex": "#e7e5dd",
+                "fraction": 0.232
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  181,
+                  176,
+                  160
+                ],
+                "hex": "#b5b0a0",
+                "fraction": 0.149
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  67,
+                  65,
+                  60
+                ],
+                "hex": "#43413c",
+                "fraction": 0.096
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00005.jpg": {
+      "regions": [
+        {
+          "box": [
+            43,
+            61,
+            399,
+            427
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "bottom half shirt",
+            "neck": "square neck",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  37,
+                  36,
+                  25
+                ],
+                "hex": "#252419",
+                "fraction": 0.367
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  75,
+                  74,
+                  60
+                ],
+                "hex": "#4b4a3c",
+                "fraction": 0.35
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  112,
+                  104,
+                  85
+                ],
+                "hex": "#706855",
+                "fraction": 0.161
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  213,
+                  182,
+                  157
+                ],
+                "hex": "#d5b69d",
+                "fraction": 0.121
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00007.jpg": {
+      "regions": [
+        {
+          "box": [
+            47,
+            47,
+            345,
+            444
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [],
+            "sleeves": "camis"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  17,
+                  18,
+                  17
+                ],
+                "hex": "#111211",
+                "fraction": 0.879
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  209,
+                  205,
+                  193
+                ],
+                "hex": "#d1cdc1",
+                "fraction": 0.106
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00009.jpg": {
+      "regions": [
+        {
+          "box": [
+            18,
+            32,
+            398,
+            392
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [
+              "stripe",
+              "graphic"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "beige",
+                "rgb": [
+                  233,
+                  216,
+                  180
+                ],
+                "hex": "#e9d8b4",
+                "fraction": 0.575
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  189,
+                  171,
+                  136
+                ],
+                "hex": "#bdab88",
+                "fraction": 0.235
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  53,
+                  32,
+                  14
+                ],
+                "hex": "#35200e",
+                "fraction": 0.121
+              },
+              {
+                "name": "olive",
+                "rgb": [
+                  127,
+                  109,
+                  76
+                ],
+                "hex": "#7f6d4c",
+                "fraction": 0.069
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00011.jpg": {
+      "regions": [
+        {
+          "box": [
+            9,
+            111,
+            403,
+            478
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "off shoulder",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "beige",
+                "rgb": [
+                  197,
+                  181,
+                  154
+                ],
+                "hex": "#c5b59a",
+                "fraction": 0.665
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  153,
+                  136,
+                  110
+                ],
+                "hex": "#99886e",
+                "fraction": 0.195
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  91,
+                  73,
+                  55
+                ],
+                "hex": "#5b4937",
+                "fraction": 0.14
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00015.jpg": {
+      "regions": [
+        {
+          "box": [
+            11,
+            49,
+            389,
+            499
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "sleeveless"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "mustard",
+                "rgb": [
+                  193,
+                  148,
+                  70
+                ],
+                "hex": "#c19446",
+                "fraction": 0.377
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  216,
+                  179,
+                  105
+                ],
+                "hex": "#d8b369",
+                "fraction": 0.272
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  244,
+                  215,
+                  144
+                ],
+                "hex": "#f4d790",
+                "fraction": 0.251
+              },
+              {
+                "name": "olive",
+                "rgb": [
+                  161,
+                  113,
+                  40
+                ],
+                "hex": "#a17128",
+                "fraction": 0.1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00016.jpg": {
+      "regions": [
+        {
+          "box": [
+            9,
+            61,
+            396,
+            422
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  104,
+                  101,
+                  93
+                ],
+                "hex": "#68655d",
+                "fraction": 0.842
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  26,
+                  23,
+                  18
+                ],
+                "hex": "#1a1712",
+                "fraction": 0.081
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  172,
+                  179,
+                  180
+                ],
+                "hex": "#acb3b4",
+                "fraction": 0.077
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00017.jpg": {
+      "regions": [
+        {
+          "box": [
+            76,
+            35,
+            333,
+            517
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "sleeveless"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  30,
+                  13,
+                  6
+                ],
+                "hex": "#1e0d06",
+                "fraction": 0.528
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  115,
+                  75,
+                  64
+                ],
+                "hex": "#734b40",
+                "fraction": 0.225
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  68,
+                  38,
+                  30
+                ],
+                "hex": "#44261e",
+                "fraction": 0.209
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  153,
+                  123,
+                  113
+                ],
+                "hex": "#997b71",
+                "fraction": 0.038
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00018.jpg": {
+      "regions": [
+        {
+          "box": [
+            116,
+            129,
+            293,
+            412
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "sleeveless"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  235,
+                  224,
+                  215
+                ],
+                "hex": "#ebe0d7",
+                "fraction": 0.671
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  224,
+                  211,
+                  202
+                ],
+                "hex": "#e0d3ca",
+                "fraction": 0.309
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00019.jpg": {
+      "regions": [
+        {
+          "box": [
+            0,
+            0,
+            405,
+            539
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  37,
+                  20,
+                  16
+                ],
+                "hex": "#251410",
+                "fraction": 0.385
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  84,
+                  53,
+                  46
+                ],
+                "hex": "#54352e",
+                "fraction": 0.288
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  150,
+                  107,
+                  93
+                ],
+                "hex": "#966b5d",
+                "fraction": 0.188
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  228,
+                  200,
+                  172
+                ],
+                "hex": "#e4c8ac",
+                "fraction": 0.139
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00020.jpg": {
+      "regions": [
+        {
+          "box": [
+            24,
+            70,
+            379,
+            436
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "polo neck",
+            "pattern": [
+              "stripe"
+            ],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  70,
+                  52,
+                  48
+                ],
+                "hex": "#463430",
+                "fraction": 0.42
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  34,
+                  20,
+                  18
+                ],
+                "hex": "#221412",
+                "fraction": 0.31
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  144,
+                  132,
+                  129
+                ],
+                "hex": "#908481",
+                "fraction": 0.137
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  218,
+                  206,
+                  202
+                ],
+                "hex": "#daceca",
+                "fraction": 0.133
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00021.jpg": {
+      "regions": [
+        {
+          "box": [
+            57,
+            143,
+            360,
+            388
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "bottom down shirt",
+            "neck": "v-neck",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  210,
+                  207,
+                  201
+                ],
+                "hex": "#d2cfc9",
+                "fraction": 0.766
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  145,
+                  140,
+                  134
+                ],
+                "hex": "#918c86",
+                "fraction": 0.132
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  243,
+                  241,
+                  238
+                ],
+                "hex": "#f3f1ee",
+                "fraction": 0.102
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00022.jpg": {
+      "regions": [
+        {
+          "box": [
+            27,
+            74,
+            382,
+            430
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "polo neck",
+            "pattern": [],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  65,
+                  43,
+                  26
+                ],
+                "hex": "#412b1a",
+                "fraction": 0.437
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  95,
+                  69,
+                  51
+                ],
+                "hex": "#5f4533",
+                "fraction": 0.313
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  21,
+                  13,
+                  7
+                ],
+                "hex": "#150d07",
+                "fraction": 0.18
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  135,
+                  111,
+                  95
+                ],
+                "hex": "#876f5f",
+                "fraction": 0.071
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00023.jpg": {
+      "regions": [
+        {
+          "box": [
+            87,
+            169,
+            349,
+            421
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [],
+            "sleeves": "camis"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  82,
+                  61,
+                  52
+                ],
+                "hex": "#523d34",
+                "fraction": 0.48
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  33,
+                  19,
+                  12
+                ],
+                "hex": "#21130c",
+                "fraction": 0.301
+              },
+              {
+                "name": "pink",
+                "rgb": [
+                  230,
+                  174,
+                  179
+                ],
+                "hex": "#e6aeb3",
+                "fraction": 0.137
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  155,
+                  113,
+                  109
+                ],
+                "hex": "#9b716d",
+                "fraction": 0.082
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00025.jpg": {
+      "regions": [
+        {
+          "box": [
+            88,
+            12,
+            263,
+            289
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "square neck",
+            "pattern": [],
+            "sleeves": "camis"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  59,
+                  42,
+                  30
+                ],
+                "hex": "#3b2a1e",
+                "fraction": 0.406
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  31,
+                  18,
+                  9
+                ],
+                "hex": "#1f1209",
+                "fraction": 0.393
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  98,
+                  84,
+                  58
+                ],
+                "hex": "#62543a",
+                "fraction": 0.159
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  174,
+                  174,
+                  136
+                ],
+                "hex": "#aeae88",
+                "fraction": 0.043
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00028.jpg": {
+      "regions": [
+        {
+          "box": [
+            37,
+            93,
+            385,
+            453
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  26,
+                  25,
+                  26
+                ],
+                "hex": "#1a191a",
+                "fraction": 0.997
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00029.jpg": {
+      "regions": [
+        {
+          "box": [
+            38,
+            93,
+            387,
+            483
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [
+              "stripe"
+            ],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  195,
+                  173,
+                  160
+                ],
+                "hex": "#c3ada0",
+                "fraction": 0.573
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  167,
+                  144,
+                  131
+                ],
+                "hex": "#a79083",
+                "fraction": 0.427
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00031.jpg": {
+      "regions": [
+        {
+          "box": [
+            37,
+            139,
+            392,
+            521
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "off shoulder",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  12,
+                  11,
+                  9
+                ],
+                "hex": "#0c0b09",
+                "fraction": 0.658
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  82,
+                  77,
+                  70
+                ],
+                "hex": "#524d46",
+                "fraction": 0.189
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  123,
+                  118,
+                  112
+                ],
+                "hex": "#7b7670",
+                "fraction": 0.111
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  180,
+                  175,
+                  166
+                ],
+                "hex": "#b4afa6",
+                "fraction": 0.042
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00037.jpg": {
+      "regions": [
+        {
+          "box": [
+            64,
+            60,
+            341,
+            255
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  24,
+                  24,
+                  22
+                ],
+                "hex": "#181816",
+                "fraction": 1.0
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00038.jpg": {
+      "regions": [
+        {
+          "box": [
+            51,
+            77,
+            394,
+            462
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "bottom down shirt",
+            "neck": "polo neck",
+            "pattern": [
+              "stripe"
+            ],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  136,
+                  140,
+                  144
+                ],
+                "hex": "#888c90",
+                "fraction": 0.697
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  183,
+                  188,
+                  195
+                ],
+                "hex": "#b7bcc3",
+                "fraction": 0.181
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  45,
+                  49,
+                  57
+                ],
+                "hex": "#2d3139",
+                "fraction": 0.121
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00041.jpg": {
+      "regions": [
+        {
+          "box": [
+            140,
+            112,
+            354,
+            343
+          ],
+          "attributes": {
+            "length": "cropped",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  228,
+                  224,
+                  224
+                ],
+                "hex": "#e4e0e0",
+                "fraction": 0.353
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  198,
+                  187,
+                  175
+                ],
+                "hex": "#c6bbaf",
+                "fraction": 0.288
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  142,
+                  136,
+                  131
+                ],
+                "hex": "#8e8883",
+                "fraction": 0.185
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  98,
+                  93,
+                  89
+                ],
+                "hex": "#625d59",
+                "fraction": 0.174
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00043.jpg": {
+      "regions": [
+        {
+          "box": [
+            41,
+            87,
+            392,
+            421
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  233,
+                  224,
+                  214
+                ],
+                "hex": "#e9e0d6",
+                "fraction": 0.392
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  33,
+                  11,
+                  12
+                ],
+                "hex": "#210b0c",
+                "fraction": 0.27
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  189,
+                  178,
+                  165
+                ],
+                "hex": "#bdb2a5",
+                "fraction": 0.205
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  85,
+                  58,
+                  56
+                ],
+                "hex": "#553a38",
+                "fraction": 0.133
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00045.jpg": {
+      "regions": [
+        {
+          "box": [
+            104,
+            181,
+            383,
+            467
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "bottom down shirt",
+            "neck": "polo neck",
+            "pattern": [
+              "dot"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  43,
+                  38,
+                  39
+                ],
+                "hex": "#2b2627",
+                "fraction": 0.42
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  22,
+                  18,
+                  20
+                ],
+                "hex": "#161214",
+                "fraction": 0.419
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  95,
+                  85,
+                  81
+                ],
+                "hex": "#5f5551",
+                "fraction": 0.111
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  185,
+                  154,
+                  136
+                ],
+                "hex": "#b99a88",
+                "fraction": 0.051
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00046.jpg": {
+      "regions": [
+        {
+          "box": [
+            0,
+            0,
+            405,
+            539
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "bottom down shirt",
+            "neck": "v-neck",
+            "pattern": [],
+            "sleeves": "sleeveless"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  23,
+                  17,
+                  13
+                ],
+                "hex": "#17110d",
+                "fraction": 0.473
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  76,
+                  50,
+                  29
+                ],
+                "hex": "#4c321d",
+                "fraction": 0.207
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  206,
+                  151,
+                  106
+                ],
+                "hex": "#ce976a",
+                "fraction": 0.174
+              },
+              {
+                "name": "olive",
+                "rgb": [
+                  132,
+                  95,
+                  61
+                ],
+                "hex": "#845f3d",
+                "fraction": 0.146
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00047.jpg": {
+      "regions": [
+        {
+          "box": [
+            9,
+            104,
+            404,
+            479
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  9,
+                  5,
+                  4
+                ],
+                "hex": "#090504",
+                "fraction": 0.935
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00049.jpg": {
+      "regions": [
+        {
+          "box": [
+            22,
+            134,
+            382,
+            461
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "square neck",
+            "pattern": [],
+            "sleeves": "sleeveless"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  241,
+                  241,
+                  241
+                ],
+                "hex": "#f1f1f1",
+                "fraction": 0.708
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  228,
+                  227,
+                  227
+                ],
+                "hex": "#e4e3e3",
+                "fraction": 0.256
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  198,
+                  195,
+                  193
+                ],
+                "hex": "#c6c3c1",
+                "fraction": 0.033
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00051.jpg": {
+      "regions": [
+        {
+          "box": [
+            0,
+            0,
+            405,
+            539
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "off shoulder",
+            "pattern": [],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  228,
+                  217,
+                  206
+                ],
+                "hex": "#e4d9ce",
+                "fraction": 0.625
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  248,
+                  243,
+                  237
+                ],
+                "hex": "#f8f3ed",
+                "fraction": 0.211
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  213,
+                  199,
+                  184
+                ],
+                "hex": "#d5c7b8",
+                "fraction": 0.163
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00054.jpg": {
+      "regions": [
+        {
+          "box": [
+            147,
+            221,
+            296,
+            460
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "pattern": [],
+            "sleeves": "camis"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  15,
+                  9,
+                  18
+                ],
+                "hex": "#0f0912",
+                "fraction": 0.655
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  61,
+                  46,
+                  53
+                ],
+                "hex": "#3d2e35",
+                "fraction": 0.16
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  241,
+                  186,
+                  160
+                ],
+                "hex": "#f1baa0",
+                "fraction": 0.102
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  139,
+                  98,
+                  93
+                ],
+                "hex": "#8b625d",
+                "fraction": 0.083
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00055.jpg": {
+      "regions": [
+        {
+          "box": [
+            20,
+            74,
+            396,
+            437
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "v-neck",
+            "pattern": [],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  236,
+                  238,
+                  233
+                ],
+                "hex": "#eceee9",
+                "fraction": 0.454
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  216,
+                  216,
+                  207
+                ],
+                "hex": "#d8d8cf",
+                "fraction": 0.427
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  173,
+                  167,
+                  151
+                ],
+                "hex": "#ada797",
+                "fraction": 0.097
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00057.jpg": {
+      "regions": [
+        {
+          "box": [
+            32,
+            96,
+            352,
+            480
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "off shoulder",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  209,
+                  209,
+                  202
+                ],
+                "hex": "#d1d1ca",
+                "fraction": 0.609
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  239,
+                  239,
+                  230
+                ],
+                "hex": "#efefe6",
+                "fraction": 0.372
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00059.jpg": {
+      "regions": [
+        {
+          "box": [
+            117,
+            87,
+            279,
+            524
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  21,
+                  19,
+                  19
+                ],
+                "hex": "#151313",
+                "fraction": 0.513
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  144,
+                  147,
+                  141
+                ],
+                "hex": "#90938d",
+                "fraction": 0.197
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  92,
+                  96,
+                  94
+                ],
+                "hex": "#5c605e",
+                "fraction": 0.176
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  217,
+                  212,
+                  194
+                ],
+                "hex": "#d9d4c2",
+                "fraction": 0.114
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00061.jpg": {
+      "regions": [
+        {
+          "box": [
+            10,
+            33,
+            390,
+            374
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "crew neck",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  6,
+                  19,
+                  33
+                ],
+                "hex": "#061321",
+                "fraction": 0.94
+              },
+              {
+                "name": "light blue",
+                "rgb": [
+                  148,
+                  165,
+                  183
+                ],
+                "hex": "#94a5b7",
+                "fraction": 0.033
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00063.jpg": {
+      "regions": [
+        {
+          "box": [
+            40,
+            34,
+            314,
+            424
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no bottom",
+            "neck": "square neck",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "camis"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  27,
+                  25,
+                  21
+                ],
+                "hex": "#1b1915",
+                "fraction": 0.318
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  155,
+                  148,
+                  133
+                ],
+                "hex": "#9b9485",
+                "fraction": 0.264
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  215,
+                  214,
+                  205
+                ],
+                "hex": "#d7d6cd",
+                "fraction": 0.251
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  97,
+                  92,
+                  82
+                ],
+                "hex": "#615c52",
+                "fraction": 0.167
+              }
+            ]
+          }
+        }
+      ]
     }
   },
   "image_root": "D:\\FIBO_Year_3\\FRA362_Studio\\AI-pytorch\\dataset"

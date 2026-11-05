@@ -13,7 +13,8 @@
       {"name": "crew neck", "aliases": ["crew", "round neck", "crewneck"]},
       {"name": "v-neck", "aliases": ["vneck", "v"]},
       {"name": "off shoulder", "aliases": ["off the shoulder", "offshoulder"]},
-      {"name": "polo neck", "aliases": ["polo", "polo collar", "collar"]}
+      {"name": "polo neck", "aliases": ["polo", "polo collar", "collar"]},
+      {"name": "square neck", "aliases": ["square", "square neckline", "square collar"]}
     ]},
     {"key": "pattern", "title": "Pattern (tick all that apply)", "mode": "multi", "options": [
       {"name": "dot", "aliases": ["dots", "dotted", "polka dot", "polka dots", "spotted"]},

@@ -16,7 +16,6 @@ index.json
 results/
 *_mask.png
 predictions.json
-merge.py
 
 # Your pictures (large, often private). Folders are kept via .gitkeep
 dataset/*
@@ -36,3 +35,6 @@ database/*
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Pictures removed in the annotator
+deleted_pictures/
