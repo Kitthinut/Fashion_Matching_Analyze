@@ -11,7 +11,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "dot"
@@ -76,7 +76,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "dot"
@@ -141,7 +141,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe",
@@ -207,7 +207,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom half shirt",
+            "type": "button half shirt",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "long"
@@ -270,7 +270,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "camis"
@@ -313,7 +313,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe",
@@ -379,7 +379,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "graphic"
@@ -434,7 +434,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -497,7 +497,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -550,7 +550,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -613,7 +613,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -656,7 +656,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -719,7 +719,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "polo neck",
             "pattern": [
               "stripe"
@@ -784,7 +784,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "v-neck",
             "pattern": [
               "graphic"
@@ -839,7 +839,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "short"
@@ -902,7 +902,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "camis"
@@ -965,7 +965,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "camis"
@@ -1028,7 +1028,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -1061,7 +1061,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -1106,7 +1106,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "long"
@@ -1169,7 +1169,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "short"
@@ -1202,7 +1202,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [
               "stripe"
@@ -1257,7 +1257,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "short"
@@ -1320,7 +1320,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "graphic"
@@ -1385,7 +1385,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [
               "dot"
@@ -1450,7 +1450,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -1513,7 +1513,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "short"
@@ -1546,7 +1546,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -1599,7 +1599,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "short"
@@ -1652,7 +1652,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "pattern": [],
             "sleeves": "camis"
           },
@@ -1714,7 +1714,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "short"
@@ -1767,7 +1767,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "long"
@@ -1810,7 +1810,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -1873,7 +1873,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "graphic"
@@ -1918,7 +1918,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [
               "graphic"
@@ -1983,7 +1983,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "short"
@@ -2046,7 +2046,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "dot"
@@ -2081,7 +2081,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "short"
@@ -2134,7 +2134,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -2199,7 +2199,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [
               "check"
@@ -2264,7 +2264,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -2319,7 +2319,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "short"
@@ -2372,7 +2372,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "short"
@@ -2435,7 +2435,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [
               "check"
@@ -2500,7 +2500,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "dot"
@@ -2565,7 +2565,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [
               "stripe"
@@ -2630,7 +2630,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "stripe"
@@ -2695,7 +2695,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "long"
@@ -2748,7 +2748,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "stripe",
@@ -2814,7 +2814,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "long"
@@ -2867,7 +2867,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "long"
@@ -2930,7 +2930,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "camis"
@@ -2973,7 +2973,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "short"
@@ -3026,7 +3026,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "long"
@@ -3089,7 +3089,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "camis"
@@ -3142,7 +3142,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -3195,7 +3195,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "stripe"
@@ -3260,7 +3260,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "camis"
@@ -3323,7 +3323,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "camis"
@@ -3376,7 +3376,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "stripe"
@@ -3441,7 +3441,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "graphic"
@@ -3496,7 +3496,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "dot"
@@ -3551,7 +3551,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "long"
@@ -3614,7 +3614,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "camis"
@@ -3647,7 +3647,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [
               "dot"
@@ -3712,7 +3712,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "long"
@@ -3765,7 +3765,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "corner only"
@@ -3810,7 +3810,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -3875,7 +3875,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "short"
@@ -3938,7 +3938,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -3991,7 +3991,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "graphic"
@@ -4056,7 +4056,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "bottom half shirt",
+            "type": "button half shirt",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -4109,7 +4109,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "dot"
@@ -4154,7 +4154,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "stripe",
@@ -4220,7 +4220,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "graphic"
@@ -4275,7 +4275,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "camis"
@@ -4338,7 +4338,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "long"
@@ -4391,7 +4391,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -4446,7 +4446,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -4489,7 +4489,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "camis"
@@ -4542,7 +4542,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "camis"
@@ -4575,7 +4575,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "short"
@@ -4638,7 +4638,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "polo neck",
             "pattern": [],
             "sleeves": "long"
@@ -4701,7 +4701,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "stripe"
@@ -4766,7 +4766,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "graphic"
@@ -4811,7 +4811,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [
               "dot"
@@ -4876,7 +4876,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -4941,7 +4941,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "long"
@@ -4994,7 +4994,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -5059,7 +5059,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "graphic"
@@ -5124,7 +5124,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "camis"
@@ -5177,7 +5177,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "short"
@@ -5220,7 +5220,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -5263,7 +5263,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "short"
@@ -5316,7 +5316,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "short"
@@ -5369,7 +5369,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "long"
@@ -5422,7 +5422,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "camis"
@@ -5475,7 +5475,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "polo neck",
             "pattern": [
               "stripe"
@@ -5530,7 +5530,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "graphic"
@@ -5585,7 +5585,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [],
             "sleeves": "long"
@@ -5648,7 +5648,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "graphic"
@@ -5703,7 +5703,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "dot"
@@ -5768,7 +5768,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "dot"
@@ -5833,7 +5833,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "graphic"
@@ -5898,7 +5898,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -5951,7 +5951,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "bottom down shirt",
+            "type": "button down shirt",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "short"
@@ -6014,7 +6014,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -6067,7 +6067,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [
               "stripe"
@@ -6132,7 +6132,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [],
             "sleeves": "long"
@@ -6185,7 +6185,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "camis"
@@ -6238,7 +6238,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "v-neck",
             "pattern": [],
             "sleeves": "long"
@@ -6291,7 +6291,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "camis"
@@ -6344,7 +6344,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [],
             "sleeves": "sleeveless"
@@ -6397,7 +6397,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "graphic"
@@ -6462,7 +6462,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "dot"
@@ -6527,7 +6527,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "square neck",
             "pattern": [
               "dot"
@@ -6592,7 +6592,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "stripe",
@@ -6658,7 +6658,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "corner only"
@@ -6723,7 +6723,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "graphic"
@@ -6788,7 +6788,7 @@
           ],
           "attributes": {
             "length": "regular",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "crew neck",
             "pattern": [
               "graphic"
@@ -6853,7 +6853,7 @@
           ],
           "attributes": {
             "length": "cropped",
-            "type": "no bottom",
+            "type": "no button",
             "neck": "off shoulder",
             "pattern": [
               "graphic"
@@ -6891,6 +6891,277 @@
                 ],
                 "hex": "#736449",
                 "fraction": 0.044
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00266.jpg": {
+      "regions": [
+        {
+          "box": [
+            25,
+            86,
+            403,
+            464
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "button down shirt",
+            "neck": "crew neck",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "brown",
+                "rgb": [
+                  81,
+                  55,
+                  31
+                ],
+                "hex": "#51371f",
+                "fraction": 0.644
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  152,
+                  123,
+                  91
+                ],
+                "hex": "#987b5b",
+                "fraction": 0.23
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  47,
+                  26,
+                  9
+                ],
+                "hex": "#2f1a09",
+                "fraction": 0.125
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00268.jpg": {
+      "regions": [
+        {
+          "box": [
+            43,
+            40,
+            363,
+            383
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no button",
+            "neck": "v-neck",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  3,
+                  4,
+                  3
+                ],
+                "hex": "#030403",
+                "fraction": 0.872
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  244,
+                  243,
+                  243
+                ],
+                "hex": "#f4f3f3",
+                "fraction": 0.074
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00270.jpg": {
+      "regions": [
+        {
+          "box": [
+            55,
+            132,
+            335,
+            455
+          ],
+          "attributes": {
+            "length": "cropped",
+            "type": "no button",
+            "neck": "off shoulder",
+            "pattern": [
+              "graphic"
+            ],
+            "sleeves": "sleeveless"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "orange",
+                "rgb": [
+                  194,
+                  114,
+                  63
+                ],
+                "hex": "#c2723f",
+                "fraction": 0.529
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  152,
+                  80,
+                  36
+                ],
+                "hex": "#985024",
+                "fraction": 0.239
+              },
+              {
+                "name": "maroon",
+                "rgb": [
+                  78,
+                  33,
+                  11
+                ],
+                "hex": "#4e210b",
+                "fraction": 0.232
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00272.jpg": {
+      "regions": [
+        {
+          "box": [
+            79,
+            44,
+            338,
+            344
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no button",
+            "neck": "off shoulder",
+            "pattern": [],
+            "sleeves": "long"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "brown",
+                "rgb": [
+                  96,
+                  95,
+                  93
+                ],
+                "hex": "#605f5d",
+                "fraction": 0.389
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  49,
+                  46,
+                  44
+                ],
+                "hex": "#312e2c",
+                "fraction": 0.338
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  136,
+                  135,
+                  133
+                ],
+                "hex": "#888785",
+                "fraction": 0.22
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  217,
+                  188,
+                  173
+                ],
+                "hex": "#d9bcad",
+                "fraction": 0.053
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "All_blouses/blouse_00274.jpg": {
+      "regions": [
+        {
+          "box": [
+            34,
+            70,
+            377,
+            397
+          ],
+          "attributes": {
+            "length": "regular",
+            "type": "no button",
+            "neck": "off shoulder",
+            "pattern": [
+              "dot"
+            ],
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  180,
+                  180,
+                  176
+                ],
+                "hex": "#b4b4b0",
+                "fraction": 0.641
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  154,
+                  149,
+                  137
+                ],
+                "hex": "#9a9589",
+                "fraction": 0.291
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  46,
+                  45,
+                  40
+                ],
+                "hex": "#2e2d28",
+                "fraction": 0.068
               }
             ]
           }
