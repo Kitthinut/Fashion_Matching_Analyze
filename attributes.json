@@ -5,9 +5,9 @@
       {"name": "cropped", "aliases": ["cropped length", "crop", "crop top"]}
     ]},
     {"key": "type", "title": "Clothes type", "mode": "single", "options": [
-      {"name": "no bottom", "aliases": ["top only"]},
-      {"name": "bottom half shirt", "aliases": ["bottom half"]},
-      {"name": "bottom down shirt", "aliases": ["bottom down", "button down", "button up", "button front"]}
+      {"name": "no button", "aliases": ["top only"]},
+      {"name": "button half shirt", "aliases": ["bottom half"]},
+      {"name": "button down shirt", "aliases": ["bottom down", "button down", "button up", "button front"]}
     ]},
     {"key": "neck", "title": "Neck type", "mode": "single", "options": [
       {"name": "crew neck", "aliases": ["crew", "round neck", "crewneck"]},

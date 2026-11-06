@@ -167,17 +167,39 @@ new pictures to `database/` (only new pictures are processed).
 
 | File | Purpose |
 |---|---|
-| `annotate.py` | label and crop window |
-| `train.py` | trains the model, writes `model.pt` |
-| `build_index.py` | reads `database/`, writes `index.json` |
-| `search_app.py` / `search.py` | search window / command line |
-| `run_all.py` | train, index and search in one command |
-| `analysis.py` | color, length and width, neck geometry from pixels |
-| `attributes.json` | categories, options and search aliases (edit to add more) |
+| `annotate.py` | GUI for drawing garment regions, selecting labels, and saving `annotations.json` |
+| `analysis.py` | segments a garment crop and estimates its dominant colors |
+| `attributes.py` / `attributes.json` | loads the shared category and label definitions |
+| `dataset.py` / `model.py` | prepares annotated regions and defines the training model |
+| `train.py` | trains the model from `annotations.json` and writes `model.pt` |
+| `inference.py` | loads `model.pt` and predicts attributes for an image |
+| `build_index.py` | predicts attributes and analyzes colors for `database/`, writing `index.json` |
+| `searchlib.py` | parses search terms and matches them against `index.json` |
+| `search_app.py` / `search.py` | graphical / command-line search |
+| `run_all.py` | runs training, indexing, and graphical search in sequence |
 
-Test the pixel analysis alone, without any training:
-`python analysis.py photo.jpg 70` (70 = the garment's real length in cm).
-It prints colors and measurements and saves `photo_mask.png` so you can check the cut-out.
+### What happens in `annotate.py` -> `analysis.py`
+
+1. `annotate.py` scans the selected dataset folder (including subfolders) for supported
+   image files and opens them in a labeling window.
+2. You draw a rectangle around a garment, or use the full image, then select its
+   attributes from the categories in `attributes.json`.
+3. When you add the region, `annotate.py` crops the original image and calls
+   `analysis.analyze_crop(crop)`.
+4. `analysis.py` estimates a foreground mask with GrabCut and image cleanup, then
+   clusters the masked pixels to estimate dominant colors. Each color includes a
+   name, RGB and hex values, and an approximate fraction of the garment pixels.
+5. `annotate.py` saves the region's box, chosen attributes, and color analysis together
+   in `annotations.json`. If automatic color analysis raises an error, the region and
+   labels are still saved; its analysis is left empty.
+
+The analysis is a color estimate, not a clothing-attribute classifier. Garment labels
+are selected by the annotator during this step; the trained model predicts attributes
+later when `build_index.py` processes the search database.
+
+To test the pixel analysis on one image without training, run `python analysis.py
+photo.jpg`. It prints the estimated colors and writes `photo_mask.png` with the
+detected garment area overlaid in green.
 
 ---
 
