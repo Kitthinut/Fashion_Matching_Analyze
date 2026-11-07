@@ -144948,6 +144948,135 @@
           }
         }
       ]
+    },
+    "All_blouses/blouse_00563.jpg": {
+      "regions": [
+        {
+          "box": [
+            25,
+            126,
+            137,
+            287
+          ],
+          "attributes": {
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  238,
+                  224,
+                  205
+                ],
+                "hex": "#eee0cd",
+                "fraction": 0.609
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  227,
+                  210,
+                  188
+                ],
+                "hex": "#e3d2bc",
+                "fraction": 0.391
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            282,
+            106,
+            396,
+            277
+          ],
+          "attributes": {
+            "sleeves": "short"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  241,
+                  229,
+                  211
+                ],
+                "hex": "#f1e5d3",
+                "fraction": 0.461
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  251,
+                  245,
+                  232
+                ],
+                "hex": "#fbf5e8",
+                "fraction": 0.299
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  221,
+                  202,
+                  179
+                ],
+                "hex": "#ddcab3",
+                "fraction": 0.16
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  189,
+                  166,
+                  140
+                ],
+                "hex": "#bda68c",
+                "fraction": 0.08
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            26,
+            109,
+            378,
+            466
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  239,
+                  226,
+                  208
+                ],
+                "hex": "#efe2d0",
+                "fraction": 0.756
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  228,
+                  211,
+                  190
+                ],
+                "hex": "#e4d3be",
+                "fraction": 0.244
+              }
+            ]
+          }
+        }
+      ]
     }
   }
 }

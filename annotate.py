@@ -4,7 +4,7 @@ import shutil
 import time
 import tkinter as tk
 from pathlib import Path
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 import numpy as np
 from PIL import Image, ImageTk
@@ -31,6 +31,7 @@ class Annotator:
         self.trash = self.folder.resolve().parent / "deleted_pictures"   # removed pictures go here (recoverable)
         self.idx, self.start, self.cur_box, self.box_id = 0, None, None, None
         self.vars = {}
+        self.category_frames = {}
         self.build_ui()
         win.after(150, self.begin)
 
@@ -50,9 +51,22 @@ class Annotator:
         self.title = tk.Label(r, anchor="w", justify="left", wraplength=450, font=("Arial", 10, "bold"))
         self.title.pack(fill="x")
 
-        for cat in self.schema["categories"]:
-            lf = tk.LabelFrame(r, text=cat["title"], padx=4)
-            lf.pack(fill="x", pady=2)
+        tk.Label(r, text="Category for this crop:", anchor="w").pack(fill="x", pady=(8, 0))
+        categories = self.schema["categories"]
+        self.category_by_key = {cat["key"]: cat for cat in categories}
+        self.category_key_by_title = {cat["title"]: cat["key"] for cat in categories}
+        self.category_var = tk.StringVar(value=categories[0]["title"])
+        self.category_picker = ttk.Combobox(
+            r, state="readonly", textvariable=self.category_var,
+            values=[cat["title"] for cat in categories])
+        self.category_picker.pack(fill="x")
+        self.category_picker.bind("<<ComboboxSelected>>", self.on_category_change)
+
+        self.category_container = tk.Frame(r)
+        self.category_container.pack(fill="x")
+        for cat in categories:
+            lf = tk.LabelFrame(self.category_container, text=cat["title"], padx=4)
+            self.category_frames[cat["key"]] = lf
             key, names = cat["key"], [o["name"] for o in cat["options"]]
             if cat["mode"] == "single":
                 var = tk.StringVar(value="")
@@ -67,6 +81,7 @@ class Annotator:
                 for j, n in enumerate(names + [NONE]):
                     tk.Checkbutton(lf, text="(none of these)" if n == NONE else n, variable=d[n],
                                    anchor="w").grid(row=j // 3, column=j % 3, sticky="w", padx=4)
+        self.on_category_change()
 
         row = tk.Frame(r)
         row.pack(fill="x", pady=3)
@@ -250,33 +265,47 @@ class Annotator:
 
     # ----------------------------------------------------- attribute <-> UI
     def get_attributes(self):
-        attrs = {}
-        for cat in self.schema["categories"]:
-            k, v = cat["key"], self.vars[cat["key"]]
-            if cat["mode"] == "single":
-                if v.get():
-                    attrs[k] = v.get()
-            else:
-                ticked = [n for n, b in v.items() if n != NONE and b.get()]
-                if ticked:
-                    attrs[k] = ticked
-                elif v[NONE].get():
-                    attrs[k] = []          # explicitly "no pattern"
-        return attrs
+        k = self.category_key_by_title[self.category_var.get()]
+        cat, v = self.category_by_key[k], self.vars[k]
+        if cat["mode"] == "single":
+            return {k: v.get()} if v.get() else {}
+        ticked = [n for n, b in v.items() if n != NONE and b.get()]
+        if ticked:
+            return {k: ticked}
+        if v[NONE].get():
+            return {k: []}          # explicitly "none of these"
+        return {}
 
     def set_attributes(self, attrs):
+        selected_key = next((cat["key"] for cat in self.schema["categories"] if cat["key"] in attrs), None)
+        if selected_key:
+            self.category_var.set(self.category_by_key[selected_key]["title"])
+            self.on_category_change()
         for cat in self.schema["categories"]:
             k, v = cat["key"], self.vars[cat["key"]]
+            value = attrs.get(k) if k == selected_key else None
             if cat["mode"] == "single":
-                v.set(attrs.get(k, ""))
+                v.set(value or "")
             else:
                 for n, b in v.items():
-                    b.set(n in attrs.get(k, []))
-                v[NONE].set(k in attrs and attrs[k] == [])
+                    b.set(n in (value or []))
+                v[NONE].set(value == [])
 
-    @staticmethod
-    def short(attrs):
-        return " | ".join("+".join(v) if isinstance(v, list) else v for v in attrs.values() if v) or "-"
+    def on_category_change(self, _=None):
+        for frame in self.category_frames.values():
+            frame.pack_forget()
+        key = self.category_key_by_title.get(self.category_var.get())
+        if key:
+            self.category_frames[key].pack(fill="x", pady=2)
+
+    def short(self, attrs):
+        labels = []
+        for key, value in attrs.items():
+            if not value:
+                continue
+            title = self.category_by_key.get(key, {}).get("title", key)
+            labels.append(f"{title}: {'+'.join(value) if isinstance(value, list) else value}")
+        return " | ".join(labels) or "-"
 
     # ---------------------------------------------------------------- image
     def entry(self):
@@ -347,7 +376,7 @@ class Annotator:
     def add_region(self):
         attrs = self.get_attributes()
         if not attrs:
-            messagebox.showwarning("Nothing picked", "Pick at least one attribute first.")
+            messagebox.showwarning("Nothing picked", "Pick a label for the selected category first.")
             return
         box = self.cur_box or [0, 0, self.img.width, self.img.height]
         self.win.config(cursor="watch"); self.win.update_idletasks()
@@ -373,7 +402,11 @@ class Annotator:
         i = self.sel_region()
         if i is None:
             return self.say("Select a region in the list first.")
-        self.entry()["regions"][i]["attributes"] = self.get_attributes()
+        attrs = self.get_attributes()
+        if not attrs:
+            messagebox.showwarning("Nothing picked", "Pick a label for the selected category first.")
+            return
+        self.entry()["regions"][i]["attributes"] = attrs
         self.refresh_regions(); self.redraw(i); self.save()
 
     def delete_region(self):

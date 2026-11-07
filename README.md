@@ -83,9 +83,11 @@ python annotate.py dataset
 
 A window opens showing your first picture.
 
-1. **Drag** on the picture to crop one garment. No drag means the whole image is used.
-2. **Pick the attributes** on the right: one option each for Length, Clothes type, Neck and
-   Sleeves; tick any Patterns that apply (or "none of these").
+1. **Drag** on the picture to crop the area relevant to one category (for example, crop
+   the garment length for Length or the neckline for Neck). No drag means the whole image
+   is used.
+2. **Choose one category** on the right, then select its label. Each crop is saved with
+   labels for that category only. Patterns can have multiple selections (or "none of these").
 3. Press **Enter** (or click *Add region*). Colors are analysed automatically.
 4. Press the **Right arrow** for the next picture. Everything saves as you go to `annotations.json`.
 
@@ -95,7 +97,7 @@ A window opens showing your first picture.
 | Left / Right arrow | previous / next picture |
 | Ctrl+S | save |
 | Click a region in the list | view it, then *Update selected* or *Delete* |
-| "Keep ticks after adding" | keeps your choices for the next region (faster for similar items) |
+| "Keep ticks after adding" | keeps the selected category's choices for the next crop |
 
 Tips:
 - Label **at least 30 examples of every option** you want it to learn, and keep them balanced.
