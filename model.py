@@ -31,22 +31,27 @@ class MultiHeadNet(nn.Module):
         return {k: self.head(k)(f) for k in self.keys}
 
 
-def compute_loss(out, y, spec):
-    """single -> cross-entropy (label -1 = not annotated, ignored)
-       multi  -> BCE, only for samples where that category was annotated."""
-    total, n = sum(o.sum() for o in out.values()) * 0.0, 0
+def compute_category_losses(out, y, spec):
+    """Return one loss per annotated category, ignoring samples without that label."""
+    losses = {}
     for k, c in spec.items():
         if c["mode"] == "single":
             if (y[k] >= 0).any():
-                total = total + F.cross_entropy(out[k], y[k], ignore_index=-1)
-                n += 1
+                losses[k] = F.cross_entropy(out[k], y[k], ignore_index=-1)
         else:
             m = y[k + "__mask"]
             if m.sum() > 0:
                 l = F.binary_cross_entropy_with_logits(out[k], y[k], reduction="none").mean(1)
-                total = total + (l * m).sum() / m.sum()
-                n += 1
-    return total / max(n, 1)
+                losses[k] = (l * m).sum() / m.sum()
+    return losses
+
+
+def compute_loss(out, y, spec):
+    """Average the losses for categories labelled in this batch."""
+    losses = compute_category_losses(out, y, spec)
+    if losses:
+        return torch.stack(list(losses.values())).mean()
+    return sum(o.sum() for o in out.values()) * 0.0
 
 
 def decode(out, spec, i=0):

@@ -115,7 +115,8 @@ python run_all.py
 This runs three steps in order:
 
 1. **Train** the model on `annotations.json`, saved as `model.pt`.
-   It prints the label counts and accuracy after each epoch.
+   It prints label counts, per-category training/validation loss, and per-category
+   accuracy or F1 after each epoch.
 2. **Index** every picture in `database/` into `index.json`.
 3. **Open the search window.**
 
@@ -145,6 +146,7 @@ long sleeve button down grey
 
 - The status line shows how your words were understood.
 - Or use the **dropdowns** for each category.
+- Each result shows predictions under their category names (for example, `Length: cropped`).
 - Results are ranked by match score. The **Minimum match score** slider controls how strict it is.
   Lower it if you get no results.
 - **Click a picture** to open it full size.

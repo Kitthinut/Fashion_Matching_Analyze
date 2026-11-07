@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 from attributes import head_spec, load_schema
 from dataset import RegionDataset, load_annotations, split_by_image
-from model import MultiHeadNet, compute_loss
+from model import MultiHeadNet, compute_category_losses, compute_loss
 
 
 def get_device():
@@ -22,11 +22,16 @@ def evaluate(model, loader, spec, dev):
     model.eval()
     loss = n = 0
     st = {k: [0, 0, 0] for k in spec}          # single: correct,total | multi: tp,fp,fn
+    category_loss = {k: [0.0, 0] for k in spec}
     for x, y in loader:
         x, y = x.to(dev), {k: v.to(dev) for k, v in y.items()}
         out = model(x)
         loss += compute_loss(out, y, spec).item() * len(x)
         n += len(x)
+        for k, value in compute_category_losses(out, y, spec).items():
+            count = int((y[k] >= 0).sum()) if spec[k]["mode"] == "single" else int(y[k + "__mask"].sum())
+            category_loss[k][0] += value.item() * count
+            category_loss[k][1] += count
         for k, c in spec.items():
             if c["mode"] == "single":
                 m = y[k] >= 0
@@ -47,7 +52,8 @@ def evaluate(model, loader, spec, dev):
         else:
             met[k] = 2 * a / (2 * a + b + d) if (2 * a + b + d) else None
     vals = [v for v in met.values() if v is not None]
-    return loss / max(n, 1), met, (sum(vals) / len(vals) if vals else 0.0)
+    losses = {k: total / count if count else None for k, (total, count) in category_loss.items()}
+    return loss / max(n, 1), met, (sum(vals) / len(vals) if vals else 0.0), losses
 
 
 def main():
@@ -63,7 +69,9 @@ def main():
     ap.add_argument("--no-pretrained", action="store_true", help="skip ImageNet weights (offline)")
     a = ap.parse_args()
 
-    spec = head_spec(load_schema())
+    schema = load_schema()
+    spec = head_spec(schema)
+    titles = {cat["key"]: cat["title"] for cat in schema["categories"]}
     samples = load_annotations(a.ann)
     if not samples:
         raise SystemExit("No labelled regions found. Run annotate.py first.")
@@ -75,7 +83,7 @@ def main():
             v = s["attributes"].get(k)
             for o in ([v] if isinstance(v, str) else (v or [])):
                 cnt[o] += 1
-        print(f"  {k:8s}", {o: cnt.get(o, 0) for o in c["options"]})
+        print(f"  {titles.get(k, k):16s}", {o: cnt.get(o, 0) for o in c["options"]})
 
     dev = get_device()
     print("device:", dev)
@@ -91,17 +99,31 @@ def main():
     for ep in range(1, a.epochs + 1):
         model.train()
         tot = 0
+        train_category_loss = {k: [0.0, 0] for k in spec}
         for x, y in tl:
             x, y = x.to(dev), {k: v.to(dev) for k, v in y.items()}
             opt.zero_grad()
-            loss = compute_loss(model(x), y, spec)
+            out = model(x)
+            loss = compute_loss(out, y, spec)
             loss.backward()
             opt.step()
             tot += loss.item() * len(x)
+            for k, value in compute_category_losses(out, y, spec).items():
+                count = int((y[k] >= 0).sum()) if spec[k]["mode"] == "single" else int(y[k + "__mask"].sum())
+                train_category_loss[k][0] += value.item() * count
+                train_category_loss[k][1] += count
         sched.step()
-        vloss, met, score = evaluate(model, vl, spec, dev)
-        m = "  ".join(f"{k}={'-' if v is None else format(v, '.2f')}" for k, v in met.items())
-        print(f"epoch {ep:02d} train {tot/len(tl.dataset):.3f} val {vloss:.3f} | {m}")
+        vloss, met, score, val_category_loss = evaluate(model, vl, spec, dev)
+        train_losses = " ".join(
+            f"{titles.get(k, k)}={total / count:.3f}"
+            for k, (total, count) in train_category_loss.items() if count)
+        val_losses = " ".join(
+            f"{titles.get(k, k)}={'-' if v is None else format(v, '.3f')}"
+            for k, v in val_category_loss.items())
+        metrics = " ".join(
+            f"{titles.get(k, k)}={'-' if v is None else format(v, '.2f')}" for k, v in met.items())
+        print(f"epoch {ep:02d} train {tot/len(tl.dataset):.3f} [{train_losses}] "
+              f"val {vloss:.3f} [{val_losses}] | accuracy/F1 [{metrics}]")
         if score >= best:
             best = score
             torch.save({"state": model.state_dict(), "spec": spec, "arch": a.arch, "size": a.size}, a.out)

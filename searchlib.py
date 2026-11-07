@@ -92,12 +92,14 @@ def score_group(region, g):
     return max(vals) if g["mode"] == "single" else min(vals)
 
 
-def describe_region(region):
+def describe_region(region, schema=None):
+    category_titles = {cat["key"]: cat["title"] for cat in schema["categories"]} if schema else {}
     parts = []
     for key, probs in region["attributes"].items():
         top = sorted(probs.items(), key=lambda kv: -kv[1])
         chosen = [n for n, p in top if p >= 0.5] or [top[0][0]]
-        parts.append("+".join(chosen))
+        title = category_titles.get(key, key.replace("_", " ").title())
+        parts.append(f"{title}: {'+'.join(chosen)}")
     cols = ((region.get("analysis") or {}).get("colors")) or []
     cs = ", ".join(f"{c['name']} {c['fraction']:.0%}" for c in cols[:2])
     return " | ".join(parts) + (f"\ncolor: {cs}" if cs else "")
@@ -107,7 +109,7 @@ def load_index(path="index.json"):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def search(index, groups, min_score=0.3, limit=50):
+def search(index, groups, min_score=0.3, limit=50, schema=None):
     root, res = Path(index["image_root"]), []
     for rel, info in index["images"].items():
         best = None
@@ -118,7 +120,7 @@ def search(index, groups, min_score=0.3, limit=50):
                 best = (ov, sc, r)
         if best:
             res.append({"path": str(root / rel), "rel": rel, "score": best[0],
-                        "term_scores": best[1], "summary": describe_region(best[2])})
+                            "term_scores": best[1], "summary": describe_region(best[2], schema)})
     res.sort(key=lambda r: -r["score"])
     return res[:limit]
 

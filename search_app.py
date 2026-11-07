@@ -89,7 +89,7 @@ class SearchApp:
         except ValueError:
             limit = 40
         self.last_query = self.q.get().strip() or " ".join(describe_group(g) for g in groups)
-        self.results = search(self.index, groups, self.min_score.get(), limit)
+        self.results = search(self.index, groups, self.min_score.get(), limit, self.schema)
         msg = "Understood: " + "; ".join(describe_group(g) for g in groups)
         if ignored:
             msg += f"   (ignored: {', '.join(ignored)})"
