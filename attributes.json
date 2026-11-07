@@ -6,8 +6,8 @@
     ]},
     {"key": "type", "title": "Clothes type", "mode": "single", "options": [
       {"name": "no button", "aliases": ["top only"]},
-      {"name": "button half shirt", "aliases": ["botton half"]},
-      {"name": "button down shirt", "aliases": ["botton down", "button down", "button up", "button front"]}
+      {"name": "button half shirt", "aliases": ["button half"]},
+      {"name": "button down shirt", "aliases": ["button down", "button down", "button up", "button front"]}
     ]},
     {"key": "neck", "title": "Neck type", "mode": "single", "options": [
       {"name": "crew neck", "aliases": ["crew", "round neck", "crewneck"]},
