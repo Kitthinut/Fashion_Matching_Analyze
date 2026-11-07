@@ -1,20 +1,3 @@
-"""Merge labels from several friends into one annotations.json (run on YOUR machine).
-
-Each friend sends back a folder/zip containing:
-    annotations.json          (made by annotate.py)
-    their pictures            (the images they labelled; skip if you gave them the pictures)
-
-Unzip each submission into its own folder, e.g.  submissions/alice  submissions/bob
-
-    python merge_annotations.py submissions/alice submissions/bob
-    python merge_annotations.py submissions/alice --dataset dataset --out annotations.json
-
-Rules
-  * Pictures that are already in your dataset/ (same relative path + same file size) are reused.
-  * New pictures are copied to dataset/<friendname>/... so two friends' "IMG_001.jpg" never collide.
-  * Labels with options that are not in attributes.json are dropped (with a warning).
-  * Existing annotations.json is kept and extended (a .bak copy is saved). Use --fresh to start over.
-"""
 import argparse
 import json
 import re
@@ -54,12 +37,48 @@ def clean_attrs(attrs, schema, warn):
     return ok
 
 
+def diff(old, new):
+    keys = sorted(set(old) | set(new))
+    return "; ".join(f"{k}: {old.get(k)} -> {new.get(k)}" for k in keys if old.get(k) != new.get(k))
+
+
+def merge_region(entry, r, policy, warn, key):
+    """Add region r to entry['regions'] without creating conflicting duplicates."""
+    regs = entry["regions"]
+    same_box = [x for x in regs if x["box"] == r["box"]]
+    if not same_box:
+        if regs:
+            warn(f"{key}: extra region with a different crop added (review if both are real)")
+        regs.append(r)
+        return
+    identical = any(x["attributes"] == r["attributes"] for x in same_box)
+    conflicting = [x for x in same_box if x["attributes"] != r["attributes"]]
+    if identical:
+        if conflicting and policy == "replace":          # leftovers from an earlier merge
+            for x in conflicting:
+                regs.remove(x)
+            warn(f"{key}: removed {len(conflicting)} outdated duplicate region(s)")
+        return
+    if policy == "replace":
+        warn(f"{key}: labels updated  ({diff(same_box[0]['attributes'], r['attributes'])})")
+        for x in same_box[1:]:
+            regs.remove(x)
+        regs[regs.index(same_box[0])] = r
+    elif policy == "keep":
+        warn(f"{key}: kept your existing labels, ignored the incoming ones ({diff(same_box[0]['attributes'], r['attributes'])})")
+    else:
+        warn(f"{key}: same crop now has two different label sets - review them")
+        regs.append(r)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sources", nargs="+", help="friend folders (or their annotations.json files)")
     ap.add_argument("--dataset", default="dataset", help="your master image folder")
     ap.add_argument("--out", default="annotations.json")
     ap.add_argument("--fresh", action="store_true", help="ignore the existing annotations file")
+    ap.add_argument("--on-conflict", choices=["replace", "keep", "both"], default="replace",
+                    help="same picture + same crop, different labels (default: incoming replaces old)")
     a = ap.parse_args()
 
     schema = load_schema()
@@ -109,14 +128,8 @@ def main():
                 shutil.copy2(own, dst)
 
             entry = merged["images"].setdefault(key, {"regions": []})
-            had = bool(entry["regions"])
             for r in regions:
-                same = [x for x in entry["regions"]
-                        if x["box"] == r["box"] and x["attributes"] == r["attributes"]]
-                if not same:
-                    entry["regions"].append(r)
-            if had and len(entry["regions"]) > len(regions):
-                warn(f"{key} was labelled by more than one source (regions combined, please review)")
+                merge_region(entry, r, a.on_conflict, warn, key)
             added += 1
         print(f"{tag}: merged {added} labelled pictures")
 
