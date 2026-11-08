@@ -39,7 +39,7 @@ BOX_RGB_PRED = (227, 75, 75)
 FONT_TITLE = ("Segoe UI", 15, "bold")
 FONT_SUBTITLE = ("Segoe UI", 10)
 FONT_BODY = ("Segoe UI", 10)
-FONT_MONO = ("Consolas", "Courier New", "monospace")
+FONT_MONO = ("Consolas", 10)
 
 
 # -----------------------------------------------------------------------------
