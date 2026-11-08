@@ -22,3 +22,9 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+submissions/
+test_results/
+database/
+dataset/
+annotations.json
