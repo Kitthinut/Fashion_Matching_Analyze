@@ -1,0 +1,9 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    { "name": "1. Annotate dataset", "type": "debugpy", "request": "launch", "program": "annotate.py", "args": ["dataset"], "cwd": "${workspaceFolder}", "console": "integratedTerminal" },
+    { "name": "2. RUN ALL (train > index > search)", "type": "debugpy", "request": "launch", "program": "run_all.py", "cwd": "${workspaceFolder}", "console": "integratedTerminal" },
+    { "name": "3. Search window only", "type": "debugpy", "request": "launch", "program": "search_app.py", "cwd": "${workspaceFolder}", "console": "integratedTerminal" },
+    { "name": "4. Re-index database", "type": "debugpy", "request": "launch", "program": "build_index.py", "args": ["database"], "cwd": "${workspaceFolder}", "console": "integratedTerminal" }
+  ]
+}
