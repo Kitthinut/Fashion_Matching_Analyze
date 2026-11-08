@@ -1,7 +1,7 @@
 import torch
 
-from dataset import eval_transform
-from model import MultiHeadNet, decode
+from train.dataset import eval_transform
+from train.model import MultiHeadNet, decode
 
 
 def get_device():

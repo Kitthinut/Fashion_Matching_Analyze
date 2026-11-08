@@ -24,7 +24,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from analysis import analyze_crop, segment_garment
+from label.analysis import analyze_crop, segment_garment
 from attributes import load_schema
 from searchlib import open_path
 
@@ -50,7 +50,7 @@ def find_garment(bgr, margin=0.04):
 def forward(bundle, crop):
     """-> (probs {category: {option: p}}, last conv feature maps [C,h,w])"""
     import torch
-    from model import decode
+    from train.model import decode
     model, spec, tf, dev = bundle
     store = {}
     hook = model.backbone.layer4.register_forward_hook(lambda m, i, o: store.__setitem__("a", o))

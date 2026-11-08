@@ -9,7 +9,7 @@ from tkinter import messagebox, ttk
 import numpy as np
 from PIL import Image, ImageTk
 
-from analysis import analyze_crop
+from label.analysis import analyze_crop
 from attributes import load_schema
 
 EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}

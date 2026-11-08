@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from analysis import COLOR_TABLE
+from label.analysis import COLOR_TABLE
 
 COLOR_ALIASES = {"grey": "gray", "navy blue": "navy", "dark blue": "navy", "sky blue": "light blue",
                  "violet": "purple", "tan": "beige", "off white": "cream", "crimson": "red",

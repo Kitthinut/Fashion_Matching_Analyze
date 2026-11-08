@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from analysis import analyze_crop
+from label.analysis import analyze_crop
 from inference import load_model, predict_pil
 
 EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}

@@ -1,14 +1,32 @@
 import json
 from pathlib import Path
 
-SCHEMA_FILE = Path(__file__).parent / "attributes.json"
+SCHEMA_FILE = Path(__file__).resolve().parent / "attributes.json"
 
 
-def load_schema(path=SCHEMA_FILE):
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+def _resolve_schema_path(path=None):
+    if path is None:
+        return SCHEMA_FILE
+
+    candidate = Path(path)
+    if not candidate.is_absolute():
+        candidate = (Path(__file__).resolve().parent / candidate).resolve()
+    return candidate
 
 
-def head_spec(schema):
-    """{'neck': {'mode': 'single', 'options': ['crew neck', ...]}, ...}"""
-    return {c["key"]: {"mode": c["mode"], "options": [o["name"] for o in c["options"]]}
-            for c in schema["categories"]}
+def load_schema(path=None):
+    schema_path = _resolve_schema_path(path)
+    return json.loads(schema_path.read_text(encoding="utf-8"))
+
+
+def head_spec(schema=None):
+    """Generates head metadata directly from schema."""
+    if schema is None:
+        schema = load_schema()
+    return {
+        cat["key"]: {
+            "mode": cat["mode"],
+            "options": [o["name"] for o in cat["options"]]
+        }
+        for cat in schema["categories"]
+    }
