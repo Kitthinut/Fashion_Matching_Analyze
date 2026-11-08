@@ -42,3 +42,8 @@ desktop.ini
 # Pictures removed in the annotator
 deleted_pictures/
 submissions/
+
+attributes.json
+annotations_test.json
+annotations_train.json
+annotations_validation.json

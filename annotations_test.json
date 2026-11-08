@@ -840,6 +840,4706 @@
           }
         }
       ]
+    },
+    "CDS_polos_00050.jpg": {
+      "regions": [
+        {
+          "box": [
+            528,
+            390,
+            582,
+            436
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            283,
+            243,
+            703,
+            765
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  25,
+                  29,
+                  41
+                ],
+                "hex": "#191d29",
+                "fraction": 0.621
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  32,
+                  39,
+                  53
+                ],
+                "hex": "#202735",
+                "fraction": 0.369
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            460,
+            312,
+            508,
+            775
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            397,
+            237,
+            617,
+            350
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            645,
+            302,
+            770,
+            527
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            284,
+            316,
+            388,
+            543
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "CDS_polos_00061.jpg": {
+      "regions": [
+        {
+          "box": [
+            232,
+            393,
+            1447,
+            1741
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  47,
+                  50,
+                  63
+                ],
+                "hex": "#2f323f",
+                "fraction": 0.985
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            568,
+            307,
+            1092,
+            662
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            740,
+            529,
+            901,
+            1746
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            1170,
+            465,
+            1419,
+            1039
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            232,
+            476,
+            504,
+            1028
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            987,
+            751,
+            1087,
+            879
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00013.jpg": {
+      "regions": [
+        {
+          "box": [
+            56,
+            61,
+            303,
+            328
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  126,
+                  109,
+                  91
+                ],
+                "hex": "#7e6d5b",
+                "fraction": 0.34
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  173,
+                  157,
+                  139
+                ],
+                "hex": "#ad9d8b",
+                "fraction": 0.324
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  228,
+                  213,
+                  195
+                ],
+                "hex": "#e4d5c3",
+                "fraction": 0.221
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  24,
+                  18,
+                  12
+                ],
+                "hex": "#18120c",
+                "fraction": 0.115
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            174,
+            63,
+            212,
+            335
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            118,
+            20,
+            265,
+            103
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            271,
+            39,
+            392,
+            266
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            19,
+            59,
+            110,
+            502
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00149.jpg": {
+      "regions": [
+        {
+          "box": [
+            134,
+            162,
+            321,
+            239
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            52,
+            171,
+            310,
+            463
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  236,
+                  224,
+                  222
+                ],
+                "hex": "#ece0de",
+                "fraction": 0.379
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  41,
+                  32,
+                  24
+                ],
+                "hex": "#292018",
+                "fraction": 0.29
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  201,
+                  185,
+                  183
+                ],
+                "hex": "#c9b9b7",
+                "fraction": 0.257
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  124,
+                  109,
+                  102
+                ],
+                "hex": "#7c6d66",
+                "fraction": 0.074
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            135,
+            183,
+            313,
+            386
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            63,
+            178,
+            129,
+            432
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            176,
+            202,
+            199,
+            455
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        }
+      ]
+    },
+    "CDS_polos_00016.jpg": {
+      "regions": [
+        {
+          "box": [
+            567,
+            466,
+            608,
+            544
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            45,
+            230,
+            873,
+            1062
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  35,
+                  47,
+                  74
+                ],
+                "hex": "#232f4a",
+                "fraction": 0.549
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  21,
+                  31,
+                  53
+                ],
+                "hex": "#151f35",
+                "fraction": 0.259
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  221,
+                  231,
+                  239
+                ],
+                "hex": "#dde7ef",
+                "fraction": 0.142
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  132,
+                  142,
+                  157
+                ],
+                "hex": "#848e9d",
+                "fraction": 0.051
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            401,
+            323,
+            509,
+            1048
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            305,
+            210,
+            638,
+            381
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            118,
+            228,
+            859,
+            1042
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe",
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            656,
+            296,
+            851,
+            671
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            66,
+            281,
+            264,
+            664
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00029.jpg": {
+      "regions": [
+        {
+          "box": [
+            157,
+            63,
+            319,
+            114
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            336,
+            80,
+            404,
+            282
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            16,
+            93,
+            87,
+            262
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            192,
+            97,
+            238,
+            479
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            73,
+            79,
+            340,
+            481
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  33,
+                  40,
+                  60
+                ],
+                "hex": "#21283c",
+                "fraction": 0.541
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  11,
+                  17,
+                  31
+                ],
+                "hex": "#0b111f",
+                "fraction": 0.459
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "CDS_polos_00010.jpg": {
+      "regions": [
+        {
+          "box": [
+            864,
+            421,
+            977,
+            533
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            692,
+            289,
+            802,
+            1367
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            245,
+            104,
+            1280,
+            1356
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  22,
+                  22,
+                  23
+                ],
+                "hex": "#161617",
+                "fraction": 0.996
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            540,
+            87,
+            945,
+            344
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            1025,
+            196,
+            1325,
+            732
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            132,
+            183,
+            442,
+            735
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "CDS_polos_00055.jpg": {
+      "regions": [
+        {
+          "box": [
+            593,
+            334,
+            654,
+            392
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            469,
+            171,
+            564,
+            923
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            701,
+            146,
+            931,
+            500
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            70,
+            121,
+            305,
+            494
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            377,
+            25,
+            651,
+            211
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            155,
+            46,
+            900,
+            940
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  31,
+                  31,
+                  31
+                ],
+                "hex": "#1f1f1f",
+                "fraction": 0.646
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  39,
+                  38,
+                  39
+                ],
+                "hex": "#272627",
+                "fraction": 0.341
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "CDS_polos_00027.jpg": {
+      "regions": [
+        {
+          "box": [
+            537,
+            354,
+            581,
+            398
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            266,
+            218,
+            741,
+            625
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  38,
+                  47,
+                  48
+                ],
+                "hex": "#262f30",
+                "fraction": 0.492
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  27,
+                  33,
+                  35
+                ],
+                "hex": "#1b2123",
+                "fraction": 0.486
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            462,
+            283,
+            522,
+            611
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            401,
+            221,
+            606,
+            327
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            610,
+            282,
+            721,
+            525
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            298,
+            287,
+            394,
+            509
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00033.jpg": {
+      "regions": [
+        {
+          "box": [
+            43,
+            233,
+            209,
+            539
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            264,
+            34,
+            392,
+            298
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            72,
+            218,
+            292,
+            478
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe"
+            ]
+          }
+        },
+        {
+          "box": [
+            97,
+            192,
+            229,
+            280
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            187,
+            250,
+            226,
+            454
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            73,
+            216,
+            294,
+            517
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  40,
+                  27,
+                  24
+                ],
+                "hex": "#281b18",
+                "fraction": 0.489
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  164,
+                  165,
+                  163
+                ],
+                "hex": "#a4a5a3",
+                "fraction": 0.237
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  113,
+                  108,
+                  106
+                ],
+                "hex": "#716c6a",
+                "fraction": 0.205
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  237,
+                  233,
+                  221
+                ],
+                "hex": "#ede9dd",
+                "fraction": 0.069
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "CDS_polos_00060.jpg": {
+      "regions": [
+        {
+          "box": [
+            593,
+            318,
+            1075,
+            643
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            751,
+            551,
+            890,
+            1702
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            937,
+            743,
+            1092,
+            867
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            1164,
+            438,
+            1444,
+            1009
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            141,
+            418,
+            493,
+            1028
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            219,
+            263,
+            1408,
+            1752
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  39,
+                  36,
+                  58
+                ],
+                "hex": "#27243a",
+                "fraction": 0.983
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00041.jpg": {
+      "regions": [
+        {
+          "box": [
+            280,
+            99,
+            350,
+            466
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            22,
+            101,
+            127,
+            514
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            189,
+            171,
+            224,
+            335
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            81,
+            63,
+            319,
+            177
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            74,
+            80,
+            317,
+            335
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  6,
+                  8,
+                  12
+                ],
+                "hex": "#06080c",
+                "fraction": 0.766
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  36,
+                  42,
+                  57
+                ],
+                "hex": "#242a39",
+                "fraction": 0.225
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00073.jpg": {
+      "regions": [
+        {
+          "box": [
+            234,
+            123,
+            327,
+            435
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            33,
+            117,
+            118,
+            410
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            79,
+            91,
+            279,
+            178
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            135,
+            154,
+            186,
+            389
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            57,
+            108,
+            296,
+            404
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  156,
+                  143,
+                  131
+                ],
+                "hex": "#9c8f83",
+                "fraction": 0.53
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  181,
+                  169,
+                  157
+                ],
+                "hex": "#b5a99d",
+                "fraction": 0.419
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  78,
+                  68,
+                  57
+                ],
+                "hex": "#4e4439",
+                "fraction": 0.051
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00081.jpg": {
+      "regions": [
+        {
+          "box": [
+            2,
+            57,
+            124,
+            511
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            295,
+            71,
+            403,
+            358
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            134,
+            140,
+            367,
+            358
+          ],
+          "attributes": {
+            "pattern": [
+              "graphic"
+            ]
+          }
+        },
+        {
+          "box": [
+            151,
+            41,
+            333,
+            128
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            235,
+            89,
+            303,
+            467
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            6,
+            56,
+            404,
+            474
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "brown",
+                "rgb": [
+                  99,
+                  92,
+                  90
+                ],
+                "hex": "#635c5a",
+                "fraction": 0.311
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  140,
+                  136,
+                  135
+                ],
+                "hex": "#8c8887",
+                "fraction": 0.302
+              },
+              {
+                "name": "maroon",
+                "rgb": [
+                  92,
+                  23,
+                  30
+                ],
+                "hex": "#5c171e",
+                "fraction": 0.219
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  189,
+                  185,
+                  186
+                ],
+                "hex": "#bdb9ba",
+                "fraction": 0.168
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00091.jpg": {
+      "regions": [
+        {
+          "box": [
+            224,
+            25,
+            384,
+            419
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            6,
+            32,
+            142,
+            397
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            125,
+            8,
+            301,
+            72
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            153,
+            28,
+            219,
+            324
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            9,
+            21,
+            391,
+            388
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  132,
+                  143,
+                  138
+                ],
+                "hex": "#848f8a",
+                "fraction": 0.546
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  205,
+                  217,
+                  217
+                ],
+                "hex": "#cdd9d9",
+                "fraction": 0.454
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "CDS_polos_00035.jpg": {
+      "regions": [
+        {
+          "box": [
+            917,
+            490,
+            992,
+            607
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            693,
+            324,
+            1003,
+            479
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            501,
+            321,
+            1178,
+            1136
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  46,
+                  63,
+                  91
+                ],
+                "hex": "#2e3f5b",
+                "fraction": 0.839
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  210,
+                  168,
+                  132
+                ],
+                "hex": "#d2a884",
+                "fraction": 0.098
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  173,
+                  132,
+                  104
+                ],
+                "hex": "#ad8468",
+                "fraction": 0.056
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            781,
+            399,
+            881,
+            1098
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            1014,
+            438,
+            1189,
+            754
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            443,
+            429,
+            682,
+            784
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00009.jpg": {
+      "regions": [
+        {
+          "box": [
+            276,
+            164,
+            398,
+            335
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            6,
+            165,
+            156,
+            348
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            157,
+            152,
+            271,
+            229
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            203,
+            197,
+            237,
+            431
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            124,
+            175,
+            287,
+            425
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  42,
+                  22,
+                  21
+                ],
+                "hex": "#2a1615",
+                "fraction": 0.923
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  143,
+                  139,
+                  142
+                ],
+                "hex": "#8f8b8e",
+                "fraction": 0.053
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "BP_knitwear_00035.jpg": {
+      "regions": [
+        {
+          "box": [
+            103,
+            0,
+            296,
+            242
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  192,
+                  185,
+                  172
+                ],
+                "hex": "#c0b9ac",
+                "fraction": 0.67
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  163,
+                  151,
+                  137
+                ],
+                "hex": "#a39789",
+                "fraction": 0.25
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  109,
+                  86,
+                  71
+                ],
+                "hex": "#6d5647",
+                "fraction": 0.08
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            195,
+            11,
+            226,
+            236
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            175,
+            0,
+            261,
+            21
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            115,
+            4,
+            246,
+            124
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            252,
+            10,
+            305,
+            120
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        }
+      ]
+    },
+    "CDS_polos_00022.jpg": {
+      "regions": [
+        {
+          "box": [
+            551,
+            361,
+            593,
+            398
+          ],
+          "attributes": {
+            "pattern": [
+              "corner only"
+            ]
+          }
+        },
+        {
+          "box": [
+            292,
+            211,
+            707,
+            674
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  242,
+                  242,
+                  242
+                ],
+                "hex": "#f2f2f2",
+                "fraction": 0.795
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  226,
+                  226,
+                  224
+                ],
+                "hex": "#e2e2e0",
+                "fraction": 0.185
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            452,
+            267,
+            534,
+            639
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            395,
+            228,
+            593,
+            326
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            621,
+            263,
+            722,
+            484
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            288,
+            263,
+            389,
+            501
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00033.jpg": {
+      "regions": [
+        {
+          "box": [
+            488,
+            558,
+            880,
+            1138
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  231,
+                  230,
+                  234
+                ],
+                "hex": "#e7e6ea",
+                "fraction": 0.395
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  199,
+                  132,
+                  91
+                ],
+                "hex": "#c7845b",
+                "fraction": 0.292
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  120,
+                  65,
+                  33
+                ],
+                "hex": "#784121",
+                "fraction": 0.177
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  172,
+                  163,
+                  160
+                ],
+                "hex": "#aca3a0",
+                "fraction": 0.135
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            670,
+            724,
+            709,
+            920
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            414,
+            551,
+            985,
+            749
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            393,
+            616,
+            468,
+            1382
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            886,
+            564,
+            1051,
+            1382
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00860.jpg": {
+      "regions": [
+        {
+          "box": [
+            646,
+            276,
+            866,
+            706
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  48,
+                  24,
+                  20
+                ],
+                "hex": "#301814",
+                "fraction": 0.338
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  69,
+                  43,
+                  40
+                ],
+                "hex": "#452b28",
+                "fraction": 0.31
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  107,
+                  66,
+                  52
+                ],
+                "hex": "#6b4234",
+                "fraction": 0.265
+              },
+              {
+                "name": "olive",
+                "rgb": [
+                  147,
+                  98,
+                  76
+                ],
+                "hex": "#93624c",
+                "fraction": 0.087
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            745,
+            418,
+            799,
+            700
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            571,
+            281,
+            947,
+            438
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            551,
+            324,
+            650,
+            934
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            895,
+            380,
+            961,
+            765
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00040.jpg": {
+      "regions": [
+        {
+          "box": [
+            240,
+            546,
+            1055,
+            1247
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  212,
+                  212,
+                  212
+                ],
+                "hex": "#d4d4d4",
+                "fraction": 0.583
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  228,
+                  228,
+                  228
+                ],
+                "hex": "#e4e4e4",
+                "fraction": 0.417
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            646,
+            562,
+            706,
+            1235
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            22,
+            276,
+            1323,
+            594
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            1035,
+            276,
+            1316,
+            1607
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            4,
+            270,
+            236,
+            1539
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00111.jpg": {
+      "regions": [
+        {
+          "box": [
+            409,
+            560,
+            918,
+            1580
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  49,
+                  29,
+                  23
+                ],
+                "hex": "#311d17",
+                "fraction": 0.97
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            607,
+            844,
+            673,
+            1436
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            272,
+            603,
+            1111,
+            848
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            416,
+            855,
+            904,
+            1388
+          ],
+          "attributes": {
+            "pattern": [
+              "dot"
+            ]
+          }
+        },
+        {
+          "box": [
+            263,
+            691,
+            396,
+            1424
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            961,
+            432,
+            1328,
+            934
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00127.jpg": {
+      "regions": [
+        {
+          "box": [
+            479,
+            479,
+            873,
+            1134
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  62,
+                  41,
+                  41
+                ],
+                "hex": "#3e2929",
+                "fraction": 0.854
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  93,
+                  66,
+                  62
+                ],
+                "hex": "#5d423e",
+                "fraction": 0.091
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  134,
+                  103,
+                  99
+                ],
+                "hex": "#866763",
+                "fraction": 0.055
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            648,
+            657,
+            711,
+            1102
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            429,
+            468,
+            967,
+            688
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            393,
+            515,
+            492,
+            1204
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            855,
+            535,
+            992,
+            1154
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00157.jpg": {
+      "regions": [
+        {
+          "box": [
+            240,
+            225,
+            1089,
+            1483
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  44,
+                  41,
+                  57
+                ],
+                "hex": "#2c2939",
+                "fraction": 0.452
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  29,
+                  26,
+                  39
+                ],
+                "hex": "#1d1a27",
+                "fraction": 0.449
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  234,
+                  235,
+                  235
+                ],
+                "hex": "#eaebeb",
+                "fraction": 0.093
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            637,
+            477,
+            704,
+            1296
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            69,
+            222,
+            1334,
+            508
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            508,
+            540,
+            835,
+            886
+          ],
+          "attributes": {
+            "pattern": [
+              "graphic"
+            ]
+          }
+        },
+        {
+          "box": [
+            56,
+            229,
+            252,
+            1490
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            1078,
+            222,
+            1312,
+            1496
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00598.jpg": {
+      "regions": [
+        {
+          "box": [
+            497,
+            468,
+            961,
+            1274
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "khaki",
+                "rgb": [
+                  220,
+                  167,
+                  142
+                ],
+                "hex": "#dca78e",
+                "fraction": 0.308
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  162,
+                  109,
+                  85
+                ],
+                "hex": "#a26d55",
+                "fraction": 0.271
+              },
+              {
+                "name": "red",
+                "rgb": [
+                  162,
+                  9,
+                  21
+                ],
+                "hex": "#a20915",
+                "fraction": 0.259
+              },
+              {
+                "name": "maroon",
+                "rgb": [
+                  88,
+                  24,
+                  22
+                ],
+                "hex": "#581816",
+                "fraction": 0.162
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            655,
+            772,
+            760,
+            956
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            551,
+            490,
+            909,
+            767
+          ],
+          "attributes": {
+            "neck": "square neck"
+          }
+        },
+        {
+          "box": [
+            866,
+            492,
+            983,
+            796
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            492,
+            481,
+            596,
+            799
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00009.jpg": {
+      "regions": [
+        {
+          "box": [
+            601,
+            508,
+            1127,
+            1420
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  43,
+                  27,
+                  26
+                ],
+                "hex": "#2b1b1a",
+                "fraction": 0.352
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  220,
+                  221,
+                  197
+                ],
+                "hex": "#dcddc5",
+                "fraction": 0.302
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  176,
+                  175,
+                  149
+                ],
+                "hex": "#b0af95",
+                "fraction": 0.226
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  86,
+                  67,
+                  65
+                ],
+                "hex": "#564341",
+                "fraction": 0.12
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            830,
+            767,
+            891,
+            1391
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            450,
+            490,
+            1287,
+            783
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            555,
+            796,
+            1114,
+            1355
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe"
+            ]
+          }
+        },
+        {
+          "box": [
+            416,
+            578,
+            562,
+            1120
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            1152,
+            528,
+            1316,
+            1024
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00039.jpg": {
+      "regions": [
+        {
+          "box": [
+            319,
+            364,
+            1071,
+            1501
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  229,
+                  219,
+                  220
+                ],
+                "hex": "#e5dbdc",
+                "fraction": 0.416
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  194,
+                  180,
+                  181
+                ],
+                "hex": "#c2b4b5",
+                "fraction": 0.31
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  149,
+                  124,
+                  115
+                ],
+                "hex": "#957c73",
+                "fraction": 0.144
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  211,
+                  156,
+                  124
+                ],
+                "hex": "#d39c7c",
+                "fraction": 0.13
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            673,
+            693,
+            772,
+            1238
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            130,
+            396,
+            1199,
+            697
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            110,
+            501,
+            321,
+            1665
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            1035,
+            389,
+            1332,
+            1082
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00470.jpg": {
+      "regions": [
+        {
+          "box": [
+            438,
+            553,
+            922,
+            1377
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "maroon",
+                "rgb": [
+                  85,
+                  45,
+                  42
+                ],
+                "hex": "#552d2a",
+                "fraction": 0.387
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  129,
+                  72,
+                  61
+                ],
+                "hex": "#81483d",
+                "fraction": 0.31
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  44,
+                  23,
+                  25
+                ],
+                "hex": "#2c1719",
+                "fraction": 0.226
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  181,
+                  142,
+                  130
+                ],
+                "hex": "#b58e82",
+                "fraction": 0.077
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            630,
+            803,
+            711,
+            1314
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            317,
+            549,
+            1019,
+            819
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            904,
+            614,
+            1226,
+            1161
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            123,
+            648,
+            407,
+            1145
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "sport_bra_00156.jpg": {
+      "regions": [
+        {
+          "box": [
+            93,
+            183,
+            315,
+            484
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  240,
+                  239,
+                  244
+                ],
+                "hex": "#f0eff4",
+                "fraction": 0.485
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  210,
+                  150,
+                  109
+                ],
+                "hex": "#d2966d",
+                "fraction": 0.389
+              },
+              {
+                "name": "beige",
+                "rgb": [
+                  224,
+                  176,
+                  145
+                ],
+                "hex": "#e0b091",
+                "fraction": 0.075
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  178,
+                  119,
+                  82
+                ],
+                "hex": "#b27752",
+                "fraction": 0.05
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            184,
+            278,
+            224,
+            412
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            144,
+            191,
+            273,
+            298
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            254,
+            188,
+            289,
+            278
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            132,
+            185,
+            166,
+            262
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "sport_bra_00020.jpg": {
+      "regions": [
+        {
+          "box": [
+            21,
+            70,
+            362,
+            539
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  248,
+                  245,
+                  241
+                ],
+                "hex": "#f8f5f1",
+                "fraction": 0.461
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  191,
+                  176,
+                  166
+                ],
+                "hex": "#bfb0a6",
+                "fraction": 0.305
+              },
+              {
+                "name": "cream",
+                "rgb": [
+                  239,
+                  231,
+                  227
+                ],
+                "hex": "#efe7e3",
+                "fraction": 0.234
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            133,
+            212,
+            205,
+            480
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            74,
+            73,
+            324,
+            262
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            274,
+            70,
+            403,
+            459
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            0,
+            69,
+            136,
+            536
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "sport_bra_00036.jpg": {
+      "regions": [
+        {
+          "box": [
+            101,
+            145,
+            306,
+            473
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "khaki",
+                "rgb": [
+                  191,
+                  139,
+                  98
+                ],
+                "hex": "#bf8b62",
+                "fraction": 0.585
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  18,
+                  19,
+                  26
+                ],
+                "hex": "#12131a",
+                "fraction": 0.355
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  83,
+                  68,
+                  62
+                ],
+                "hex": "#53443e",
+                "fraction": 0.06
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            160,
+            230,
+            204,
+            343
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            135,
+            173,
+            261,
+            264
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            246,
+            145,
+            289,
+            199
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            119,
+            180,
+            151,
+            235
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "sport_bra_00038.jpg": {
+      "regions": [
+        {
+          "box": [
+            74,
+            59,
+            345,
+            445
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  25,
+                  24,
+                  23
+                ],
+                "hex": "#191817",
+                "fraction": 0.433
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  180,
+                  119,
+                  83
+                ],
+                "hex": "#b47753",
+                "fraction": 0.214
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  207,
+                  145,
+                  106
+                ],
+                "hex": "#cf916a",
+                "fraction": 0.187
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  150,
+                  95,
+                  63
+                ],
+                "hex": "#965f3f",
+                "fraction": 0.166
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            197,
+            189,
+            239,
+            327
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            116,
+            76,
+            302,
+            212
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            101,
+            63,
+            145,
+            156
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            282,
+            67,
+            314,
+            165
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "sport_bra_00045.jpg": {
+      "regions": [
+        {
+          "box": [
+            146,
+            122,
+            302,
+            333
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  168,
+                  113,
+                  81
+                ],
+                "hex": "#a87151",
+                "fraction": 0.349
+              },
+              {
+                "name": "white",
+                "rgb": [
+                  236,
+                  232,
+                  231
+                ],
+                "hex": "#ece8e7",
+                "fraction": 0.331
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  123,
+                  74,
+                  49
+                ],
+                "hex": "#7b4a31",
+                "fraction": 0.266
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  208,
+                  175,
+                  170
+                ],
+                "hex": "#d0afaa",
+                "fraction": 0.054
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            219,
+            211,
+            258,
+            269
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            179,
+            150,
+            282,
+            233
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            167,
+            116,
+            210,
+            188
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            254,
+            129,
+            288,
+            197
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "sport_bra_00133.jpg": {
+      "regions": [
+        {
+          "box": [
+            45,
+            66,
+            362,
+            493
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "navy",
+                "rgb": [
+                  21,
+                  35,
+                  70
+                ],
+                "hex": "#152346",
+                "fraction": 0.349
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  172,
+                  115,
+                  84
+                ],
+                "hex": "#ac7354",
+                "fraction": 0.306
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  202,
+                  146,
+                  114
+                ],
+                "hex": "#ca9272",
+                "fraction": 0.265
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  111,
+                  65,
+                  46
+                ],
+                "hex": "#6f412e",
+                "fraction": 0.081
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            178,
+            292,
+            248,
+            363
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            120,
+            84,
+            307,
+            335
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            270,
+            77,
+            405,
+            237
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            0,
+            70,
+            146,
+            243
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "sport_bra_00005.jpg": {
+      "regions": [
+        {
+          "box": [
+            150,
+            125,
+            366,
+            431
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "cream",
+                "rgb": [
+                  241,
+                  219,
+                  210
+                ],
+                "hex": "#f1dbd2",
+                "fraction": 0.438
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  194,
+                  131,
+                  93
+                ],
+                "hex": "#c2835d",
+                "fraction": 0.311
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  214,
+                  184,
+                  174
+                ],
+                "hex": "#d6b8ae",
+                "fraction": 0.157
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  149,
+                  88,
+                  58
+                ],
+                "hex": "#95583a",
+                "fraction": 0.094
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            233,
+            200,
+            280,
+            371
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            171,
+            152,
+            329,
+            226
+          ],
+          "attributes": {
+            "neck": "crew neck"
+          }
+        },
+        {
+          "box": [
+            311,
+            77,
+            405,
+            250
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            96,
+            142,
+            188,
+            397
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "sport_bra_00017.jpg": {
+      "regions": [
+        {
+          "box": [
+            47,
+            8,
+            280,
+            237
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "light gray",
+                "rgb": [
+                  235,
+                  201,
+                  222
+                ],
+                "hex": "#ebc9de",
+                "fraction": 0.546
+              },
+              {
+                "name": "pink",
+                "rgb": [
+                  201,
+                  170,
+                  185
+                ],
+                "hex": "#c9aab9",
+                "fraction": 0.261
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  153,
+                  132,
+                  146
+                ],
+                "hex": "#998492",
+                "fraction": 0.167
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            135,
+            141,
+            191,
+            201
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            77,
+            69,
+            211,
+            165
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            133,
+            7,
+            216,
+            81
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            58,
+            10,
+            129,
+            111
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "sport_bra_00111.jpg": {
+      "regions": [
+        {
+          "box": [
+            58,
+            61,
+            314,
+            493
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "brown",
+                "rgb": [
+                  94,
+                  66,
+                  51
+                ],
+                "hex": "#5e4233",
+                "fraction": 0.629
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  157,
+                  114,
+                  85
+                ],
+                "hex": "#9d7255",
+                "fraction": 0.23
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  65,
+                  42,
+                  31
+                ],
+                "hex": "#412a1f",
+                "fraction": 0.141
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            131,
+            222,
+            170,
+            329
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            180,
+            63,
+            288,
+            133
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            174,
+            70,
+            241,
+            207
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            89,
+            66,
+            293,
+            202
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "bottom_down_shirt_00111.jpg": {
+      "regions": [
+        {
+          "box": [
+            90,
+            68,
+            135,
+            363
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            267,
+            28,
+            324,
+            272
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            175,
+            9,
+            254,
+            94
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            133,
+            26,
+            282,
+            331
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "black",
+              "rgb": [
+                31,
+                29,
+                44
+              ],
+              "hex": "#1f1d2c",
+              "fraction": 0.541
+            },
+            {
+              "name": "charcoal",
+              "rgb": [
+                41,
+                40,
+                58
+              ],
+              "hex": "#29283a",
+              "fraction": 0.457
+            }
+          ]
+        },
+        {
+          "box": [
+            186,
+            89,
+            242,
+            329
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        }
+      ]
+    },
+    "bottom_down_shirt_00010.jpg": {
+      "regions": [
+        {
+          "box": [
+            82,
+            91,
+            338,
+            514
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "maroon",
+              "rgb": [
+                145,
+                15,
+                17
+              ],
+              "hex": "#910f11",
+              "fraction": 0.366
+            },
+            {
+              "name": "khaki",
+              "rgb": [
+                201,
+                136,
+                112
+              ],
+              "hex": "#c98870",
+              "fraction": 0.277
+            },
+            {
+              "name": "beige",
+              "rgb": [
+                240,
+                195,
+                179
+              ],
+              "hex": "#f0c3b3",
+              "fraction": 0.25
+            },
+            {
+              "name": "red",
+              "rgb": [
+                166,
+                73,
+                62
+              ],
+              "hex": "#a6493e",
+              "fraction": 0.107
+            }
+          ]
+        },
+        {
+          "box": [
+            151,
+            179,
+            249,
+            492
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            91,
+            76,
+            311,
+            189
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            5,
+            99,
+            404,
+            487
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe"
+            ]
+          }
+        },
+        {
+          "box": [
+            7,
+            107,
+            58,
+            518
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            331,
+            136,
+            403,
+            485
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        }
+      ]
+    },
+    "bottom_down_shirt_00017.jpg": {
+      "regions": [
+        {
+          "box": [
+            107,
+            151,
+            280,
+            420
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "light blue",
+              "rgb": [
+                131,
+                158,
+                203
+              ],
+              "hex": "#839ecb",
+              "fraction": 0.67
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                89,
+                111,
+                156
+              ],
+              "hex": "#596f9c",
+              "fraction": 0.222
+            },
+            {
+              "name": "charcoal",
+              "rgb": [
+                61,
+                54,
+                67
+              ],
+              "hex": "#3d3643",
+              "fraction": 0.108
+            }
+          ]
+        },
+        {
+          "box": [
+            182,
+            197,
+            215,
+            385
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            141,
+            137,
+            257,
+            194
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            62,
+            159,
+            332,
+            431
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe"
+            ]
+          }
+        },
+        {
+          "box": [
+            52,
+            164,
+            134,
+            431
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            256,
+            156,
+            344,
+            302
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        }
+      ]
+    },
+    "bottom_down_shirt_00018.jpg": {
+      "regions": [
+        {
+          "box": [
+            284,
+            122,
+            352,
+            450
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            58,
+            124,
+            123,
+            452
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            150,
+            83,
+            256,
+            137
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            181,
+            158,
+            223,
+            402
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            113,
+            117,
+            286,
+            391
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "white",
+              "rgb": [
+                239,
+                238,
+                243
+              ],
+              "hex": "#efeef3",
+              "fraction": 0.812
+            },
+            {
+              "name": "black",
+              "rgb": [
+                28,
+                28,
+                29
+              ],
+              "hex": "#1c1c1d",
+              "fraction": 0.118
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                186,
+                186,
+                186
+              ],
+              "hex": "#bababa",
+              "fraction": 0.07
+            }
+          ]
+        }
+      ]
+    },
+    "bottom_down_shirt_00020.jpg": {
+      "regions": [
+        {
+          "box": [
+            286,
+            78,
+            377,
+            395
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            24,
+            78,
+            105,
+            407
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            32,
+            88,
+            362,
+            371
+          ],
+          "attributes": {
+            "pattern": [
+              "check"
+            ]
+          }
+        },
+        {
+          "box": [
+            128,
+            52,
+            256,
+            114
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            165,
+            122,
+            214,
+            363
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            97,
+            73,
+            289,
+            353
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "pink",
+              "rgb": [
+                202,
+                116,
+                140
+              ],
+              "hex": "#ca748c",
+              "fraction": 0.556
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                170,
+                82,
+                106
+              ],
+              "hex": "#aa526a",
+              "fraction": 0.291
+            },
+            {
+              "name": "maroon",
+              "rgb": [
+                132,
+                45,
+                68
+              ],
+              "hex": "#842d44",
+              "fraction": 0.153
+            }
+          ]
+        }
+      ]
+    },
+    "bottom_down_shirt_00082.jpg": {
+      "regions": [
+        {
+          "box": [
+            107,
+            98,
+            304,
+            360
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "cream",
+              "rgb": [
+                224,
+                224,
+                222
+              ],
+              "hex": "#e0e0de",
+              "fraction": 0.453
+            },
+            {
+              "name": "black",
+              "rgb": [
+                36,
+                35,
+                31
+              ],
+              "hex": "#24231f",
+              "fraction": 0.266
+            },
+            {
+              "name": "khaki",
+              "rgb": [
+                181,
+                166,
+                152
+              ],
+              "hex": "#b5a698",
+              "fraction": 0.178
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                104,
+                100,
+                95
+              ],
+              "hex": "#68645f",
+              "fraction": 0.103
+            }
+          ]
+        },
+        {
+          "box": [
+            154,
+            151,
+            216,
+            368
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            135,
+            74,
+            268,
+            150
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            53,
+            121,
+            351,
+            358
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe"
+            ]
+          }
+        },
+        {
+          "box": [
+            305,
+            101,
+            391,
+            342
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        },
+        {
+          "box": [
+            34,
+            120,
+            101,
+            417
+          ],
+          "attributes": {
+            "sleeves": "short"
+          }
+        }
+      ]
+    },
+    "bottom_down_shirt_00002.jpg": {
+      "regions": [
+        {
+          "box": [
+            278,
+            104,
+            372,
+            479
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            35,
+            99,
+            128,
+            485
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            25,
+            89,
+            368,
+            485
+          ],
+          "attributes": {
+            "pattern": [
+              "graphic"
+            ]
+          }
+        },
+        {
+          "box": [
+            131,
+            63,
+            265,
+            158
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            182,
+            133,
+            233,
+            352
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            97,
+            93,
+            292,
+            339
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "white",
+              "rgb": [
+                231,
+                231,
+                229
+              ],
+              "hex": "#e7e7e5",
+              "fraction": 0.338
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                123,
+                123,
+                126
+              ],
+              "hex": "#7b7b7e",
+              "fraction": 0.261
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                173,
+                174,
+                174
+              ],
+              "hex": "#adaeae",
+              "fraction": 0.26
+            },
+            {
+              "name": "charcoal",
+              "rgb": [
+                73,
+                73,
+                77
+              ],
+              "hex": "#49494d",
+              "fraction": 0.142
+            }
+          ]
+        }
+      ]
+    },
+    "bottom_down_shirt_00009.jpg": {
+      "regions": [
+        {
+          "box": [
+            83,
+            182,
+            140,
+            513
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            253,
+            200,
+            319,
+            495
+          ],
+          "attributes": {
+            "sleeves": "long"
+          }
+        },
+        {
+          "box": [
+            123,
+            160,
+            294,
+            229
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            168,
+            226,
+            215,
+            414
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            122,
+            181,
+            260,
+            395
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "light gray",
+              "rgb": [
+                209,
+                209,
+                210
+              ],
+              "hex": "#d1d1d2",
+              "fraction": 0.475
+            },
+            {
+              "name": "white",
+              "rgb": [
+                231,
+                231,
+                232
+              ],
+              "hex": "#e7e7e8",
+              "fraction": 0.414
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                136,
+                135,
+                131
+              ],
+              "hex": "#888783",
+              "fraction": 0.111
+            }
+          ]
+        }
+      ]
+    },
+    "bottom_down_shirt_00058.jpg": {
+      "regions": [
+        {
+          "box": [
+            11,
+            74,
+            124,
+            247
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            311,
+            80,
+            405,
+            254
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            83,
+            64,
+            346,
+            470
+          ],
+          "attributes": {
+            "pattern": [
+              "stripe"
+            ]
+          }
+        },
+        {
+          "box": [
+            113,
+            49,
+            323,
+            142
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            158,
+            188,
+            228,
+            419
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            81,
+            74,
+            346,
+            463
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "light blue",
+              "rgb": [
+                143,
+                159,
+                188
+              ],
+              "hex": "#8f9fbc",
+              "fraction": 0.379
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                182,
+                200,
+                229
+              ],
+              "hex": "#b6c8e5",
+              "fraction": 0.319
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                109,
+                122,
+                149
+              ],
+              "hex": "#6d7a95",
+              "fraction": 0.244
+            },
+            {
+              "name": "charcoal",
+              "rgb": [
+                70,
+                65,
+                64
+              ],
+              "hex": "#464140",
+              "fraction": 0.058
+            }
+          ]
+        },
+        {
+          "box": [
+            0,
+            0,
+            405,
+            539
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "light blue",
+              "rgb": [
+                146,
+                160,
+                186
+              ],
+              "hex": "#92a0ba",
+              "fraction": 0.343
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                127,
+                126,
+                131
+              ],
+              "hex": "#7f7e83",
+              "fraction": 0.299
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                183,
+                199,
+                227
+              ],
+              "hex": "#b7c7e3",
+              "fraction": 0.268
+            },
+            {
+              "name": "charcoal",
+              "rgb": [
+                83,
+                76,
+                71
+              ],
+              "hex": "#534c47",
+              "fraction": 0.09
+            }
+          ]
+        }
+      ]
     }
   }
 }

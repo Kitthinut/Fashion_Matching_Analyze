@@ -2,7 +2,7 @@
 Place this file in 4_test/validate_test.py.
 Run: python validate_test.py
 
-Stage 1 evaluates the saved checkpoint on train and validation splits.
+Stage 1 evaluates the saved checkpoint on validation and test splits.
 Stage 2 opens an image-by-image annotated test-set review.
 """
 from __future__ import annotations
@@ -165,31 +165,31 @@ def fmt(value):
     return "N/A" if value is None else f"{value:.1%}"
 
 
-def assess_generalization(train, val):
-    """Heuristic snapshot assessment, not a substitute for epoch history."""
-    loss_gap = val["loss"] - train["loss"]
-    train_score, val_score = train["mean_class"], val["mean_class"]
-    score_gap = (train_score - val_score) if train_score is not None and val_score is not None else None
+def assess_generalization(val, test):
+    """Heuristic snapshot assessment comparing Validation and Test splits."""
+    loss_gap = test["loss"] - val["loss"]
+    val_score, test_score = val["mean_class"], test["mean_class"]
+    score_gap = (val_score - test_score) if val_score is not None and test_score is not None else None
 
     if score_gap is not None and score_gap >= 0.15 and loss_gap > 0:
-        return ("POSSIBLE OVERFITTING",
-                "Training performance is substantially stronger than validation performance. "
-                "The gap suggests the model may be memorizing training examples.")
-    if val["loss"] > train["loss"] * 1.5 and loss_gap > 0.15:
-        return ("POSSIBLE OVERFITTING",
-                "Validation loss is considerably higher than training loss. Check data diversity, "
-                "regularization, and whether train/validation images are from comparable sources.")
-    if train_score is not None and val_score is not None and train_score < 0.55 and val_score < 0.55:
-        return ("POSSIBLE UNDERFITTING",
-                "Both training and validation attribute scores are low. The model may not have "
-                "learned the task sufficiently, or labels/features may be difficult.")
+        return ("POSSIBLE OVERFITTING TO VALIDATION",
+                "Validation performance is substantially stronger than test-set performance. "
+                "The gap suggests the model selection may have overfitted to the validation split.")
+    if test["loss"] > val["loss"] * 1.5 and loss_gap > 0.15:
+        return ("HIGHER TEST LOSS DETECTED",
+                "Test loss is considerably higher than validation loss. Check for distribution shift "
+                "or domain differences between validation and test images.")
+    if val_score is not None and test_score is not None and val_score < 0.55 and test_score < 0.55:
+        return ("POOR GENERALIZATION / UNDERFITTING",
+                "Both validation and test attribute scores are low. The model may not have "
+                "learned the task sufficiently.")
     if score_gap is not None and abs(score_gap) <= 0.08 and loss_gap <= 0.15:
-        return ("REASONABLY FITTED SNAPSHOT",
-                "Training and validation results are relatively close. This is encouraging, "
-                "but confirm performance on the untouched test set.")
+        return ("GOOD GENERALIZATION",
+                "Validation and test results are closely matched. This indicates that performance "
+                "on unseen data is consistent with validation metrics.")
     return ("MIXED / NEEDS REVIEW",
             "The metrics do not show a clear pattern. Review per-category scores, box IoU, "
-            "dataset size, class balance, and test-set results before making a final judgement.")
+            "dataset size, and class balance between validation and test splits.")
 
 
 def resolve_image_root(annotation_path, data):
@@ -217,8 +217,8 @@ class EvaluationApp:
         self.root.geometry("1120x820")
         self.root.minsize(900, 650)
         self.bundle = None
-        self.train_result = None
         self.val_result = None
+        self.test_result = None
         self.build_first_window()
         self.root.after(150, self.run_evaluation)
 
@@ -227,7 +227,7 @@ class EvaluationApp:
         header.pack(fill=tk.X)
         tk.Label(header, text="GARMENT AI  /  MODEL EVALUATION",
                  bg="#202938", fg="white", font=("Arial", 16, "bold")).pack(anchor="w")
-        tk.Label(header, text="Stage 1 — Training vs. validation performance",
+        tk.Label(header, text="Stage 1 — Validation vs. Test performance",
                  bg="#202938", fg="#d6deea", font=("Arial", 10)).pack(anchor="w", pady=(5, 0))
 
         self.progress = ttk.Progressbar(self.root, mode="indeterminate")
@@ -242,7 +242,7 @@ class EvaluationApp:
         self.metrics_text = tk.Text(self.content, wrap=tk.WORD, font=("Consolas", 11),
                                     height=25, padx=14, pady=12)
         self.metrics_text.pack(fill=tk.BOTH, expand=True)
-        self.metrics_text.insert(tk.END, "Evaluating saved checkpoint on train and validation datasets...\n")
+        self.metrics_text.insert(tk.END, "Evaluating saved checkpoint on validation and test datasets...\n")
         self.metrics_text.config(state=tk.DISABLED)
 
         footer = tk.Frame(self.root, padx=18, pady=14)
@@ -266,9 +266,9 @@ class EvaluationApp:
         self.root.update_idletasks()
         try:
             model_path = ROOT / "model.pt"
-            train_ann = ROOT / "annotations_train.json"
             val_ann = ROOT / "annotations_validation.json"
-            for path in (model_path, train_ann, val_ann):
+            test_ann = ROOT / "annotations_test.json"
+            for path in (model_path, val_ann, test_ann):
                 if not path.is_file():
                     raise FileNotFoundError(f"Required file not found:\n{path}")
 
@@ -277,12 +277,12 @@ class EvaluationApp:
                 raise ValueError("The checkpoint has no bounding-box prediction heads.")
             size = int(torch.load(model_path, map_location="cpu", weights_only=False).get("size", 224))
 
-            self.train_result = evaluate_split(model, spec, device, train_ann, size)
             self.val_result = evaluate_split(model, spec, device, val_ann, size)
+            self.test_result = evaluate_split(model, spec, device, test_ann, size)
             self.bundle = (model, spec, transform, device, has_boxes)
 
-            title, explanation = assess_generalization(self.train_result, self.val_result)
-            tr, va = self.train_result, self.val_result
+            title, explanation = assess_generalization(self.val_result, self.test_result)
+            va, ts = self.val_result, self.test_result
             lines = [
                 "CHECKPOINT SNAPSHOT — NOT HISTORICAL TRAINING CURVES",
                 "=" * 66,
@@ -290,27 +290,27 @@ class EvaluationApp:
                 f"Architecture: {model.__class__.__name__}",
                 "",
                 "DATASET SUMMARY",
-                f"Training images:   {tr['images']}",
                 f"Validation images: {va['images']}",
+                f"Test images:       {ts['images']}",
                 "",
                 "OVERALL METRICS",
-                f"{'Metric':<27}{'TRAIN':>14}{'VALIDATION':>18}",
+                f"{'Metric':<27}{'VALIDATION':>14}{'TEST':>18}",
                 "-" * 60,
-                f"{'Loss':<27}{tr['loss']:>14.4f}{va['loss']:>18.4f}",
-                f"{'Mean attribute score':<27}{fmt(tr['mean_class']):>14}{fmt(va['mean_class']):>18}",
-                f"{'Mean bounding-box IoU':<27}{fmt(tr['mean_iou']):>14}{fmt(va['mean_iou']):>18}",
+                f"{'Loss':<27}{va['loss']:>14.4f}{ts['loss']:>18.4f}",
+                f"{'Mean attribute score':<27}{fmt(va['mean_class']):>14}{fmt(ts['mean_class']):>18}",
+                f"{'Mean bounding-box IoU':<27}{fmt(va['mean_iou']):>14}{fmt(ts['mean_iou']):>18}",
                 "",
                 "PER-CATEGORY ATTRIBUTE SCORE",
-                f"{'Category':<27}{'TRAIN':>14}{'VALIDATION':>18}",
+                f"{'Category':<27}{'VALIDATION':>14}{'TEST':>18}",
                 "-" * 60,
             ]
             for key in spec:
-                lines.append(f"{key:<27}{fmt(tr['class_metrics'].get(key)):>14}{fmt(va['class_metrics'].get(key)):>18}")
+                lines.append(f"{key:<27}{fmt(va['class_metrics'].get(key)):>14}{fmt(ts['class_metrics'].get(key)):>18}")
             lines += ["", "PER-CATEGORY BOX IoU",
-                      f"{'Category':<27}{'TRAIN':>14}{'VALIDATION':>18}",
+                      f"{'Category':<27}{'VALIDATION':>14}{'TEST':>18}",
                       "-" * 60]
             for key in spec:
-                lines.append(f"{key:<27}{fmt(tr['per_head_iou'].get(key)):>14}{fmt(va['per_head_iou'].get(key)):>18}")
+                lines.append(f"{key:<27}{fmt(va['per_head_iou'].get(key)):>14}{fmt(ts['per_head_iou'].get(key)):>18}")
             lines += [
                 "", "GENERALIZATION ASSESSMENT",
                 "=" * 66,
@@ -321,9 +321,9 @@ class EvaluationApp:
                 "• Single-label heads use top-1 accuracy.",
                 "• Multi-label heads use micro-F1 at a 0.50 threshold.",
                 "• Box quality uses mean IoU on annotated regions.",
-                "• The assessment is a heuristic comparison of this checkpoint.",
-                "• Training-set performance is not an unbiased estimate of generalization.",
-                "• The untouched test set is the next independent check.",
+                "• The assessment compares validation (model selection) vs. test (unseen evaluation).",
+                "• Validation performance is used during training to select best model checkpoint.",
+                "• Test set provides unbiased true performance evaluation.",
             ]
             self.set_report("\n".join(lines))
             self.status.config(text=f"Evaluation complete  |  Device: {device}")
@@ -331,7 +331,7 @@ class EvaluationApp:
         except Exception as exc:
             self.status.config(text="Evaluation failed.")
             self.set_report(f"EVALUATION ERROR\n\n{type(exc).__name__}: {exc}\n\n"
-                            "Check that model.pt, annotations_train.json, annotations_validation.json, "
+                            "Check that model.pt, annotations_validation.json, annotations_test.json, "
                             "dataset images, and the 1_label / 2_train modules are in the expected locations.")
             messagebox.showerror("Evaluation error", str(exc))
         finally:
@@ -492,8 +492,6 @@ class TestSetWindow(tk.Toplevel):
             info = self.entries[self.current][1]
             regions = info.get("regions", [])
             gt_by_key = {}
-            # In this project each region's attributes identify which category labels
-            # share that region's pixel-coordinate box.
             for region in regions:
                 for key, value in region.get("attributes", {}).items():
                     gt_by_key[key] = {"value": value, "box": region.get("box")}
@@ -543,7 +541,7 @@ class TestSetWindow(tk.Toplevel):
                       f"Attribute exact-match rate: {correct}/{compared} ({correct/compared:.1%})" if compared else "Attribute exact-match rate: N/A",
                       f"Mean box IoU: {sum(ious)/len(ious):.1%}" if ious else "Mean box IoU: N/A",
                       "",
-                      "Note: this is a per-image diagnostic. The full split metrics are calculated in Stage 1 for train/validation; test-set aggregate scoring can be added after reviewing annotation structure."]
+                      "Note: this is a per-image diagnostic. The full split metrics are calculated in Stage 1 for validation/test splits."]
             self.result_text.delete("1.0", tk.END)
             self.result_text.insert(tk.END, "\n".join(lines))
             self.draw_prediction_overlay(pred_boxes)
