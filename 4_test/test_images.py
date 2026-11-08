@@ -1,308 +1,335 @@
-"""Test model: predict attributes + per-category boxes (4_test/test_images.py)."""
+"""Garment AI Image Tester
+Place this file in 4_test/test_images.py.
+Run: python test_images.py
+"""
+from __future__ import annotations
 
-import argparse
 import sys
 from pathlib import Path
-
-import cv2
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from PIL import Image, ImageDraw, ImageFont, ImageTk
+import torch
 
 ROOT = Path(__file__).resolve().parents[1]
-TEST = Path(__file__).resolve().parent
-LABEL = ROOT / "1_label"
-TRAIN = ROOT / "2_train"
-SEARCH = ROOT / "3_search"
-for p in (ROOT, TEST, LABEL, TRAIN, SEARCH):
-    if str(p) not in sys.path:
-        sys.path.insert(0, str(p))
+HERE = Path(__file__).resolve().parent
+TRAIN_DIR = ROOT / "2_train"
+LABEL_DIR = ROOT / "1_label"
+for folder in (ROOT, HERE, TRAIN_DIR, LABEL_DIR):
+    if str(folder) not in sys.path:
+        sys.path.insert(0, str(folder))
 
-from analysis import analyze_crop
-from attributes import default_pattern, load_schema
-from inference import get_device, load_model
+from dataset import eval_transform
+from model import MultiHeadNet, decode
 
-EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
-
+IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
 BOX_COLORS = {
-    "length": (0, 230, 118),
-    "neck": (0, 229, 255),
-    "sleeve": (255, 145, 0),
-    "pattern": (200, 80, 255),
+    "length": (0, 176, 80),
+    "type": (192, 80, 220),
+    "neck": (0, 176, 240),
+    "pattern": (255, 220, 0),
+    "sleeves": (255, 220, 0),
 }
+BAR_GREEN = (0, 176, 80)
+BAR_BLUE = (145, 166, 201)
+BAR_BG = (225, 225, 225)
 
 
-def font(size):
-    for name in ("arial.ttf", "DejaVuSans.ttf", "Helvetica.ttc"):
+def get_device():
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
+def load_bundle(model_path: Path):
+    if not model_path.is_file():
+        raise FileNotFoundError(f"Model checkpoint not found:\n{model_path}")
+    device = get_device()
+    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
+    required = {"state", "spec", "arch"}
+    missing = required - set(checkpoint)
+    if missing:
+        raise ValueError(f"Checkpoint is missing required keys: {sorted(missing)}")
+
+    has_boxes = bool(checkpoint.get("has_boxes", False)) or any(
+        key.startswith("box_heads.") for key in checkpoint["state"]
+    )
+    if not has_boxes:
+        raise ValueError("This checkpoint does not contain bounding-box heads.")
+
+    model = MultiHeadNet(
+        checkpoint["arch"], checkpoint["spec"],
+        pretrained=False, with_boxes=True
+    )
+    model.load_state_dict(checkpoint["state"], strict=True)
+    model.to(device).eval()
+    transform = eval_transform(int(checkpoint.get("size", 224)))
+    return model, checkpoint["spec"], transform, device
+
+
+def predict(image, bundle):
+    model, spec, transform, device = bundle
+    tensor = transform(image).unsqueeze(0).to(device)
+    with torch.inference_mode():
+        output = model(tensor)
+    probabilities, normalized_boxes = decode(output, spec)
+    selected = {}
+    for key, config in spec.items():
+        values = probabilities[key]
+        if config["mode"] == "single":
+            selected[key] = max(values, key=values.get)
+        else:
+            selected[key] = [name for name, score in values.items() if score >= 0.30]
+    return probabilities, normalized_boxes, selected
+
+
+def get_font(size, bold=False):
+    candidates = (
+        ["arialbd.ttf", "DejaVuSans-Bold.ttf"] if bold
+        else ["arial.ttf", "DejaVuSans.ttf"]
+    )
+    for candidate in candidates:
         try:
-            return ImageFont.truetype(name, size)
+            return ImageFont.truetype(candidate, size)
         except OSError:
-            pass
+            continue
     return ImageFont.load_default()
 
 
-def denorm_box(nb, w, h):
-    """Normalised [0,1] xyxy → absolute pixel coords."""
-    x1, y1, x2, y2 = nb
-    return [
-        int(max(0, min(w - 1, x1 * w))),
-        int(max(0, min(h - 1, y1 * h))),
-        int(max(0, min(w, x2 * w))),
-        int(max(0, min(h, y2 * h))),
-    ]
+def color_name(rgb):
+    r, g, b = rgb
+    if max(rgb) - min(rgb) < 18:
+        return "gray" if sum(rgb) / 3 > 55 else "black"
+    if r > 170 and g > 150 and b > 120 and max(rgb)-min(rgb) < 85:
+        return "beige"
+    if r > g * 1.25 and r > b * 1.25:
+        return "red" if r > 120 else "maroon"
+    if g > r * 1.18 and g > b * 1.12:
+        return "green"
+    if b > r * 1.15 and b > g * 1.08:
+        return "blue"
+    if r > 150 and g > 100 and b < 100:
+        return "brown"
+    if max(rgb) < 75:
+        return "charcoal"
+    return "neutral"
 
 
-def pick(probs, spec, thr):
-    chosen = {}
-    for k, c in spec.items():
-        p = probs[k]
-        if c["mode"] == "single":
-            chosen[k] = [max(p, key=p.get)]
-        else:
-            chosen[k] = [o for o, v in p.items() if v >= thr]
-    return chosen
+def extract_colors(image, box=None, limit=4):
+    """Small dependency-free dominant-color estimate using PIL quantization."""
+    if box:
+        x1, y1, x2, y2 = box
+        crop = image.crop((max(0, x1), max(0, y1), min(image.width, x2), min(image.height, y2)))
+        if crop.width < 2 or crop.height < 2:
+            crop = image
+    else:
+        crop = image
+    crop = crop.copy()
+    crop.thumbnail((240, 240))
+    quantized = crop.convert("RGB").quantize(colors=limit, method=Image.Quantize.MEDIANCUT)
+    palette = quantized.getpalette()
+    counts = quantized.getcolors() or []
+    total = max(sum(count for count, _ in counts), 1)
+    result = []
+    for count, index in sorted(counts, reverse=True)[:limit]:
+        rgb = tuple(palette[index * 3:index * 3 + 3])
+        result.append({
+            "name": color_name(rgb),
+            "rgb": rgb,
+            "fraction": count / total,
+        })
+    return result
 
 
-def forward(bundle, img):
-    """Forward pass → probs, normalised boxes, layer4 feats for CAM."""
-    import torch
-    from model import decode
-
-    model, spec, tf, dev, has_boxes = bundle
-    store = {}
-    hook = model.backbone.layer4.register_forward_hook(
-        lambda m, i, o: store.__setitem__("a", o)
-    )
-    with torch.no_grad():
-        out = model(tf(img).unsqueeze(0).to(dev))
-    hook.remove()
-    probs, boxes = decode(out, spec)
-    feats = store.get("a")
-    return probs, boxes, (feats[0] if feats is not None else None)
-
-
-def cam_for(bundle, feats, key, option):
-    import torch
-
-    model, spec = bundle[0], bundle[1]
-    j = spec[key]["options"].index(option)
-    with torch.no_grad():
-        cam = torch.einsum("c,chw->hw", model.head(key).weight[j].detach(), feats)
-    return cam.cpu().numpy()
-
-
-def cam_image(crop, cam):
-    c = np.maximum(cam, 0).astype(np.float32)
-    if c.max() > 0:
-        c = c / c.max()
-    c = np.clip(
-        cv2.resize(c, (crop.width, crop.height), interpolation=cv2.INTER_CUBIC), 0, 1
-    )
-    heat = cv2.applyColorMap((c * 255).astype(np.uint8), cv2.COLORMAP_JET)[:, :, ::-1]
-    return Image.fromarray((0.55 * np.array(crop) + 0.45 * heat).astype(np.uint8))
-
-
-def cam_sheet(crop, bundle, feats, chosen, probs, titles, max_tiles=8):
-    if feats is None:
-        return None
-    tiles = []
-    for k, opts in chosen.items():
-        for o in opts:
-            tiles.append(
-                (
-                    f"{titles.get(k, k)}: {o} {probs[k][o]:.0%}",
-                    cam_image(crop, cam_for(bundle, feats, k, o)),
-                )
-            )
-    tiles = tiles[:max_tiles]
-    if not tiles:
-        return None
-    th, f = 300, font(15)
-    ims = []
-    for cap, im in tiles:
-        im = im.resize((max(1, int(im.width * th / im.height)), th))
-        tile = Image.new("RGB", (max(im.width, 230), th + 26), (250, 250, 250))
-        ImageDraw.Draw(tile).text((4, 4), cap, fill=(0, 0, 0), font=f)
-        tile.paste(im, (0, 26))
-        ims.append(tile)
-    sheet = Image.new("RGB", (sum(t.width + 6 for t in ims), th + 26), (250, 250, 250))
-    x = 0
-    for t in ims:
-        sheet.paste(t, (x, 0))
-        x += t.width + 6
-    return sheet
-
-
-def render(img, pred_boxes, probs, spec, chosen, titles, colors):
-    H = min(820, max(560, img.height))
-    s = H / img.height
-    view = img.resize((max(1, int(img.width * s)), H))
-    d = ImageDraw.Draw(view)
-    f_tag = font(12)
-
-    for key, box in pred_boxes.items():
-        x0, y0, x1, y1 = [int(v * s) for v in box]
-        if x1 - x0 < 4 or y1 - y0 < 4:
+def pixel_boxes(normalized_boxes, image_size):
+    width, height = image_size
+    result = {}
+    for key, box in normalized_boxes.items():
+        if box is None or len(box) != 4:
             continue
-        col = BOX_COLORS.get(key, (255, 255, 0))
-        d.rectangle(
-            [x0, y0, max(x0 + 2, x1 - 1), max(y0 + 2, y1 - 1)], outline=col, width=3
-        )
-        d.text((x0 + 4, y0 + 4), f"[{titles.get(key, key)}]", fill=col, font=f_tag)
+        x1, y1, x2, y2 = box
+        coords = [
+            round(max(0, min(1, x1)) * width),
+            round(max(0, min(1, y1)) * height),
+            round(max(0, min(1, x2)) * width),
+            round(max(0, min(1, y2)) * height),
+        ]
+        if coords[2] > coords[0] and coords[3] > coords[1]:
+            result[key] = coords
+    return result
 
-    PW, f_t, f_r = 540, font(20), font(16)
-    need = 16 + sum(32 + 22 * len(c["options"]) for c in spec.values()) + 110
-    panel = Image.new("RGB", (PW, max(H, need)), (250, 250, 250))
+
+def render_report(image, boxes, probabilities, spec, selected, colors, titles=None):
+    titles = titles or {}
+    target_h = 720
+    scale = min(target_h / image.height, 760 / image.width)
+    view = image.resize((max(1, int(image.width * scale)),
+                         max(1, int(image.height * scale))))
+    draw = ImageDraw.Draw(view)
+    label_font = get_font(15, True)
+
+    for key, box in boxes.items():
+        x1, y1, x2, y2 = [int(v * scale) for v in box]
+        color = BOX_COLORS.get(key, (130, 90, 190))
+        draw.rectangle((x1, y1, x2, y2), outline=color, width=4)
+        label = titles.get(key, key.replace("_", " ").title())
+        label_box = draw.textbbox((x1 + 4, max(0, y1 - 22)), label, font=label_font)
+        draw.rectangle(label_box, fill=(255, 255, 255))
+        draw.text((x1 + 4, max(0, y1 - 22)), label, fill=color, font=label_font)
+
+    panel_w = 600
+    f_title = get_font(21, True)
+    f_text = get_font(15)
+    line_h = 27
+    total_h = 24
+    for key, config in spec.items():
+        total_h += 34 + len(config["options"]) * line_h + 13
+    total_h += 45 + len(colors) * 31 + 25
+    panel = Image.new("RGB", (panel_w, max(target_h, total_h)), "white")
     pd = ImageDraw.Draw(panel)
-    y = 14
-    for k, c in spec.items():
-        pd.text(
-            (14, y),
-            titles.get(k, k) + ("  (multi)" if c["mode"] == "multi" else ""),
-            fill=(30, 30, 30),
-            font=f_t,
-        )
-        y += 32
-        for o in c["options"]:
-            v, on = probs[k][o], o in chosen[k]
-            pd.rectangle([14, y + 2, 264, y + 18], fill=(228, 228, 228))
-            pd.rectangle(
-                [14, y + 2, 14 + int(250 * v), y + 18],
-                fill=(0, 170, 80) if on else (150, 170, 205),
-            )
-            pd.text(
-                (274, y),
-                f"{o}  {v:.0%}" + ("   <" if on else ""),
-                fill=(0, 0, 0) if on else (95, 95, 95),
-                font=f_r,
-            )
-            y += 22
+    y = 18
+    for key, config in spec.items():
+        title = titles.get(key, key.replace("_", " ").title())
+        if config["mode"] == "multi":
+            title += " (multi-label)"
+        pd.text((20, y), title, fill=(20, 20, 20), font=f_title)
+        y += 34
+        ordered = sorted(config["options"],
+                         key=lambda name: probabilities[key].get(name, 0),
+                         reverse=True)
+        for option in ordered:
+            score = float(probabilities[key].get(option, 0))
+            is_selected = option in selected[key] if isinstance(selected[key], list) else option == selected[key]
+            bar_x, bar_y, bar_w, bar_h = 20, y + 5, 205, 13
+            pd.rectangle((bar_x, bar_y, bar_x + bar_w, bar_y + bar_h), fill=BAR_BG)
+            fill_w = max(0, min(bar_w, int(bar_w * score)))
+            if fill_w:
+                pd.rectangle((bar_x, bar_y, bar_x + fill_w, bar_y + bar_h),
+                             fill=BAR_GREEN if is_selected else BAR_BLUE)
+            label = f"{option}  {score:.0%}"
+            pd.text((245, y), label, fill=(20, 20, 20) if is_selected else (95, 95, 95), font=f_text)
+            if is_selected:
+                pd.text((560, y), "✓", fill=BAR_GREEN, font=f_text)
+            y += line_h
+        y += 13
 
-    pd.text((14, y + 4), "Shirt Colors", fill=(30, 30, 30), font=f_t)
-    y += 36
-    for cdict in colors[:4]:
-        pd.rectangle(
-            [14, y, 40, y + 22], fill=tuple(cdict["rgb"]), outline=(120, 120, 120)
-        )
-        pd.text(
-            (48, y + 2),
-            f"{cdict['name']}  {cdict['fraction']:.0%}",
-            fill=(0, 0, 0),
-            font=f_r,
-        )
-        y += 28
+    pd.text((20, y), "Shirt Colors (estimated)", fill=(20, 20, 20), font=f_title)
+    y += 38
+    for item in colors:
+        rgb = tuple(int(v) for v in item["rgb"])
+        pd.rectangle((20, y, 48, y + 22), fill=rgb, outline=(100, 100, 100))
+        pd.text((60, y + 2),
+                f'{item["name"]}  {item["fraction"]:.0%}',
+                fill=(30, 30, 30), font=f_text)
+        y += 31
 
-    out = Image.new(
-        "RGB", (view.width + PW, max(view.height, panel.height)), (250, 250, 250)
-    )
-    out.paste(view, (0, 0))
-    out.paste(panel, (view.width, 0))
-    return out
+    canvas = Image.new("RGB", (view.width + panel_w, max(view.height, panel.height)), (248, 248, 248))
+    canvas.paste(view, (0, 0))
+    canvas.paste(panel, (view.width, 0))
+    return canvas
 
 
-def analyse(path, bundle, args, titles, outdir):
-    spec = bundle[1]
-    img = Image.open(path).convert("RGB")
-    w, h = img.size
+class ImageTester:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Garment AI | Image Testing")
+        self.root.geometry("1450x900")
+        self.root.minsize(1000, 650)
+        self.bundle = None
+        self.current_image = None
+        self.report = None
+        self.report_photo = None
+        self.report_path = None
 
-    probs, norm_boxes, feats = forward(bundle, img)
-    chosen = pick(probs, spec, args.thr)
-    chosen = default_pattern(chosen, probs, args.thr)
+        self.build_ui()
+        self.load_checkpoint()
 
-    pred_boxes = {
-        k: denorm_box(nb, w, h) for k, nb in norm_boxes.items() if nb is not None
-    }
+    def build_ui(self):
+        top = tk.Frame(self.root, padx=14, pady=12, bg="#202938")
+        top.pack(fill=tk.X)
+        tk.Label(top, text="GARMENT AI  /  IMAGE TESTING",
+                 bg="#202938", fg="white", font=("Arial", 16, "bold")).pack(side=tk.LEFT)
+        tk.Button(top, text="Upload image", command=self.upload_image,
+                  bg="#16a36a", fg="white", relief=tk.FLAT,
+                  padx=16, pady=8).pack(side=tk.RIGHT)
+        tk.Button(top, text="Save report", command=self.save_report,
+                  padx=14, pady=8).pack(side=tk.RIGHT, padx=8)
 
-    crop_box = pred_boxes.get("length", [0, 0, w, h])
-    crop = img.crop(tuple(crop_box))
-    try:
-        colors = analyze_crop(cv2.cvtColor(np.array(crop), cv2.COLOR_RGB2BGR))["colors"]
-    except Exception:
-        colors = []
+        self.status = tk.Label(self.root, text="Loading model...",
+                               anchor="w", padx=14, pady=8)
+        self.status.pack(fill=tk.X)
 
-    print(f"\n=== {path.name} ===")
-    for key, box in pred_boxes.items():
-        print(f"  predicted {key:10s} box {box}  ({box[2]-box[0]}x{box[3]-box[1]} px)")
+        self.viewer = tk.Label(self.root, text="Upload a garment image to begin.",
+                               bg="#eeeeee", fg="#555555")
+        self.viewer.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 12))
 
-    for k, c in spec.items():
-        ranked = sorted(probs[k].items(), key=lambda kv: -kv[1])
-        if c["mode"] == "single":
-            top = ranked[0]
-            line = f"{top[0]} {top[1]:.0%}" + (" (unsure)" if top[1] < 0.6 else "")
-            line += " | next: " + ", ".join(f"{o} {v:.0%}" for o, v in ranked[1:3])
-        else:
-            hit = [f"{o} {v:.0%}" for o, v in ranked if v >= args.thr]
-            line = ", ".join(hit) if hit else "no pattern"
-        print(f"  {titles.get(k, k):14s} {line}")
-
-    print(
-        "  "
-        + f"{'Shirt Colors':14s} "
-        + (", ".join(f"{c['name']} {c['fraction']:.0%}" for c in colors[:4]) or "-")
-    )
-
-    result = outdir / f"{path.stem}_result.png"
-    render(img, pred_boxes, probs, spec, chosen, titles, colors).save(result)
-    print("Saved result:", result)
-
-    shown = [result]
-    if args.cam and feats is not None:
-        sheet = cam_sheet(crop, bundle, feats, chosen, probs, titles)
-        if sheet is not None:
-            cam_path = outdir / f"{path.stem}_cam.png"
-            sheet.save(cam_path)
-            print("Saved CAM heatmap:", cam_path)
-            shown.append(cam_path)
-    return shown
-
-
-def main():
-    ap = argparse.ArgumentParser(description="Test model – predicted per-category boxes")
-    ap.add_argument("images", nargs="*", help="Image paths or directories")
-    ap.add_argument("--model", default=ROOT / "model.pt")
-    ap.add_argument("--cam", action="store_true")
-    ap.add_argument("--thr", type=float, default=0.5)
-    ap.add_argument("--out", default=ROOT / "test_results")
-    ap.add_argument("--no-open", action="store_true")
-    args = ap.parse_args()
-
-    if not Path(args.model).exists():
-        raise SystemExit(f"Model not found at {args.model}. Train first.")
-
-    paths = []
-    for p in map(Path, args.images):
-        paths += (
-            sorted(f for f in p.rglob("*") if f.suffix.lower() in EXTS)
-            if p.is_dir()
-            else [p]
-        )
-    if not paths:
-        raise SystemExit("No images given. Usage: python 4_test/test_images.py photo.jpg")
-
-    dev = get_device()
-    bundle = load_model(args.model, dev=dev)
-    if not bundle[4]:
-        print("WARNING: checkpoint has no box heads. Re-train to get predicted boxes.")
-    titles = {
-        c["key"]: c["title"].split(" (")[0] for c in load_schema()["categories"]
-    }
-    outdir = Path(args.out)
-    outdir.mkdir(parents=True, exist_ok=True)
-
-    shown = []
-    for p in paths:
+    def load_checkpoint(self):
+        model_path = ROOT / "model.pt"
         try:
-            shown += analyse(p, bundle, args, titles, outdir)
-        except Exception as ex:
-            print(f"\n{p}: Analysis failed – {ex}")
+            self.bundle = load_bundle(model_path)
+            self.status.config(
+                text=f"Model ready  |  {self.bundle[0].__class__.__name__}  |  Device: {self.bundle[3]}"
+            )
+        except Exception as exc:
+            self.status.config(text="Model could not be loaded.")
+            messagebox.showerror("Model loading error", str(exc))
 
-    if shown and not args.no_open:
+    def upload_image(self):
+        path = filedialog.askopenfilename(
+            title="Choose a garment image",
+            filetypes=[("Image files", "*.jpg *.jpeg *.png *.webp *.bmp"),
+                       ("All files", "*.*")]
+        )
+        if not path:
+            return
+        if self.bundle is None:
+            messagebox.showerror("Model unavailable", "Please fix model.pt before testing.")
+            return
         try:
-            from searchlib import open_path
-            for f in shown[:4]:
-                open_path(f)
-        except Exception:
-            pass
+            image = Image.open(path).convert("RGB")
+            probs, norm_boxes, selected = predict(image, self.bundle)
+            boxes = pixel_boxes(norm_boxes, image.size)
+            color_box = boxes.get("length")
+            if color_box is None and boxes:
+                color_box = max(boxes.values(), key=lambda b: (b[2]-b[0])*(b[3]-b[1]))
+            colors = extract_colors(image, color_box)
+            report = render_report(image, boxes, probs, self.bundle[1],
+                                   selected, colors)
+            self.current_image = image
+            self.report = report
+            self.report_path = None
+            self.show_report()
+            self.status.config(text=f"Prediction complete  |  {Path(path).name}  |  {self.bundle[3]}")
+        except Exception as exc:
+            messagebox.showerror("Prediction error", f"{type(exc).__name__}: {exc}")
+
+    def show_report(self):
+        if self.report is None:
+            return
+        preview = self.report.copy()
+        preview.thumbnail((self.root.winfo_width() - 40, self.root.winfo_height() - 150))
+        self.report_photo = ImageTk.PhotoImage(preview)
+        self.viewer.config(image=self.report_photo, text="")
+
+    def save_report(self):
+        if self.report is None:
+            messagebox.showinfo("No report", "Upload an image and run prediction first.")
+            return
+        path = filedialog.asksaveasfilename(
+            title="Save prediction report",
+            defaultextension=".png",
+            filetypes=[("PNG image", "*.png")]
+        )
+        if path:
+            self.report.save(path)
+            self.report_path = Path(path)
+            self.status.config(text=f"Report saved: {path}")
+            messagebox.showinfo("Saved", f"Report saved to:\n{path}")
 
 
 if __name__ == "__main__":
-    main()
+    app_root = tk.Tk()
+    ImageTester(app_root)
+    app_root.mainloop()

@@ -25,7 +25,9 @@ database/*
 
 # Keep annotations.json in git (your labels are valuable).
 # To keep them private instead, uncomment the next line:
-annotations.json
+annotations_test.json
+
+
 test_results/
 
 # VS Code (keep launch.json, ignore personal settings)

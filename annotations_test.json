@@ -1,0 +1,845 @@
+{
+  "image_root": "D:\\FIBO_Year_3\\FRA362_Studio\\AI-pytorch\\dataset\\test",
+  "split": "test",
+  "images": {
+    "crop_v-neck_sleeveless_00141.jpg": {
+      "regions": [
+        {
+          "box": [
+            122,
+            122,
+            278,
+            406
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": [
+            {
+              "name": "black",
+              "rgb": [
+                30,
+                31,
+                29
+              ],
+              "hex": "#1e1f1d",
+              "fraction": 0.878
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                178,
+                179,
+                178
+              ],
+              "hex": "#b2b3b2",
+              "fraction": 0.117
+            }
+          ]
+        },
+        {
+          "box": [
+            188,
+            259,
+            231,
+            402
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            123,
+            116,
+            286,
+            203
+          ],
+          "attributes": {
+            "neck": "polo neck"
+          }
+        },
+        {
+          "box": [
+            253,
+            144,
+            350,
+            285
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            65,
+            128,
+            155,
+            289
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00020.jpg": {
+      "regions": [
+        {
+          "box": [
+            103,
+            113,
+            299,
+            447
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "charcoal",
+              "rgb": [
+                70,
+                42,
+                38
+              ],
+              "hex": "#462a26",
+              "fraction": 0.33
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                206,
+                199,
+                206
+              ],
+              "hex": "#cec7ce",
+              "fraction": 0.274
+            },
+            {
+              "name": "brown",
+              "rgb": [
+                97,
+                69,
+                65
+              ],
+              "hex": "#614541",
+              "fraction": 0.271
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                132,
+                107,
+                103
+              ],
+              "hex": "#846b67",
+              "fraction": 0.125
+            }
+          ]
+        },
+        {
+          "box": [
+            177,
+            235,
+            221,
+            441
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            142,
+            164,
+            257,
+            297
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            274,
+            119,
+            308,
+            227
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        },
+        {
+          "box": [
+            88,
+            117,
+            126,
+            243
+          ],
+          "attributes": {
+            "sleeves": "camis"
+          }
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00031.jpg": {
+      "regions": [
+        {
+          "box": [
+            132,
+            166,
+            273,
+            392
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "black",
+              "rgb": [
+                19,
+                20,
+                21
+              ],
+              "hex": "#131415",
+              "fraction": 0.877
+            },
+            {
+              "name": "khaki",
+              "rgb": [
+                203,
+                154,
+                125
+              ],
+              "hex": "#cb9a7d",
+              "fraction": 0.104
+            }
+          ]
+        },
+        {
+          "box": [
+            176,
+            260,
+            226,
+            395
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            159,
+            164,
+            238,
+            274
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            263,
+            166,
+            336,
+            465
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            73,
+            174,
+            133,
+            446
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00033.jpg": {
+      "regions": [
+        {
+          "box": [
+            183,
+            93,
+            333,
+            252
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            58,
+            93,
+            147,
+            289
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            136,
+            156,
+            224,
+            286
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            176,
+            279,
+            235,
+            408
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            107,
+            104,
+            304,
+            418
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": [
+            {
+              "name": "charcoal",
+              "rgb": [
+                62,
+                37,
+                32
+              ],
+              "hex": "#3e2520",
+              "fraction": 0.695
+            },
+            {
+              "name": "black",
+              "rgb": [
+                41,
+                20,
+                15
+              ],
+              "hex": "#29140f",
+              "fraction": 0.287
+            }
+          ]
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00039.jpg": {
+      "regions": [
+        {
+          "box": [
+            250,
+            107,
+            362,
+            289
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            55,
+            107,
+            154,
+            310
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            143,
+            161,
+            253,
+            293
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            167,
+            267,
+            231,
+            455
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            110,
+            98,
+            298,
+            459
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "charcoal",
+              "rgb": [
+                72,
+                67,
+                42
+              ],
+              "hex": "#48432a",
+              "fraction": 0.463
+            },
+            {
+              "name": "brown",
+              "rgb": [
+                92,
+                87,
+                59
+              ],
+              "hex": "#5c573b",
+              "fraction": 0.462
+            },
+            {
+              "name": "cream",
+              "rgb": [
+                238,
+                232,
+                226
+              ],
+              "hex": "#eee8e2",
+              "fraction": 0.075
+            }
+          ]
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00112.jpg": {
+      "regions": [
+        {
+          "box": [
+            82,
+            155,
+            139,
+            508
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            231,
+            117,
+            400,
+            227
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            142,
+            142,
+            245,
+            227
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            206,
+            217,
+            251,
+            275
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            125,
+            152,
+            269,
+            354
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": [
+            {
+              "name": "cream",
+              "rgb": [
+                248,
+                230,
+                177
+              ],
+              "hex": "#f8e6b1",
+              "fraction": 0.505
+            },
+            {
+              "name": "khaki",
+              "rgb": [
+                208,
+                165,
+                113
+              ],
+              "hex": "#d0a571",
+              "fraction": 0.217
+            },
+            {
+              "name": "beige",
+              "rgb": [
+                222,
+                199,
+                150
+              ],
+              "hex": "#dec796",
+              "fraction": 0.207
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                174,
+                125,
+                83
+              ],
+              "hex": "#ae7d53",
+              "fraction": 0.071
+            }
+          ]
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00005.jpg": {
+      "regions": [
+        {
+          "box": [
+            123,
+            85,
+            271,
+            281
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            157,
+            262,
+            243,
+            455
+          ],
+          "attributes": {
+            "type": "button down shirt"
+          }
+        },
+        {
+          "box": [
+            109,
+            71,
+            289,
+            470
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": [
+            {
+              "name": "cream",
+              "rgb": [
+                241,
+                228,
+                206
+              ],
+              "hex": "#f1e4ce",
+              "fraction": 0.458
+            },
+            {
+              "name": "khaki",
+              "rgb": [
+                176,
+                157,
+                135
+              ],
+              "hex": "#b09d87",
+              "fraction": 0.307
+            },
+            {
+              "name": "beige",
+              "rgb": [
+                213,
+                199,
+                178
+              ],
+              "hex": "#d5c7b2",
+              "fraction": 0.197
+            },
+            {
+              "name": "brown",
+              "rgb": [
+                86,
+                65,
+                49
+              ],
+              "hex": "#564131",
+              "fraction": 0.038
+            }
+          ]
+        },
+        {
+          "box": [
+            246,
+            66,
+            395,
+            279
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            23,
+            67,
+            136,
+            297
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00017.jpg": {
+      "regions": [
+        {
+          "box": [
+            258,
+            23,
+            382,
+            364
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            12,
+            8,
+            140,
+            323
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            95,
+            9,
+            288,
+            195
+          ],
+          "attributes": {
+            "neck": "square neck"
+          }
+        },
+        {
+          "box": [
+            135,
+            172,
+            188,
+            401
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            70,
+            12,
+            308,
+            396
+          ],
+          "attributes": {
+            "length": "regular"
+          },
+          "analysis": [
+            {
+              "name": "black",
+              "rgb": [
+                18,
+                16,
+                17
+              ],
+              "hex": "#121011",
+              "fraction": 0.675
+            },
+            {
+              "name": "beige",
+              "rgb": [
+                231,
+                171,
+                140
+              ],
+              "hex": "#e7ab8c",
+              "fraction": 0.147
+            },
+            {
+              "name": "khaki",
+              "rgb": [
+                197,
+                139,
+                112
+              ],
+              "hex": "#c58b70",
+              "fraction": 0.135
+            },
+            {
+              "name": "brown",
+              "rgb": [
+                122,
+                80,
+                62
+              ],
+              "hex": "#7a503e",
+              "fraction": 0.043
+            }
+          ]
+        }
+      ]
+    },
+    "crop_v-neck_sleeveless_00103.jpg": {
+      "regions": [
+        {
+          "box": [
+            155,
+            93,
+            226,
+            213
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": [
+            {
+              "name": "cream",
+              "rgb": [
+                235,
+                222,
+                214
+              ],
+              "hex": "#ebded6",
+              "fraction": 0.455
+            },
+            {
+              "name": "gray",
+              "rgb": [
+                186,
+                127,
+                96
+              ],
+              "hex": "#ba7f60",
+              "fraction": 0.24
+            },
+            {
+              "name": "light gray",
+              "rgb": [
+                203,
+                182,
+                167
+              ],
+              "hex": "#cbb6a7",
+              "fraction": 0.229
+            },
+            {
+              "name": "brown",
+              "rgb": [
+                127,
+                78,
+                55
+              ],
+              "hex": "#7f4e37",
+              "fraction": 0.076
+            }
+          ]
+        },
+        {
+          "box": [
+            176,
+            125,
+            200,
+            171
+          ],
+          "attributes": {
+            "type": "button half shirt"
+          }
+        },
+        {
+          "box": [
+            167,
+            86,
+            220,
+            137
+          ],
+          "attributes": {
+            "neck": "v-neck"
+          }
+        },
+        {
+          "box": [
+            221,
+            85,
+            279,
+            225
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            93,
+            93,
+            169,
+            132
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    }
+  }
+}
