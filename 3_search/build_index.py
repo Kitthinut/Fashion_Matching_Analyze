@@ -1,12 +1,24 @@
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import cv2
 import numpy as np
 from PIL import Image
 
-from label.analysis import analyze_crop
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+for path in (
+    PROJECT_ROOT / "1_label",
+    PROJECT_ROOT / "2_train",
+    SCRIPT_DIR,
+    PROJECT_ROOT,
+):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+
+from analysis import analyze_crop
 from inference import load_model, predict_pil
 
 EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
@@ -14,9 +26,9 @@ EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("database", nargs="?", default="database")
-    ap.add_argument("--model", default="model.pt")
-    ap.add_argument("--out", default="index.json")
+    ap.add_argument("database", nargs="?", default=PROJECT_ROOT / "database")
+    ap.add_argument("--model", default=PROJECT_ROOT / "model.pt")
+    ap.add_argument("--out", default=PROJECT_ROOT / "index.json")
     ap.add_argument("--rebuild", action="store_true")
     a = ap.parse_args()
 

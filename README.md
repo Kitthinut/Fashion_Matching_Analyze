@@ -78,7 +78,7 @@ AI-pytorch
 ## 4. Label your pictures
 
 ```
-python annotate.py dataset
+python 1_label/annotate.py
 ```
 
 A window opens showing your first picture.
@@ -171,12 +171,12 @@ new pictures to `database/` (only new pictures are processed).
 
 | File | Purpose |
 |---|---|
-| `annotate.py` | GUI for drawing garment regions, selecting labels, and saving `annotations.json` |
-| `analysis.py` | segments a garment crop and estimates its dominant colors |
+| `1_label/annotate.py` | GUI for drawing garment regions, selecting labels, and saving `annotations.json` |
+| `1_label/analysis.py` | segments a garment crop and estimates its dominant colors |
 | `attributes.py` / `attributes.json` | loads the shared category and label definitions |
-| `dataset.py` / `model.py` | prepares annotated regions and defines the training model |
-| `train.py` | trains the model from `annotations.json` and writes `model.pt` |
-| `inference.py` | loads `model.pt` and predicts attributes for an image |
+| `2_train/dataset.py` / `2_train/model.py` | prepares annotated regions and defines the training model |
+| `2_train/train.py` | trains the model from `annotations.json` and writes `model.pt` |
+| `2_train/inference.py` | loads `model.pt` and predicts attributes for an image |
 | `build_index.py` | predicts attributes and analyzes colors for `database/`, writing `index.json` |
 | `searchlib.py` | parses search terms and matches them against `index.json` |
 | `search_app.py` / `search.py` | graphical / command-line search |

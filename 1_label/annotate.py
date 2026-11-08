@@ -1,6 +1,7 @@
 import argparse
 import json
 import shutil
+import sys
 import time
 import tkinter as tk
 from pathlib import Path
@@ -9,7 +10,11 @@ from tkinter import messagebox, ttk
 import numpy as np
 from PIL import Image, ImageTk
 
-from label.analysis import analyze_crop
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from analysis import analyze_crop
 from attributes import load_schema
 
 EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
@@ -28,7 +33,7 @@ class Annotator:
         self.data = (json.loads(self.ann_path.read_text(encoding="utf-8"))
                      if self.ann_path.exists() else {"images": {}})
         self.data["image_root"] = str(self.folder.resolve())
-        self.trash = self.folder.resolve().parent / "deleted_pictures"   # removed pictures go here (recoverable)
+        self.trash = self.folder.resolve().parent / "deleted_pictures"
         self.idx, self.start, self.cur_box, self.box_id = 0, None, None, None
         self.vars = {}
         self.category_frames = {}
@@ -38,7 +43,7 @@ class Annotator:
     # ------------------------------------------------------------------ UI
     def build_ui(self):
         w = self.win
-        w.title("Garment annotator")
+        w.title("Garment Annotator - Enhanced Multi-Category View")
         w.geometry("1380x900")
         self.canvas = tk.Canvas(w, bg="#222", cursor="crosshair")
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -89,19 +94,19 @@ class Annotator:
         tk.Button(row, text="Update selected", command=self.update_region).pack(side="left", expand=True, fill="x")
         tk.Button(row, text="Delete", command=self.delete_region).pack(side="left", expand=True, fill="x")
         self.keep = tk.BooleanVar(value=False)
-        tk.Checkbutton(r, text="Keep ticks after adding (faster for similar items)", variable=self.keep, anchor="w").pack(fill="x")
+        tk.Checkbutton(r, text="Keep ticks after adding", variable=self.keep, anchor="w").pack(fill="x")
 
-        tk.Label(r, text="Regions in this image (click to view/edit):", anchor="w").pack(fill="x")
-        self.rl = tk.Listbox(r, height=4, exportselection=False)
+        tk.Label(r, text="Regions in this image:", anchor="w").pack(fill="x")
+        self.rl = tk.Listbox(r, height=5, exportselection=False)
         self.rl.pack(fill="x")
         self.rl.bind("<<ListboxSelect>>", self.on_region_select)
 
-        tk.Button(r, text="Preview colors of current crop", command=self.analyze_current).pack(fill="x", pady=2)
+        tk.Button(r, text="Preview shirt colors (Length crop only)", command=self.analyze_current).pack(fill="x", pady=2)
 
         self.info = tk.Text(r, height=6, wrap="word", font=("Consolas", 9))
         self.info.pack(fill="both", expand=True)
 
-        # --- jump controls
+        # Nav / Jump controls
         row = tk.Frame(r)
         row.pack(fill="x", pady=(4, 0))
         tk.Label(row, text="Go to #").pack(side="left")
@@ -118,7 +123,7 @@ class Annotator:
         tk.Button(row, text="Save", command=self.save).pack(side="left", expand=True, fill="x")
         tk.Button(row, text="Next >", command=lambda: self.goto(self.idx + 1)).pack(side="left", expand=True, fill="x")
 
-        tk.Button(r, text="Delete this picture...  (Del)", command=self.delete_picture, fg="#b00020").pack(fill="x")
+        tk.Button(r, text="Delete this picture... (Del)", command=self.delete_picture, fg="#b00020").pack(fill="x")
 
         w.bind("<Return>", lambda e: None if self.typing() else self.add_region())
         w.bind("<Delete>", lambda e: None if self.typing() else self.delete_picture())
@@ -129,18 +134,15 @@ class Annotator:
         w.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def typing(self):
-        """True while the cursor is inside a text box (so arrow keys / Enter keep their normal job)."""
         try:
             return isinstance(self.win.focus_get(), (tk.Entry, tk.Spinbox))
         except KeyError:
             return False
 
-    # -------------------------------------------------- progress / start-up
     def labelled(self, rel):
         return bool(self.data["images"].get(rel, {}).get("regions"))
 
     def first_unlabelled(self, start=0):
-        """Index of the next picture without any region (wraps around); None if all are done."""
         n = len(self.files)
         for k in range(n):
             i = (start + k) % n
@@ -174,12 +176,13 @@ class Annotator:
             tk.Radiobutton(box, text=text, variable=choice, value=val, anchor="w", justify="left").pack(fill="x", pady=1)
 
         if first_un is not None:
-            radio(f"Continue at the first unlabelled picture   (#{first_un + 1}: {self.files[first_un]})", "resume")
+            radio(f"Continue at first unlabelled   (#{first_un + 1}: {self.files[first_un]})", "resume")
         else:
             tk.Label(box, text="All pictures are labelled.", fg="#2e7d32", anchor="w").pack(fill="x")
         if done:
-            radio(f"Right after the last labelled picture   (#{after_last + 1}: {self.files[after_last]})", "after")
-        radio("Start from the beginning   (#1)", "begin")
+            radio(f"After last labelled   (#{after_last + 1}: {self.files[after_last]})", "after")
+        radio("Start from beginning (#1)", "begin")
+
         row = tk.Frame(box)
         row.pack(fill="x", pady=1)
         tk.Radiobutton(row, text="Go to picture number:", variable=choice, value="num").pack(side="left")
@@ -235,12 +238,8 @@ class Annotator:
         self.win.focus_set()
 
     def delete_picture(self):
-        """Move the current picture to deleted_pictures/ and drop its labels (asks first)."""
         rel = self.files[self.idx]
-        if not messagebox.askyesno(
-                "Delete picture",
-                f"Remove this picture from the dataset?\n\n{rel}\n\n"
-                f"The file is moved to:\n{self.trash}\n(not erased) and its labels are removed."):
+        if not messagebox.askyesno("Delete picture", f"Remove {rel} from dataset?"):
             return
         dst = self.trash / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -255,15 +254,15 @@ class Annotator:
         del self.files[self.idx]
         if not self.files:
             self.save()
-            messagebox.showinfo("No pictures left", "The dataset folder has no more pictures. Closing.")
+            messagebox.showinfo("No pictures left", "Dataset folder is empty. Closing.")
             self.win.destroy()
             return
         self.idx = min(self.idx, len(self.files) - 1)
         self.save()
         self.show_image()
-        self.say(f"Moved {rel} to\n{dst}")
+        self.say(f"Moved {rel} to {dst}")
 
-    # ----------------------------------------------------- attribute <-> UI
+    # ----------------------------------------------------- Attribute <-> UI
     def get_attributes(self):
         k = self.category_key_by_title[self.category_var.get()]
         cat, v = self.category_by_key[k], self.vars[k]
@@ -273,7 +272,7 @@ class Annotator:
         if ticked:
             return {k: ticked}
         if v[NONE].get():
-            return {k: []}          # explicitly "none of these"
+            return {k: []}
         return {}
 
     def set_attributes(self, attrs):
@@ -307,7 +306,7 @@ class Annotator:
             labels.append(f"{title}: {'+'.join(value) if isinstance(value, list) else value}")
         return " | ".join(labels) or "-"
 
-    # ---------------------------------------------------------------- image
+    # ---------------------------------------------------------------- Image Canvas
     def entry(self):
         return self.data["images"].setdefault(self.files[self.idx], {"regions": []})
 
@@ -325,24 +324,37 @@ class Annotator:
         c = self.canvas
         c.delete("all")
         c.create_image(0, 0, anchor="nw", image=self.photo)
+        
         for i, r in enumerate(self.entry()["regions"]):
             x0, y0, x1, y1 = [v * self.scale for v in r["box"]]
-            col = "red" if i == highlight else "#00e676"
-            c.create_rectangle(x0, y0, x1, y1, outline=col, width=2)
+            attrs = r["attributes"]
+            is_length_cat = "length" in attrs
+            
+            # Distinct visual styles: Length (solid green/red) vs Other Categories (dashed cyan/orange)
+            if is_length_cat:
+                col = "#ff1744" if i == highlight else "#00e676"
+                dash = None
+            else:
+                col = "#ff9100" if i == highlight else "#00e5ff"
+                dash = (4, 4)
+
+            c.create_rectangle(x0, y0, x1, y1, outline=col, width=2, dash=dash)
             c.create_text(x0 + 4, y0 + 4, anchor="nw", fill=col, font=("Arial", 10, "bold"),
-                          text=f"{i+1}: {self.short(r['attributes'])}")
+                          text=f"{i+1}: {self.short(attrs)}")
         self.box_id = None
 
     def refresh_regions(self):
         e = self.entry()
         done = sum(1 for f in self.files if self.labelled(f))
-        self.title.config(text=f"[{self.idx+1}/{len(self.files)}] {self.files[self.idx]}  ({len(e['regions'])} regions)\n"
+        self.title.config(text=f"[{self.idx+1}/{len(self.files)}] {self.files[self.idx]} ({len(e['regions'])} regions)\n"
                                f"Labelled pictures: {done}/{len(self.files)}")
         self.rl.delete(0, "end")
         for i, r in enumerate(e["regions"]):
-            self.rl.insert("end", f"{i+1}: {self.short(r['attributes'])}")
+            is_length = "length" in r["attributes"]
+            prefix = "[Length/Shirt]" if is_length else "[Category]"
+            self.rl.insert("end", f"{i+1}: {prefix} {self.short(r['attributes'])}")
 
-    # ---------------------------------------------------------------- mouse
+    # ---------------------------------------------------------------- Mouse Bounding Box
     def on_press(self, e):
         self.start, self.cur_box = (e.x, e.y), None
 
@@ -368,7 +380,7 @@ class Annotator:
         self.cur_box = [cl(x0 / s, W), cl(y0 / s, H), cl(x1 / s, W), cl(y1 / s, H)]
         self.say(f"Crop box: {self.cur_box}\nPick attributes, then press Enter.")
 
-    # -------------------------------------------------------------- regions
+    # -------------------------------------------------------------- Region Management & Analysis
     def run_analysis(self, box):
         crop = np.array(self.img.crop(tuple(box)))[:, :, ::-1].copy()
         return analyze_crop(crop)
@@ -378,21 +390,35 @@ class Annotator:
         if not attrs:
             messagebox.showwarning("Nothing picked", "Pick a label for the selected category first.")
             return
+
         box = self.cur_box or [0, 0, self.img.width, self.img.height]
-        self.win.config(cursor="watch"); self.win.update_idletasks()
-        try:
-            analysis = self.run_analysis(box)
-        except Exception as ex:                   # analysis must never block labelling
-            analysis = None
-            self.say(f"(color analysis skipped: {ex})")
-        self.win.config(cursor="")
-        self.entry()["regions"].append({"box": box, "attributes": attrs, "analysis": analysis})
+        shirt_colors = None
+
+        # Execute color segmentation strictly when analyzing the "length" category
+        if "length" in attrs:
+            self.win.config(cursor="watch")
+            self.win.update_idletasks()
+            try:
+                analysis_res = self.run_analysis(box)
+                shirt_colors = analysis_res.get("colors", [])
+            except Exception as ex:
+                self.say(f"(Color analysis skipped: {ex})")
+            self.win.config(cursor="")
+
+        region_data = {"box": box, "attributes": attrs}
+        if shirt_colors:
+            region_data["shirt_colors"] = shirt_colors
+
+        self.entry()["regions"].append(region_data)
         self.cur_box = None
         if not self.keep.get():
             self.set_attributes({})
-        self.refresh_regions(); self.redraw(); self.save()
-        if analysis:
-            self.show_analysis(analysis)
+        self.refresh_regions()
+        self.redraw()
+        self.save()
+
+        if shirt_colors:
+            self.show_shirt_colors(shirt_colors)
 
     def sel_region(self):
         s = self.rl.curselection()
@@ -407,14 +433,18 @@ class Annotator:
             messagebox.showwarning("Nothing picked", "Pick a label for the selected category first.")
             return
         self.entry()["regions"][i]["attributes"] = attrs
-        self.refresh_regions(); self.redraw(i); self.save()
+        self.refresh_regions()
+        self.redraw(i)
+        self.save()
 
     def delete_region(self):
         i = self.sel_region()
         if i is None:
             return self.say("Select a region in the list first.")
         del self.entry()["regions"][i]
-        self.refresh_regions(); self.redraw(); self.save()
+        self.refresh_regions()
+        self.redraw()
+        self.save()
 
     def on_region_select(self, _=None):
         i = self.sel_region()
@@ -423,17 +453,21 @@ class Annotator:
         r = self.entry()["regions"][i]
         self.set_attributes(r["attributes"])
         self.redraw(i)
-        if r.get("analysis"):
-            self.show_analysis(r["analysis"])
+        if r.get("shirt_colors"):
+            self.show_shirt_colors(r["shirt_colors"])
 
-    def show_analysis(self, an):
-        cols = ", ".join(f"{c['name']} {c['fraction']:.0%}" for c in an["colors"])
-        self.say(f"Colors: {cols}")
+    def show_shirt_colors(self, colors):
+        cols = ", ".join(f"{c['name']} ({c['fraction']:.0%})" for c in colors)
+        self.say(f"Shirt Color: {cols}")
 
     def analyze_current(self):
+        attrs = self.get_attributes()
+        if "length" not in attrs:
+            return self.say("Color analysis is restricted to the 'Length' category.")
         box = self.cur_box or [0, 0, self.img.width, self.img.height]
         try:
-            self.show_analysis(self.run_analysis(box))
+            an = self.run_analysis(box)
+            self.show_shirt_colors(an.get("colors", []))
         except Exception as ex:
             self.say(f"Analysis failed: {ex}")
 
@@ -441,7 +475,7 @@ class Annotator:
         self.info.delete("1.0", "end")
         self.info.insert("end", text)
 
-    # ------------------------------------------------------------ nav / save
+    # ------------------------------------------------------------ Navigation / Save
     def goto(self, i):
         self.save()
         self.idx = max(0, min(i, len(self.files) - 1))
@@ -458,8 +492,8 @@ class Annotator:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("folder", nargs="?", default="dataset")
-    ap.add_argument("--ann", default="annotations.json")
+    ap.add_argument("folder", nargs="?", default=PROJECT_ROOT / "dataset")
+    ap.add_argument("--ann", default=PROJECT_ROOT / "annotations.json")
     a = ap.parse_args()
     root = tk.Tk()
     Annotator(root, a.folder, a.ann)
