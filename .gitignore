@@ -1,0 +1,24 @@
+# --- Python & Virtual Environments (The cause of your 10,000 files) ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --- Project Specific (Too large or generated automatically) ---
+dataset/
+deleted_pictures/
+model.pt
+*.pt
+*.pth
+*.json.bak
+
+# --- OS & Editor Files ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
