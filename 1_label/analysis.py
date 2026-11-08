@@ -38,7 +38,7 @@ def segment_garment(bgr, max_side=400):
 
     m = np.full((sh, sw), cv2.GC_PR_BGD, np.uint8)
     m[int(sh * 0.06):int(sh * 0.94), int(sw * 0.06):int(sw * 0.94)] = cv2.GC_PR_FGD
-    m[int(sh * 0.50):int(sh * 0.70), int(sw * 0.40):int(sw * 0.60)] = cv2.GC_FGD  # torso prior
+    m[int(sh * 0.50):int(sh * 0.70), int(sw * 0.40):int(sw * 0.60)] = cv2.GC_FGD
     c = max(2, int(min(sh, sw) * 0.04))
     for ys in (slice(0, c), slice(sh - c, sh)):
         for xs in (slice(0, c), slice(sw - c, sw)):
@@ -68,7 +68,7 @@ def dominant_colors(bgr, mask, k=4):
         px = bgr.reshape(-1, 3)
     if len(px) > 20000:
         px = px[np.random.default_rng(0).choice(len(px), 20000, replace=False)]
-    px = px[:, ::-1].astype(np.float32)  # BGR → RGB
+    px = px[:, ::-1].astype(np.float32)
     k = max(1, min(k, len(px)))
     crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 20, 1.0)
     _, lab, centers = cv2.kmeans(px, k, None, crit, 3, cv2.KMEANS_PP_CENTERS)
