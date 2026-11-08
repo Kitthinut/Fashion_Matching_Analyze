@@ -1,10 +1,21 @@
+"""Build search index from database/ using trained model (3_search/build_index.py)."""
+
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import cv2
 import numpy as np
 from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[1]
+SEARCH = Path(__file__).resolve().parent
+LABEL = ROOT / "1_label"
+TRAIN = ROOT / "2_train"
+for p in (ROOT, SEARCH, LABEL, TRAIN):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
 from analysis import analyze_crop
 from inference import load_model, predict_pil
@@ -14,9 +25,9 @@ EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("database", nargs="?", default="database")
-    ap.add_argument("--model", default="model.pt")
-    ap.add_argument("--out", default="index.json")
+    ap.add_argument("database", nargs="?", default=ROOT / "database")
+    ap.add_argument("--model", default=ROOT / "model.pt")
+    ap.add_argument("--out", default=ROOT / "index.json")
     ap.add_argument("--rebuild", action="store_true")
     a = ap.parse_args()
 
@@ -45,12 +56,16 @@ def main():
             continue
         try:
             img = Image.open(f).convert("RGB")
-            attrs = predict_pil(bundle, img)
+            attrs, _boxes = predict_pil(bundle, img)
             small = img.copy()
-            small.thumbnail((800, 800))                       # keep analysis fast
+            small.thumbnail((800, 800))
             analysis = analyze_crop(cv2.cvtColor(np.array(small), cv2.COLOR_RGB2BGR))
-            region = {"box": [0, 0, img.width, img.height], "attributes": attrs,
-                      "analysis": analysis, "analysis_size": list(small.size)}
+            region = {
+                "box": [0, 0, img.width, img.height],
+                "attributes": attrs,
+                "analysis": analysis,
+                "analysis_size": list(small.size),
+            }
             index["images"][rel] = {"mtime": mt, "regions": [region]}
         except Exception as ex:
             print(f"skip {rel}: {ex}")

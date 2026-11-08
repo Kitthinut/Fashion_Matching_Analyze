@@ -1,13 +1,29 @@
+"""GUI search app (3_search/search_app.py)."""
+
 import argparse
+import sys
 import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox
 
 from PIL import Image, ImageTk
 
+ROOT = Path(__file__).resolve().parents[1]
+SEARCH = Path(__file__).resolve().parent
+for p in (ROOT, SEARCH, ROOT / "1_label"):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
+
 from attributes import load_schema
-from searchlib import (attr_group, describe_group, export_results, load_index, open_path,
-                       parse_query, search)
+from searchlib import (
+    attr_group,
+    describe_group,
+    export_results,
+    load_index,
+    open_path,
+    parse_query,
+    search,
+)
 
 THUMB, PAD = 200, 6
 
@@ -17,7 +33,7 @@ class SearchApp:
         self.win, self.schema = win, load_schema()
         self.index = load_index(index_path)
         self.results, self.thumbs, self.last_query = [], [], ""
-        win.title(f"Garment search  -  {len(self.index['images'])} images indexed")
+        win.title(f"Garment search  –  {len(self.index['images'])} images indexed")
         win.geometry("1180x800")
 
         top = tk.Frame(win, padx=8, pady=6)
@@ -36,18 +52,28 @@ class SearchApp:
         for cat in self.schema["categories"]:
             tk.Label(flt, text=cat["title"].split(" (")[0] + ":").pack(side="left")
             var = tk.StringVar(value="(any)")
-            tk.OptionMenu(flt, var, "(any)", *[o["name"] for o in cat["options"]]).pack(side="left", padx=(0, 8))
+            tk.OptionMenu(
+                flt, var, "(any)", *[o["name"] for o in cat["options"]]
+            ).pack(side="left", padx=(0, 8))
             self.filters[cat["key"]] = var
 
         opt = tk.Frame(win, padx=8)
         opt.pack(fill="x")
-        self.min_score = tk.Scale(opt, from_=0.05, to=0.95, resolution=0.05, orient="horizontal",
-                                  length=220, label="Minimum match score per term")
+        self.min_score = tk.Scale(
+            opt,
+            from_=0.05,
+            to=0.95,
+            resolution=0.05,
+            orient="horizontal",
+            length=220,
+            label="Minimum match score per term",
+        )
         self.min_score.set(0.30)
         self.min_score.pack(side="left")
         tk.Label(opt, text="  Max results:").pack(side="left")
         self.maxn = tk.Spinbox(opt, from_=5, to=500, width=5)
-        self.maxn.delete(0, "end"); self.maxn.insert(0, "40")
+        self.maxn.delete(0, "end")
+        self.maxn.insert(0, "40")
         self.maxn.pack(side="left")
         tk.Button(opt, text="Clear", command=self.clear).pack(side="left", padx=10)
 
@@ -63,10 +89,11 @@ class SearchApp:
         self.canvas.pack(side="left", fill="both", expand=True)
         self.inner = tk.Frame(self.canvas, bg="#f3f3f3")
         self.canvas.create_window((0, 0), window=self.inner, anchor="nw")
-        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
-        self.canvas.bind_all("<Button-4>", lambda e: self.canvas.yview_scroll(-3, "units"))
-        self.canvas.bind_all("<Button-5>", lambda e: self.canvas.yview_scroll(3, "units"))
-        self.say("Try:  navy v-neck stripe short sleeve cropped      (colours: red, blue, black, ...)")
+        self.canvas.bind_all(
+            "<MouseWheel>",
+            lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"),
+        )
+        self.say("Try:  navy v-neck stripe short sleeve cropped")
 
     def say(self, t):
         self.status.config(text=t)
@@ -80,20 +107,28 @@ class SearchApp:
         groups, ignored = parse_query(self.q.get(), self.schema)
         for key, var in self.filters.items():
             if var.get() != "(any)":
-                groups = [g for g in groups if g.get("key") != key] + [attr_group(self.schema, key, var.get())]
+                groups = [g for g in groups if g.get("key") != key] + [
+                    attr_group(self.schema, key, var.get())
+                ]
         if not groups:
-            self.say("Nothing understood - type attributes (e.g. 'red polo neck dot') or use the dropdowns.")
+            self.say("Nothing understood – type attributes or use the dropdowns.")
             return
         try:
             limit = int(self.maxn.get())
         except ValueError:
             limit = 40
-        self.last_query = self.q.get().strip() or " ".join(describe_group(g) for g in groups)
-        self.results = search(self.index, groups, self.min_score.get(), limit)
+        self.last_query = self.q.get().strip() or " ".join(
+            describe_group(g) for g in groups
+        )
+        self.results = search(
+            self.index, groups, self.min_score.get(), limit, self.schema
+        )
         msg = "Understood: " + "; ".join(describe_group(g) for g in groups)
         if ignored:
             msg += f"   (ignored: {', '.join(ignored)})"
-        self.say(f"{msg}\n{len(self.results)} match(es) of {len(self.index['images'])} images")
+        self.say(
+            f"{msg}\n{len(self.results)} match(es) of {len(self.index['images'])} images"
+        )
         self.show()
 
     def show(self):
@@ -114,10 +149,22 @@ class SearchApp:
                 lb.bind("<Button-1>", lambda e, p=r["path"]: open_path(p))
             except Exception:
                 tk.Label(f, text="(cannot load)", width=28, height=8).pack()
-            tk.Label(f, text=f"{r['score']:.2f}  {Path(r['path']).name}", bg="white",
-                     font=("Arial", 9, "bold"), wraplength=THUMB).pack()
-            tk.Label(f, text=r["summary"], bg="white", font=("Arial", 8), fg="#555",
-                     wraplength=THUMB, justify="left").pack()
+            tk.Label(
+                f,
+                text=f"{r['score']:.2f}  {Path(r['path']).name}",
+                bg="white",
+                font=("Arial", 9, "bold"),
+                wraplength=THUMB,
+            ).pack()
+            tk.Label(
+                f,
+                text=r["summary"],
+                bg="white",
+                font=("Arial", 8),
+                fg="#555",
+                wraplength=THUMB,
+                justify="left",
+            ).pack()
         self.inner.update_idletasks()
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         self.canvas.yview_moveto(0)
@@ -133,10 +180,10 @@ class SearchApp:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--index", default="index.json")
+    ap.add_argument("--index", default=str(ROOT / "index.json"))
     a = ap.parse_args()
     if not Path(a.index).exists():
-        raise SystemExit(f"{a.index} not found. Run: python build_index.py database")
+        raise SystemExit(f"{a.index} not found. Run: python 3_search/build_index.py database")
     root = tk.Tk()
     SearchApp(root, a.index)
     root.mainloop()
