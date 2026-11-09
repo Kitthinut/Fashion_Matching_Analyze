@@ -20,7 +20,7 @@ for folder in (ROOT, HERE, TRAIN_DIR, LABEL_DIR):
     if str(folder) not in sys.path:
         sys.path.insert(0, str(folder))
 
-from dataset import eval_transform, DEFAULT_SIZE
+from dataset import eval_transform, DEFAULT_TARGET_SIZE
 from model import MultiHeadNet, decode
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
@@ -48,9 +48,19 @@ def _has_boxes(state_dict, ckpt_flag):
     if ckpt_flag:
         return True
     return any(
-        k.startswith(("length_box_head", "rel_box_heads"))
+        k.startswith(("length_box_head", "rel_box_heads", "box_heads"))
         for k in state_dict
     )
+
+
+def parse_size(size_val):
+    if isinstance(size_val, (tuple, list)) and len(size_val) == 2:
+        return (int(size_val[0]), int(size_val[1]))
+    try:
+        val = int(size_val)
+        return (val, val)
+    except (ValueError, TypeError):
+        return DEFAULT_TARGET_SIZE
 
 
 def load_bundle(model_path: Path):
@@ -67,11 +77,12 @@ def load_bundle(model_path: Path):
     if not has_boxes:
         raise ValueError("This checkpoint does not contain bounding-box heads.")
 
-    size = int(checkpoint.get("size", DEFAULT_SIZE))
+    size = parse_size(checkpoint.get("size", DEFAULT_TARGET_SIZE))
+    crop_h = size[0] if isinstance(size, tuple) else size
     model = MultiHeadNet(
         checkpoint["arch"], checkpoint["spec"],
         pretrained=False, with_boxes=True,
-        crop_size=max(64, size // 2)
+        crop_size=max(64, crop_h // 2)
     )
     model.load_state_dict(checkpoint["state"], strict=False)
     model.to(device).eval()
@@ -162,7 +173,6 @@ def pixel_boxes(normalized_boxes, image_size):
         if box is None:
             continue
         if key == "sleeves" and isinstance(box, list) and box and isinstance(box[0], (list, tuple)):
-            # list of boxes
             pixel_list = []
             for b in box:
                 if len(b) != 4:
@@ -206,7 +216,6 @@ def render_report(image, boxes, probabilities, spec, selected, colors, titles=No
         color = BOX_COLORS.get(key, (130, 90, 190))
         label = titles.get(key, key.replace("_", " ").title())
 
-        # sleeves can be a list of boxes
         box_list = box_data if (key == "sleeves" and isinstance(box_data, list) and box_data and isinstance(box_data[0], (list, tuple))) else [box_data]
 
         for idx, box in enumerate(box_list):
@@ -330,12 +339,10 @@ class ImageTester:
             probs, norm_boxes, selected = predict(image, self.bundle)
             boxes = pixel_boxes(norm_boxes, image.size)
 
-            # choose a box for colour extraction (prefer length, else largest)
             color_box = None
             if "length" in boxes:
                 color_box = boxes["length"]
             elif boxes:
-                # find the largest box (handle sleeves list)
                 candidates = []
                 for v in boxes.values():
                     if isinstance(v, list) and v and isinstance(v[0], (list, tuple)):

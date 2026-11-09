@@ -1,15 +1,8 @@
-"""Feature-Driven Model with Aspect-Ratio-Aware Garment Classification
+"""Spatial Feature-Driven Model with Anchored Box Prediction & GIoU Loss
 Location: 2_train/model.py
-
-1. Predict independent normalized bounding boxes for all categories using deep CNN features.
-2. Calculate aspect ratios for the main length box.
-3. Apply geometric aspect ratio logic: (Width >= Height) -> Boost 'cropped' prediction scores.
-4. Crop regions directly from the high-res input image for isolated attribute classification.
-5. Provide complete loss computation functions for model training and evaluation.
-
-Target Input Dimensions: (Width=384, Height=224)
 """
 
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -21,16 +14,11 @@ TARGET_SIZE = (TARGET_W, TARGET_H)
 
 
 def crop_and_resize(images, boxes, output_size=112):
-    """
-    images: (B, C, H, W) - Input tensor
-    boxes:  (B, 4) normalized xyxy or (B, N, 4)
-    Returns: (B*N, C, output_size, output_size) cropped patches
-    """
     B, C, H, W = images.shape
     device = images.device
 
     if boxes.dim() == 2:
-        boxes = boxes.unsqueeze(1)  # (B, 1, 4)
+        boxes = boxes.unsqueeze(1)
     N = boxes.shape[1]
 
     boxes_pix = boxes.clone()
@@ -63,7 +51,7 @@ def crop_and_resize(images, boxes, output_size=112):
 
 class MultiHeadNet(nn.Module):
     def __init__(
-        self, arch="resnet18", spec=None, pretrained=True, with_boxes=True, crop_size=112
+        self, arch="resnet152", spec=None, pretrained=True, with_boxes=True, crop_size=112
     ):
         super().__init__()
         self.spec = spec or {}
@@ -74,47 +62,72 @@ class MultiHeadNet(nn.Module):
         weights = weights_enum.DEFAULT if (pretrained and weights_enum) else None
         backbone = getattr(models, arch)(weights=weights)
 
-        # 1. Feature Extractor Backbone for Box Detection
         self.backbone = nn.Sequential(*list(backbone.children())[:-2])
         self.feat_dim = backbone.fc.in_features
         self.global_pool = nn.AdaptiveAvgPool2d(1)
         self.drop = nn.Dropout(0.3)
 
-        # 2. Patch Classifier Backbone
         crop_backbone = getattr(models, arch)(weights=weights)
         crop_backbone.fc = nn.Identity()
         self.crop_backbone = crop_backbone
 
-        # 3. Attribute Classification Heads
         self.heads = nn.ModuleDict(
             {f"h_{k}": nn.Linear(self.feat_dim, len(c["options"])) for k, c in self.spec.items()}
         )
 
-        # 4. Feature-Based Independent Box Heads (Decoupled from length box)
         if with_boxes:
             self.box_heads = nn.ModuleDict()
             for k in self.spec:
                 out_dim = 8 if k == "sleeves" else 4
                 self.box_heads[f"b_{k}"] = nn.Sequential(
-                    nn.Linear(self.feat_dim, 256),
+                    nn.Conv2d(self.feat_dim, 256, kernel_size=3, padding=1),
+                    nn.BatchNorm2d(256),
                     nn.ReLU(inplace=True),
+                    nn.AdaptiveAvgPool2d(1),
+                    nn.Flatten(),
                     nn.Linear(256, out_dim),
                     nn.Sigmoid()
                 )
+            self._init_box_priors()
 
-    def _predict_boxes(self, global_feat):
-        """Predict independent normalized boxes directly from feature embeddings."""
+    def _init_box_priors(self):
+        """Initialize box heads with spatial priors."""
+        with torch.no_grad():
+            for k, head in self.box_heads.items():
+                last_layer = head[-2]
+                if "length" in k:
+                    last_layer.bias.copy_(torch.tensor([-2.19, -2.19, 2.19, 1.73]))
+                elif "sleeves" in k:
+                    last_layer.bias.copy_(torch.tensor([
+                        -2.94, -2.19, -0.20, 0.84,
+                        0.20, -2.19, 2.94, 0.84
+                    ]))
+                elif "neck" in k:
+                    last_layer.bias.copy_(torch.tensor([-1.09, -2.94, 1.09, -0.61]))
+                else:
+                    last_layer.bias.copy_(torch.tensor([-1.38, -1.73, 1.38, 1.38]))
+
+    def _predict_boxes(self, feat_map):
         boxes = {}
         for k in self.spec:
-            raw_box = self.box_heads[f"b_{k}"](global_feat)
+            raw_box = self.box_heads[f"b_{k}"](feat_map)
             if k == "sleeves":
-                boxes[k] = raw_box.view(-1, 2, 4)
+                b = raw_box.view(-1, 2, 4)
+                x1 = torch.min(b[..., 0], b[..., 2] - 0.05)
+                y1 = torch.min(b[..., 1], b[..., 3] - 0.05)
+                x2 = torch.max(b[..., 2], b[..., 0] + 0.05)
+                y2 = torch.max(b[..., 3], b[..., 1] + 0.05)
+                boxes[k] = torch.stack([x1, y1, x2, y2], dim=-1)
             else:
-                boxes[k] = raw_box
+                b = raw_box
+                x1 = torch.min(b[:, 0], b[:, 2] - 0.05)
+                y1 = torch.min(b[:, 1], b[:, 3] - 0.05)
+                x2 = torch.max(b[:, 2], b[:, 0] + 0.05)
+                y2 = torch.max(b[:, 3], b[:, 1] + 0.05)
+                boxes[k] = torch.stack([x1, y1, x2, y2], dim=1)
         return boxes
 
     def _classify_from_crops(self, images, boxes_dict):
-        """Crop patches from the original high-resolution image and classify independently."""
         B = images.shape[0]
         cls = {}
 
@@ -133,12 +146,8 @@ class MultiHeadNet(nn.Module):
 
     def forward(self, x, gt_boxes=None, use_gt_for_cls=False):
         feat_map = self.backbone(x)
-        global_feat = self.drop(self.global_pool(feat_map).flatten(1))
+        pred_boxes = self._predict_boxes(feat_map)
 
-        # Independent feature-based box predictions
-        pred_boxes = self._predict_boxes(global_feat)
-
-        # Select target boxes for cropped patch extraction
         boxes_for_cls = (
             gt_boxes if (use_gt_for_cls and gt_boxes is not None) else pred_boxes
         )
@@ -152,17 +161,9 @@ class MultiHeadNet(nn.Module):
 
 
 def decode(outputs, spec):
-    """
-    Decodes predictions and enforces geometry rules:
-    If predicted length box width >= height -> Boosts 'cropped' length prediction score.
-    Returns:
-      - decoded: dict of probabilities
-      - raw_boxes: dict of normalized [0.0, 1.0] coordinates (xyxy)
-    """
     cls_out = outputs["cls"]
     box_out = outputs.get("boxes", {})
 
-    # 1. Decode normalized bounding boxes
     raw_boxes = {}
     for key in spec:
         if key not in box_out:
@@ -187,20 +188,16 @@ def decode(outputs, spec):
                 max(0.0, min(1.0, max(y1, y2))),
             ]
 
-    # 2. Decode classification logits with aspect-ratio geometric check
     decoded = {}
     for key, category in spec.items():
         if key not in cls_out:
             continue
         logits = cls_out[key][0].clone()
         
-        # Rule check: if evaluating 'length' and predicted box width >= height
         if key == "length" and "length" in raw_boxes:
             bx = raw_boxes["length"]
             box_w = bx[2] - bx[0]
             box_h = bx[3] - bx[1]
-            
-            # If width >= height (short/wide aspect ratio), boost score for cropped options
             if box_w >= box_h:
                 for idx, opt in enumerate(category["options"]):
                     if "crop" in opt.lower():
@@ -215,10 +212,6 @@ def decode(outputs, spec):
 
     return decoded, raw_boxes
 
-
-# ---------------------------------------------------------
-# Loss Computation Functions
-# ---------------------------------------------------------
 
 def compute_category_losses(outputs, targets, spec):
     cls_out = outputs["cls"]
@@ -239,6 +232,32 @@ def compute_category_losses(outputs, targets, spec):
     return losses
 
 
+def giou_loss(pred, gt):
+    """Generalized IoU Loss preserving batch and sleeve dimensions."""
+    x1_p, y1_p, x2_p, y2_p = pred[..., 0], pred[..., 1], pred[..., 2], pred[..., 3]
+    x1_g, y1_g, x2_g, y2_g = gt[..., 0], gt[..., 1], gt[..., 2], gt[..., 3]
+
+    x1_i = torch.maximum(x1_p, x1_g)
+    y1_i = torch.maximum(y1_p, y1_g)
+    x2_i = torch.minimum(x2_p, x2_g)
+    y2_i = torch.minimum(y2_p, y2_g)
+    inter = (x2_i - x1_i).clamp(min=0) * (y2_i - y1_i).clamp(min=0)
+
+    area_p = (x2_p - x1_p).clamp(min=0) * (y2_p - y1_p).clamp(min=0)
+    area_g = (x2_g - x1_g).clamp(min=0) * (y2_g - y1_g).clamp(min=0)
+    union = area_p + area_g - inter + 1e-7
+    iou = inter / union
+
+    x1_c = torch.minimum(x1_p, x1_g)
+    y1_c = torch.minimum(y1_p, y1_g)
+    x2_c = torch.maximum(x2_p, x2_g)
+    y2_c = torch.maximum(y2_p, y2_g)
+    area_c = (x2_c - x1_c).clamp(min=0) * (y2_c - y1_c).clamp(min=0) + 1e-7
+
+    giou = iou - ((area_c - union) / area_c)
+    return 1.0 - giou
+
+
 def compute_box_losses(outputs, targets, spec):
     if "boxes" not in outputs or not outputs["boxes"]:
         return {}
@@ -247,24 +266,24 @@ def compute_box_losses(outputs, targets, spec):
         if k not in outputs["boxes"]:
             continue
         if k == "sleeves":
-            mask = targets["sleeves__box_mask"]
+            mask = targets["sleeves__box_mask"]  # Shape: (B, 2)
             if mask.sum() == 0:
                 continue
-            pred = outputs["boxes"]["sleeves"]
-            gt = targets["sleeves__box"]
-            l1 = F.smooth_l1_loss(pred, gt, reduction="none").mean(dim=2)
-            losses["sleeves_box"] = (l1 * mask).sum() / (mask.sum() + 1e-8)
+            pred = outputs["boxes"]["sleeves"]   # Shape: (B, 2, 4)
+            gt = targets["sleeves__box"]         # Shape: (B, 2, 4)
+            loss_g = giou_loss(pred, gt)         # Returns Shape: (B, 2)
+            losses["sleeves_box"] = (loss_g * mask).sum() / (mask.sum() + 1e-8)
         else:
-            mask = targets[k + "__box_mask"]
+            mask = targets[k + "__box_mask"]     # Shape: (B,)
             if mask.sum() > 0:
-                pred = outputs["boxes"][k]
-                gt = targets[k + "__box"]
-                l1 = F.smooth_l1_loss(pred, gt, reduction="none").mean(dim=1)
-                losses[k + "_box"] = (l1 * mask).sum() / (mask.sum() + 1e-8)
+                pred = outputs["boxes"][k]       # Shape: (B, 4)
+                gt = targets[k + "__box"]         # Shape: (B, 4)
+                loss_g = giou_loss(pred, gt)     # Returns Shape: (B,)
+                losses[k + "_box"] = (loss_g * mask).sum() / (mask.sum() + 1e-8)
     return losses
 
 
-def compute_loss(outputs, targets, spec, box_weight=8.0):
+def compute_loss(outputs, targets, spec, box_weight=10.0):
     cls_losses = compute_category_losses(outputs, targets, spec)
     box_losses = compute_box_losses(outputs, targets, spec)
 

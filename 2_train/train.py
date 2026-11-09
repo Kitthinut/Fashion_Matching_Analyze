@@ -1,4 +1,4 @@
-"""Train MultiHeadNet (box-first → classify inside crops)
+"""Train MultiHeadNet with Scheduled Box Cropping Transition
 Location: 2_train/train.py
 """
 
@@ -147,13 +147,14 @@ def main():
     ap.add_argument("--ann-train", default=ROOT / "annotations_train.json")
     ap.add_argument("--ann-val",   default=ROOT / "annotations_validation.json")
     ap.add_argument("--out",       default=ROOT / "model.pt")
-    ap.add_argument("--arch",      default="resnet18", choices=["resnet18", "resnet50"])
-    ap.add_argument("--epochs",    type=int,   default=30)
+    ap.add_argument("--arch",      default="resnet152", choices=["resnet18", "resnet50", "resnet152"])
+    ap.add_argument("--epochs",    type=int,   default=35)
     ap.add_argument("--batch",     type=int,   default=16)
     ap.add_argument("--lr",        type=float, default=3e-4)
     ap.add_argument("--size",      default=(224, 384))
     ap.add_argument("--workers",   type=int,   default=0)
-    ap.add_argument("--box-weight", type=float, default=8.0)
+    ap.add_argument("--box-weight", type=float, default=10.0)
+    ap.add_argument("--warmup-gt", type=int, default=10)
     ap.add_argument("--no-pretrained", action="store_true")
     a = ap.parse_args()
 
@@ -170,13 +171,7 @@ def main():
     if val_path.is_file():
         val_images = group_by_image(load_annotations(val_path))
     else:
-        print(f"No {val_path}; using a copy of train for val metrics")
         val_images = train_images
-
-    print(
-        f"Train images: {len(train_images)} | Val images: {len(val_images)} "
-        f"| Train regions: {len(train_regions)}"
-    )
 
     dev = get_device()
 
@@ -204,6 +199,8 @@ def main():
     for ep in range(1, a.epochs + 1):
         model.train()
         run_loss = 0.0
+        # Warmup schedule: use GT boxes for early epochs, then transition to predicted boxes
+        use_gt = ep <= a.warmup_gt
 
         for x, y in tl:
             x = x.to(dev)
@@ -217,7 +214,7 @@ def main():
                     gt_boxes[k] = y[k + "__box"]
 
             opt.zero_grad()
-            out = model(x, gt_boxes=gt_boxes, use_gt_for_cls=True)
+            out = model(x, gt_boxes=gt_boxes, use_gt_for_cls=use_gt)
             loss = compute_loss(out, y, spec, box_weight=a.box_weight)
 
             loss.backward()
@@ -230,15 +227,15 @@ def main():
 
         val_loss   = result["loss"]
         metrics    = result["class_metrics"]
-        mean_score = result["mean_class"]
         mean_iou   = result["mean_iou"]
         combined   = result["combined"]
 
         fmt = " ".join(
             f"{k}={'N/A' if v is None else f'{v:.2f}'}" for k, v in metrics.items()
         )
+        mode_str = "GT-Crops" if use_gt else "Pred-Crops"
         print(
-            f"Epoch {ep:02d} | train {run_loss / len(tl.dataset):.4f} | "
+            f"Epoch {ep:02d} [{mode_str}] | train {run_loss / len(tl.dataset):.4f} | "
             f"val {val_loss:.4f} | IoU {mean_iou:.2f} | Comb {combined:.2f} | [{fmt}]"
         )
 
