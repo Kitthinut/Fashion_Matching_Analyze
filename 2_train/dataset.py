@@ -2,6 +2,7 @@
 - Uses HSV colour space
 - Sleeves keeps up to 2 boxes (left + right)
 - Pattern automatically becomes ["no_pattern"] when missing
+- Supports rectangular sizes such as (Height=224, Width=384)
 """
 
 import json
@@ -21,18 +22,16 @@ for p in (ROOT, TRAIN):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-# HSV normalisation (H/180, S/255, V/255 → roughly [0,1])
 MEAN, STD = [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]
+DEFAULT_TARGET_SIZE = (224, 384)  # PyTorch format: (Height, Width)
 
 
 def _to_hsv_tensor(img: Image.Image) -> torch.Tensor:
-    """PIL RGB → HSV tensor in [0,1]."""
     hsv = img.convert("HSV")
     return TF.to_tensor(hsv)
 
 
 def load_annotations(ann_file):
-    """Read one annotations JSON → list of region samples."""
     ann_file = Path(ann_file)
     data = json.loads(ann_file.read_text(encoding="utf-8"))
 
@@ -81,14 +80,6 @@ def _box_area(box):
 
 
 def group_by_image(samples):
-    """
-    Merge regions into one entry per image.
-
-    Rules:
-    - sleeves  → keep up to 2 boxes (largest ones)
-    - pattern  → multi-label; if missing → ["no_pattern"]
-    - others   → keep the single largest box
-    """
     images = {}
 
     for s in samples:
@@ -105,7 +96,6 @@ def group_by_image(samples):
 
             new_box = list(s["box"])
 
-            # ---------- SLEEVES (up to 2 boxes) ----------
             if key == "sleeves":
                 if "sleeves" not in entry["categories"]:
                     entry["categories"]["sleeves"] = {
@@ -120,7 +110,6 @@ def group_by_image(samples):
                     )[:2]
                     existing["value"] = value
 
-            # ---------- PATTERN (multi-label) ----------
             elif key == "pattern":
                 if "pattern" not in entry["categories"]:
                     entry["categories"]["pattern"] = {
@@ -136,7 +125,6 @@ def group_by_image(samples):
                     if _box_area(new_box) > _box_area(existing.get("box")):
                         existing["box"] = new_box
 
-            # ---------- NORMAL CATEGORIES ----------
             else:
                 existing = entry["categories"].get(key)
                 if existing is None:
@@ -145,7 +133,6 @@ def group_by_image(samples):
                     if _box_area(new_box) > _box_area(existing["box"]):
                         entry["categories"][key] = {"box": new_box, "value": value}
 
-    # Auto-add "no_pattern" when completely missing
     for entry in images.values():
         if "pattern" not in entry["categories"]:
             entry["categories"]["pattern"] = {
@@ -156,22 +143,34 @@ def group_by_image(samples):
     return list(images.values())
 
 
-def get_transforms(train=True, size=224):
+def _parse_resize_size(size):
+    """Ensures resizing is always PyTorch T.Resize format: (Height, Width)."""
+    if isinstance(size, (tuple, list)) and len(size) == 2:
+        if size[0] > size[1]:
+            return (int(size[1]), int(size[0]))
+        return (int(size[0]), int(size[1]))
+    elif isinstance(size, (int, float)):
+        return (int(size), int(size))
+    return DEFAULT_TARGET_SIZE
+
+
+def get_transforms(train=True, size=DEFAULT_TARGET_SIZE):
+    resize_dim = _parse_resize_size(size)
     if train:
         return T.Compose([
-            T.Resize((size, size)),
+            T.Resize(resize_dim),
             T.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.05),
             T.Lambda(lambda img: _to_hsv_tensor(img)),
             T.Normalize(MEAN, STD),
         ])
     return T.Compose([
-        T.Resize((size, size)),
+        T.Resize(resize_dim),
         T.Lambda(lambda img: _to_hsv_tensor(img)),
         T.Normalize(MEAN, STD),
     ])
 
 
-def eval_transform(size=224):
+def eval_transform(size=DEFAULT_TARGET_SIZE):
     return get_transforms(train=False, size=size)
 
 
@@ -186,11 +185,7 @@ def _norm_box(box, w, h):
 
 
 class ImageBoxDataset(Dataset):
-    """One sample = full image + targets for every category.
-    Sleeves has 2 boxes, everything else has 1 box.
-    """
-
-    def __init__(self, image_entries, spec, train=True, size=224):
+    def __init__(self, image_entries, spec, train=True, size=DEFAULT_TARGET_SIZE):
         self.entries = image_entries
         self.spec = spec
         self.size = size
@@ -216,13 +211,12 @@ class ImageBoxDataset(Dataset):
             opts = c["options"]
             info = e["categories"].get(k)
 
-            # ----- Classification target -----
             if c["mode"] == "single":
                 if info and info.get("value") in opts:
                     y[k] = torch.tensor(opts.index(info["value"]), dtype=torch.long)
                 else:
                     y[k] = torch.tensor(-1, dtype=torch.long)
-            else:  # multi-label (pattern)
+            else:
                 target = torch.zeros(len(opts), dtype=torch.float32)
                 if info and info.get("value"):
                     vals = info["value"] if isinstance(info["value"], list) else [info["value"]]
@@ -234,7 +228,6 @@ class ImageBoxDataset(Dataset):
                     1.0 if info is not None else 0.0, dtype=torch.float32
                 )
 
-            # ----- Box target -----
             if k == "sleeves":
                 boxes = info.get("boxes", []) if info else []
                 while len(boxes) < 2:
@@ -255,8 +248,8 @@ class ImageBoxDataset(Dataset):
                         norm_boxes.append([0.0, 0.0, 0.0, 0.0])
                         masks.append(0.0)
 
-                y["sleeves__box"] = torch.tensor(norm_boxes, dtype=torch.float32)       # (2, 4)
-                y["sleeves__box_mask"] = torch.tensor(masks, dtype=torch.float32)       # (2,)
+                y["sleeves__box"] = torch.tensor(norm_boxes, dtype=torch.float32)
+                y["sleeves__box_mask"] = torch.tensor(masks, dtype=torch.float32)
             else:
                 if info and info.get("box") is not None:
                     box = list(info["box"])

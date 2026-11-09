@@ -1,5 +1,7 @@
 """Load a trained checkpoint and run forward pass (2_train/inference.py)."""
 
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
@@ -11,7 +13,7 @@ for p in (ROOT, TRAIN):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from dataset import eval_transform
+from dataset import eval_transform, DEFAULT_SIZE
 from model import MultiHeadNet, decode
 
 
@@ -27,22 +29,45 @@ def get_device():
     return torch.device("cpu")
 
 
+def _has_boxes(state_dict, ckpt_flag):
+    if ckpt_flag:
+        return True
+    return any(
+        k.startswith(("length_box_head", "rel_box_heads"))
+        for k in state_dict
+    )
+
+
 def load_model(path, dev=None):
-    """Load model.pt → (model, spec, transform, device, has_boxes)."""
+    """Load model.pt -> (model, spec, transform, device, has_boxes)."""
     dev = dev or get_device()
     ck = torch.load(path, map_location=dev, weights_only=False)
-    has_boxes = bool(ck.get("has_boxes", False)) or any(
-        k.startswith("box_heads.") for k in ck["state"]
+    has_boxes = _has_boxes(ck["state"], bool(ck.get("has_boxes", False)))
+    
+    # Safely load size as tuple or int (without int() cast crash)
+    raw_size = ck.get("size", DEFAULT_SIZE)
+    if isinstance(raw_size, (list, tuple)):
+        size = tuple(raw_size)
+        crop_h = size[0]
+    else:
+        size = int(raw_size)
+        crop_h = size
+
+    model = MultiHeadNet(
+        ck["arch"],
+        ck["spec"],
+        pretrained=False,
+        with_boxes=has_boxes,
+        crop_size=max(64, crop_h // 2)
     )
-    model = MultiHeadNet(ck["arch"], ck["spec"], pretrained=False, with_boxes=has_boxes)
     model.load_state_dict(ck["state"], strict=False)
     model.eval().to(dev)
-    return model, ck["spec"], eval_transform(ck.get("size", 224)), dev, has_boxes
+    return model, ck["spec"], eval_transform(size), dev, has_boxes
 
 
 @torch.no_grad()
 def predict_pil(bundle, img):
-    """Run model on one PIL image → (probs_dict, boxes_dict normalised xyxy)."""
+    """Run model on one PIL image -> (probs_dict, boxes_dict normalised xyxy)."""
     model, spec, tf, dev, has_boxes = bundle
     out = model(tf(img).unsqueeze(0).to(dev))
     return decode(out, spec)

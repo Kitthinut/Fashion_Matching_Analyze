@@ -2,6 +2,7 @@
 Place this file in 4_test/test_images.py.
 Supports sleeves with 2 boxes and HSV model.
 """
+
 from __future__ import annotations
 
 import sys
@@ -19,7 +20,7 @@ for folder in (ROOT, HERE, TRAIN_DIR, LABEL_DIR):
     if str(folder) not in sys.path:
         sys.path.insert(0, str(folder))
 
-from dataset import eval_transform
+from dataset import eval_transform, DEFAULT_SIZE
 from model import MultiHeadNet, decode
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
@@ -43,6 +44,15 @@ def get_device():
     return torch.device("cpu")
 
 
+def _has_boxes(state_dict, ckpt_flag):
+    if ckpt_flag:
+        return True
+    return any(
+        k.startswith(("length_box_head", "rel_box_heads"))
+        for k in state_dict
+    )
+
+
 def load_bundle(model_path: Path):
     if not model_path.is_file():
         raise FileNotFoundError(f"Model checkpoint not found:\n{model_path}")
@@ -53,19 +63,19 @@ def load_bundle(model_path: Path):
     if missing:
         raise ValueError(f"Checkpoint is missing required keys: {sorted(missing)}")
 
-    has_boxes = bool(checkpoint.get("has_boxes", False)) or any(
-        key.startswith("box_heads.") for key in checkpoint["state"]
-    )
+    has_boxes = _has_boxes(checkpoint["state"], bool(checkpoint.get("has_boxes", False)))
     if not has_boxes:
         raise ValueError("This checkpoint does not contain bounding-box heads.")
 
+    size = int(checkpoint.get("size", DEFAULT_SIZE))
     model = MultiHeadNet(
         checkpoint["arch"], checkpoint["spec"],
-        pretrained=False, with_boxes=True
+        pretrained=False, with_boxes=True,
+        crop_size=max(64, size // 2)
     )
-    model.load_state_dict(checkpoint["state"], strict=False)  # strict=False for safety
+    model.load_state_dict(checkpoint["state"], strict=False)
     model.to(device).eval()
-    transform = eval_transform(int(checkpoint.get("size", 224)))
+    transform = eval_transform(size)
     return model, checkpoint["spec"], transform, device
 
 

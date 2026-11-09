@@ -1,5 +1,6 @@
 """Garment AI | Evaluation & Visual Inspector
 Shows exact match counts + combined score that penalizes bad boxes.
+Overlay predictions on original full-resolution test images.
 """
 
 from __future__ import annotations
@@ -41,6 +42,16 @@ def get_device():
     return torch.device("cpu")
 
 
+def parse_size(size_val):
+    if isinstance(size_val, (tuple, list)) and len(size_val) == 2:
+        return (int(size_val[0]), int(size_val[1]))
+    try:
+        val = int(size_val)
+        return (val, val)
+    except (ValueError, TypeError):
+        return (224, 384)
+
+
 def load_bundle(model_path: Path):
     device = get_device()
     ck = torch.load(model_path, map_location=device, weights_only=False)
@@ -50,7 +61,8 @@ def load_bundle(model_path: Path):
     model = MultiHeadNet(ck["arch"], ck["spec"], pretrained=False, with_boxes=has_boxes)
     model.load_state_dict(ck["state"], strict=False)
     model.to(device).eval()
-    size = int(ck.get("size", 224))
+    
+    size = parse_size(ck.get("size", (224, 384)))
     return model, ck["spec"], eval_transform(size), device, has_boxes, size
 
 
@@ -120,7 +132,6 @@ def evaluate_split(model, spec, device, ann_path, size, batch_size=16):
                     multi_fp[k] += (pred & ~truth).sum().item()
                     multi_fn[k] += (~pred & truth).sum().item()
 
-            # Box IoU
             if k == "sleeves":
                 mask = y.get("sleeves__box_mask", torch.zeros(1)) > 0
                 if mask.any() and "sleeves" in out.get("boxes", {}):
@@ -147,7 +158,6 @@ def evaluate_split(model, spec, device, ann_path, size, batch_size=16):
             iou_sum[k] += ious.sum().item()
             iou_n[k]   += len(ious)
 
-    # Build readable results
     class_metrics = {}
     counts = {}
     for k, c in spec.items():
@@ -170,7 +180,6 @@ def evaluate_split(model, spec, device, ann_path, size, batch_size=16):
     mean_class = sum(valid_acc)/len(valid_acc) if valid_acc else 0.0
     mean_iou   = sum(valid_iou)/len(valid_iou) if valid_iou else 0.0
 
-    # Combined score – boxes are weighted equally with attributes
     combined = 0.5 * mean_class + 0.5 * mean_iou
 
     return {
@@ -215,7 +224,6 @@ class EvalApp:
         main = tk.Frame(self.root)
         main.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
 
-        # Left panel – metrics
         left = tk.Frame(main, width=520)
         left.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 10))
         left.pack_propagate(False)
@@ -227,7 +235,6 @@ class EvalApp:
         self.metrics_text.insert(tk.END, "Running evaluation...\n")
         self.metrics_text.config(state=tk.DISABLED)
 
-        # Right panel – image inspector
         right = tk.Frame(main)
         right.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
@@ -276,13 +283,12 @@ class EvalApp:
                     raise FileNotFoundError(f"Missing: {p}")
 
             model, spec, transform, device, has_boxes, size = load_bundle(model_path)
-            self.bundle = (model, spec, transform, device, has_boxes)
+            self.bundle = (model, spec, transform, device, has_boxes, size)
 
             va = evaluate_split(model, spec, device, val_ann, size)
             ts = evaluate_split(model, spec, device, test_ann, size)
             self.val_result, self.test_result = va, ts
 
-            # Verdict
             gap = (va["mean_class"] - ts["mean_class"]) if va["mean_class"] and ts["mean_class"] else None
             if gap is not None and gap > 0.12:
                 verdict = "Possible overfitting (Val >> Test)"
@@ -404,25 +410,30 @@ class EvalApp:
     def predict_current(self):
         if self.current_image is None or self.bundle is None:
             return
-        model, spec, transform, device, _ = self.bundle
+        model, spec, transform, device, _, trained_size = self.bundle
         try:
             tensor = transform(self.current_image).unsqueeze(0).to(device)
             with torch.inference_mode():
                 out = model(tensor)
-            probs, norm_boxes = decode(out, spec)
+            probs, raw_boxes = decode(out, spec)
 
             w, h = self.current_image.size
+
+            def map_box(b):
+                nx1, ny1, nx2, ny2 = b
+                return [
+                    max(0, min(w, round(nx1 * w))),
+                    max(0, min(h, round(ny1 * h))),
+                    max(0, min(w, round(nx2 * w))),
+                    max(0, min(h, round(ny2 * h))),
+                ]
+
             self.pred_boxes = {}
-            for key, box in norm_boxes.items():
+            for key, box in raw_boxes.items():
                 if key == "sleeves" and isinstance(box, list):
-                    self.pred_boxes[key] = [
-                        [max(0, min(w, round(b[0]*w))), max(0, min(h, round(b[1]*h))),
-                         max(0, min(w, round(b[2]*w))), max(0, min(h, round(b[3]*h)))]
-                        for b in box]
+                    self.pred_boxes[key] = [map_box(b) for b in box]
                 else:
-                    self.pred_boxes[key] = [
-                        max(0, min(w, round(box[0]*w))), max(0, min(h, round(box[1]*h))),
-                        max(0, min(w, round(box[2]*w))), max(0, min(h, round(box[3]*h)))]
+                    self.pred_boxes[key] = map_box(box)
 
             lines = ["Prediction vs Ground Truth", "="*42]
             gt_map = {}

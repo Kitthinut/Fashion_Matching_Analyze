@@ -1,4 +1,5 @@
 """Train MultiHeadNet (box-first → classify inside crops)
+Location: 2_train/train.py
 """
 
 import argparse
@@ -32,7 +33,6 @@ def get_device():
 
 @torch.no_grad()
 def evaluate(model, loader, spec, dev):
-    """Return a dictionary with loss, metrics, counts, IoU and combined score."""
     model.eval()
     total_loss, total_count = 0.0, 0
 
@@ -49,13 +49,11 @@ def evaluate(model, loader, spec, dev):
         x = x.to(dev)
         y = {k: v.to(dev) for k, v in y.items()}
 
-        # Use predicted boxes for classification during evaluation
         out = model(x, use_gt_for_cls=False)
         loss = compute_loss(out, y, spec)
         total_loss += loss.item() * len(x)
         total_count += len(x)
 
-        # ----- Classification counts -----
         for k, c in spec.items():
             if k not in out["cls"]:
                 continue
@@ -75,7 +73,6 @@ def evaluate(model, loader, spec, dev):
                     multi_fp[k] += (pred & ~truth).sum().item()
                     multi_fn[k] += (~pred & truth).sum().item()
 
-        # ----- Box IoU -----
         for k in spec:
             if k not in out.get("boxes", {}):
                 continue
@@ -106,7 +103,6 @@ def evaluate(model, loader, spec, dev):
             iou_sum[k] += ious.sum().item()
             iou_n[k]   += len(ious)
 
-    # ----- Build metrics -----
     class_metrics = {}
     counts = {}
     for k, c in spec.items():
@@ -133,7 +129,6 @@ def evaluate(model, loader, spec, dev):
     mean_class = sum(valid_acc) / len(valid_acc) if valid_acc else 0.0
     mean_iou   = sum(valid_iou) / len(valid_iou) if valid_iou else 0.0
 
-    # Combined score (penalises bad boxes)
     combined = 0.5 * mean_class + 0.5 * mean_iou
 
     return {
@@ -153,12 +148,12 @@ def main():
     ap.add_argument("--ann-val",   default=ROOT / "annotations_validation.json")
     ap.add_argument("--out",       default=ROOT / "model.pt")
     ap.add_argument("--arch",      default="resnet18", choices=["resnet18", "resnet50"])
-    ap.add_argument("--epochs",    type=int,   default=25)
+    ap.add_argument("--epochs",    type=int,   default=30)
     ap.add_argument("--batch",     type=int,   default=16)
     ap.add_argument("--lr",        type=float, default=3e-4)
-    ap.add_argument("--size",      type=int,   default=224)
+    ap.add_argument("--size",      default=(224, 384))
     ap.add_argument("--workers",   type=int,   default=0)
-    ap.add_argument("--box-weight", type=float, default=3.0)
+    ap.add_argument("--box-weight", type=float, default=8.0)
     ap.add_argument("--no-pretrained", action="store_true")
     a = ap.parse_args()
 
@@ -214,17 +209,14 @@ def main():
             x = x.to(dev)
             y = {k: v.to(dev) for k, v in y.items()}
 
-            # Ground-truth boxes for classification path
             gt_boxes = {}
             for k in spec:
                 if k == "sleeves":
-                    gt_boxes[k] = y["sleeves__box"]          # (B, 2, 4)
+                    gt_boxes[k] = y["sleeves__box"]
                 else:
-                    gt_boxes[k] = y[k + "__box"]             # (B, 4)
+                    gt_boxes[k] = y[k + "__box"]
 
             opt.zero_grad()
-
-            # use_gt_for_cls=True → classifier only sees GT boxes during training
             out = model(x, gt_boxes=gt_boxes, use_gt_for_cls=True)
             loss = compute_loss(out, y, spec, box_weight=a.box_weight)
 
@@ -234,7 +226,6 @@ def main():
 
         sched.step()
 
-        # ----- Validation -----
         result = evaluate(model, vl, spec, dev)
 
         val_loss   = result["loss"]
