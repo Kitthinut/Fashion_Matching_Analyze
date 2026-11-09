@@ -1,6 +1,5 @@
-"""Garment AI | Model Evaluation & Test-set Inspector
-Location: 4_test/validate_test.py
-Run: python 4_test/validate_test.py
+"""Garment AI | Evaluation & Visual Inspector
+Shows exact match counts + combined score that penalizes bad boxes.
 """
 
 from __future__ import annotations
@@ -9,20 +8,16 @@ import sys
 import json
 from pathlib import Path
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
 from PIL import Image, ImageTk, ImageDraw
 import torch
 from torch.utils.data import DataLoader
 
-# -----------------------------------------------------------------------------
-# 1. Setup Environment & Imports
-# -----------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parents[1]
 HERE = Path(__file__).resolve().parent
 TRAIN_DIR = ROOT / "2_train"
-LABEL_DIR = ROOT / "1_label"
 
-for folder in (ROOT, HERE, TRAIN_DIR, LABEL_DIR):
+for folder in (ROOT, HERE, TRAIN_DIR):
     if str(folder) not in sys.path:
         sys.path.insert(0, str(folder))
 
@@ -30,22 +25,15 @@ from attributes import head_spec
 from dataset import ImageBoxDataset, load_annotations, group_by_image, eval_transform
 from model import MultiHeadNet, decode, compute_loss
 
-# Colors & Typography
-GT_COLOR = "#16a36a"       # Green
-PRED_COLOR = "#e34b4b"     # Red
-BOX_RGB_GT = (22, 163, 106)
-BOX_RGB_PRED = (227, 75, 75)
-
-FONT_TITLE = ("Segoe UI", 15, "bold")
-FONT_SUBTITLE = ("Segoe UI", 10)
-FONT_BODY = ("Segoe UI", 10)
+GT_COLOR = (22, 163, 106)
+PRED_COLOR = (227, 75, 75)
+BG_DARK = "#202938"
+BG_LIGHT = "#f8fafc"
+FONT_TITLE = ("Segoe UI", 13, "bold")
 FONT_MONO = ("Consolas", 10)
 
 
-# -----------------------------------------------------------------------------
-# 2. Helpers & Utilities
-# -----------------------------------------------------------------------------
-def get_device() -> torch.device:
+def get_device():
     if torch.cuda.is_available():
         return torch.device("cuda")
     if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
@@ -54,624 +42,428 @@ def get_device() -> torch.device:
 
 
 def load_bundle(model_path: Path):
-    if not model_path.is_file():
-        raise FileNotFoundError(f"Model checkpoint not found at: {model_path}")
-
     device = get_device()
     ck = torch.load(model_path, map_location=device, weights_only=False)
-
-    for key in ("state", "spec", "arch"):
-        if key not in ck:
-            raise ValueError(f"Checkpoint missing required key: '{key}'")
-
     has_boxes = bool(ck.get("has_boxes", False)) or any(
-        k.startswith("box_heads.") for k in ck["state"]
+        k.startswith(("box_heads.", "length_box_head", "rel_box_heads")) for k in ck["state"]
     )
-
     model = MultiHeadNet(ck["arch"], ck["spec"], pretrained=False, with_boxes=has_boxes)
-    model.load_state_dict(ck["state"], strict=True)
+    model.load_state_dict(ck["state"], strict=False)
     model.to(device).eval()
-
-    img_size = int(ck.get("size", 224))
-    transform = eval_transform(img_size)
-
-    return model, ck["spec"], transform, device, has_boxes
+    size = int(ck.get("size", 224))
+    return model, ck["spec"], eval_transform(size), device, has_boxes, size
 
 
-def box_iou_xyxy(box_a: list[float], box_b: list[float]) -> float:
-    ax1, ay1, ax2, ay2 = box_a
-    bx1, by1, bx2, by2 = box_b
-
-    ix1, iy1 = max(ax1, bx1), max(ay1, by1)
-    ix2, iy2 = min(ax2, bx2), min(ay2, by2)
-
-    inter_area = max(0, ix2 - ix1) * max(0, iy2 - iy1)
-    area_a = max(0, ax2 - ax1) * max(0, ay2 - ay1)
-    area_b = max(0, bx2 - bx1) * max(0, by2 - by1)
-
-    union_area = area_a + area_b - inter_area
-    return inter_area / union_area if union_area > 0 else 0.0
+def fmt(v):
+    return "N/A" if v is None else f"{v:.1%}"
 
 
-def fmt_pct(value: float | None) -> str:
-    return "N/A" if value is None else f"{value:.1%}"
-
-
-def resolve_image_path(image_root: Path, relative_path: str) -> Path | None:
-    # 1. Direct path lookup
+def resolve_image_path(image_root: Path, relative_path: str):
     candidate = image_root / relative_path
     if candidate.is_file():
         return candidate
-
-    # 2. Auto-search across project dataset directories
     filename = Path(relative_path).name
-    search_dirs = [
-        image_root,
-        ROOT / "dataset",
-        ROOT / "dataset" / "test",
-        ROOT / "dataset" / "validation",
-        ROOT / "dataset" / "train",
-        ROOT,
-        Path.cwd(),
-    ]
-
-    for directory in search_dirs:
-        if directory.is_dir():
-            matches = list(directory.rglob(filename))
+    for d in [image_root, ROOT/"dataset", ROOT/"dataset"/"test",
+              ROOT/"dataset"/"validation", ROOT/"dataset"/"train", ROOT]:
+        if d.is_dir():
+            matches = list(d.rglob(filename))
             if matches:
                 return matches[0]
-
     return None
 
 
-# -----------------------------------------------------------------------------
-# 3. Evaluation Logic
-# -----------------------------------------------------------------------------
 @torch.inference_mode()
-def evaluate_split(model, spec: dict, device: torch.device, annotation_path: Path, size: int, batch_size=16) -> dict:
-    regions = load_annotations(annotation_path)
+def evaluate_split(model, spec, device, ann_path, size, batch_size=16):
+    regions = load_annotations(ann_path)
     images = group_by_image(regions)
     if not images:
-        raise ValueError(f"No readable annotations found in {annotation_path}")
+        raise ValueError(f"No images in {ann_path}")
 
-    dataset = ImageBoxDataset(images, spec, train=False, size=size)
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+    loader = DataLoader(
+        ImageBoxDataset(images, spec, train=False, size=size),
+        batch_size=batch_size, shuffle=False, num_workers=0
+    )
 
     total_loss, total_n = 0.0, 0
     single_correct = {k: 0 for k, c in spec.items() if c["mode"] == "single"}
-    single_total = {k: 0 for k, c in spec.items() if c["mode"] == "single"}
-    multi_stats = {k: [0, 0, 0] for k, c in spec.items() if c["mode"] == "multi"}
+    single_total   = {k: 0 for k, c in spec.items() if c["mode"] == "single"}
+    multi_tp = {k: 0 for k, c in spec.items() if c["mode"] == "multi"}
+    multi_fp = {k: 0 for k, c in spec.items() if c["mode"] == "multi"}
+    multi_fn = {k: 0 for k, c in spec.items() if c["mode"] == "multi"}
+    iou_sum = {k: 0.0 for k in spec}
+    iou_n   = {k: 0   for k in spec}
 
-    iou_sum, iou_count = 0.0, 0
-    per_head_iou = {k: [0.0, 0] for k in spec}
-
-    for x, targets in loader:
+    for x, y in loader:
         x = x.to(device)
-        targets = {k: v.to(device) for k, v in targets.items()}
-        outputs = model(x)
+        y = {k: v.to(device) for k, v in y.items()}
+        out = model(x, use_gt_for_cls=False)
 
-        loss = compute_loss(outputs, targets, spec)
+        loss = compute_loss(out, y, spec)
         total_loss += loss.item() * len(x)
         total_n += len(x)
 
-        for key, config in spec.items():
-            logits = outputs["cls"][key]
-            if config["mode"] == "single":
-                mask = targets[key] >= 0
+        for k, c in spec.items():
+            if k not in out["cls"]:
+                continue
+            if c["mode"] == "single":
+                mask = y[k] >= 0
                 if mask.any():
-                    pred = logits.argmax(dim=1)
-                    single_correct[key] += (pred[mask] == targets[key][mask]).sum().item()
-                    single_total[key] += mask.sum().item()
+                    pred = out["cls"][k].argmax(1)
+                    single_correct[k] += (pred[mask] == y[k][mask]).sum().item()
+                    single_total[k]   += mask.sum().item()
             else:
-                mask = targets[key + "__mask"] > 0
+                mask = y[k + "__mask"] > 0
                 if mask.any():
-                    pred = torch.sigmoid(logits[mask]) >= 0.5
-                    truth = targets[key][mask] >= 0.5
-                    multi_stats[key][0] += (pred & truth).sum().item()
-                    multi_stats[key][1] += (pred & ~truth).sum().item()
-                    multi_stats[key][2] += (~pred & truth).sum().item()
+                    pred  = torch.sigmoid(out["cls"][k][mask]) >= 0.5
+                    truth = y[k][mask] >= 0.5
+                    multi_tp[k] += (pred &  truth).sum().item()
+                    multi_fp[k] += (pred & ~truth).sum().item()
+                    multi_fn[k] += (~pred & truth).sum().item()
 
-            box_mask = targets[key + "__box_mask"] > 0
-            if box_mask.any() and key in outputs.get("boxes", {}):
-                pred_box = outputs["boxes"][key][box_mask]
-                true_box = targets[key + "__box"][box_mask]
+            # Box IoU
+            if k == "sleeves":
+                mask = y.get("sleeves__box_mask", torch.zeros(1)) > 0
+                if mask.any() and "sleeves" in out.get("boxes", {}):
+                    pred = out["boxes"]["sleeves"][mask]
+                    gt   = y["sleeves__box"][mask]
+                else:
+                    continue
+            else:
+                mask = y.get(k + "__box_mask", torch.zeros(1)) > 0
+                if not mask.any() or k not in out.get("boxes", {}):
+                    continue
+                pred = out["boxes"][k][mask]
+                gt   = y[k + "__box"][mask]
 
-                ix1 = torch.maximum(pred_box[:, 0], true_box[:, 0])
-                iy1 = torch.maximum(pred_box[:, 1], true_box[:, 1])
-                ix2 = torch.minimum(pred_box[:, 2], true_box[:, 2])
-                iy2 = torch.minimum(pred_box[:, 3], true_box[:, 3])
+            inter_x1 = torch.maximum(pred[:, 0], gt[:, 0])
+            inter_y1 = torch.maximum(pred[:, 1], gt[:, 1])
+            inter_x2 = torch.minimum(pred[:, 2], gt[:, 2])
+            inter_y2 = torch.minimum(pred[:, 3], gt[:, 3])
+            inter = (inter_x2 - inter_x1).clamp(0) * (inter_y2 - inter_y1).clamp(0)
+            area_p = (pred[:, 2] - pred[:, 0]).clamp(0) * (pred[:, 3] - pred[:, 1]).clamp(0)
+            area_g = (gt[:, 2] - gt[:, 0]).clamp(0) * (gt[:, 3] - gt[:, 1]).clamp(0)
+            union = area_p + area_g - inter + 1e-6
+            ious = inter / union
+            iou_sum[k] += ious.sum().item()
+            iou_n[k]   += len(ious)
 
-                inter = (ix2 - ix1).clamp(min=0) * (iy2 - iy1).clamp(min=0)
-                area_p = (pred_box[:, 2] - pred_box[:, 0]).clamp(min=0) * (pred_box[:, 3] - pred_box[:, 1]).clamp(min=0)
-                area_g = (true_box[:, 2] - true_box[:, 0]).clamp(min=0) * (true_box[:, 3] - true_box[:, 1]).clamp(min=0)
-                union = area_p + area_g - inter
-
-                ious = inter / union.clamp(min=1e-8)
-                iou_sum += ious.sum().item()
-                iou_count += len(ious)
-                per_head_iou[key][0] += ious.sum().item()
-                per_head_iou[key][1] += len(ious)
-
+    # Build readable results
     class_metrics = {}
-    all_class_scores = []
-    for key, config in spec.items():
-        if config["mode"] == "single":
-            val = single_correct[key] / single_total[key] if single_total[key] else None
+    counts = {}
+    for k, c in spec.items():
+        if c["mode"] == "single":
+            correct = single_correct[k]
+            total   = single_total[k]
+            acc = correct / total if total else None
+            counts[k] = f"{correct}/{total}"
         else:
-            tp, fp, fn = multi_stats[key]
-            denom = 2 * tp + fp + fn
-            val = (2 * tp / denom) if denom else None
+            tp, fp, fn = multi_tp[k], multi_fp[k], multi_fn[k]
+            denom = 2*tp + fp + fn
+            acc = (2*tp / denom) if denom else None
+            counts[k] = f"tp:{tp} fp:{fp} fn:{fn}"
+        class_metrics[k] = acc
 
-        class_metrics[key] = val
-        if val is not None:
-            all_class_scores.append(val)
+    per_head_iou = {k: (iou_sum[k]/iou_n[k] if iou_n[k] else None) for k in spec}
 
-    mean_class = sum(all_class_scores) / len(all_class_scores) if all_class_scores else None
-    mean_iou = iou_sum / iou_count if iou_count else None
+    valid_acc = [v for v in class_metrics.values() if v is not None]
+    valid_iou = [v for v in per_head_iou.values() if v is not None]
+    mean_class = sum(valid_acc)/len(valid_acc) if valid_acc else 0.0
+    mean_iou   = sum(valid_iou)/len(valid_iou) if valid_iou else 0.0
+
+    # Combined score – boxes are weighted equally with attributes
+    combined = 0.5 * mean_class + 0.5 * mean_iou
 
     return {
         "images": len(images),
         "loss": total_loss / max(total_n, 1),
         "class_metrics": class_metrics,
+        "counts": counts,
+        "per_head_iou": per_head_iou,
         "mean_class": mean_class,
         "mean_iou": mean_iou,
-        "per_head_iou": {k: (v[0] / v[1] if v[1] else None) for k, v in per_head_iou.items()},
+        "combined": combined,
     }
 
 
-def assess_generalization(val: dict, test: dict) -> tuple[str, str]:
-    loss_gap = test["loss"] - val["loss"]
-    val_score, test_score = val["mean_class"], test["mean_class"]
-    score_gap = (val_score - test_score) if val_score is not None and test_score is not None else None
-
-    if score_gap is not None and score_gap >= 0.15 and loss_gap > 0:
-        return (
-            "POSSIBLE OVERFITTING TO VALIDATION",
-            "Validation accuracy is substantially higher than test-set performance. "
-            "Model selection may have overfitted to the validation split.",
-        )
-    if test["loss"] > val["loss"] * 1.5 and loss_gap > 0.15:
-        return (
-            "HIGHER TEST LOSS DETECTED",
-            "Test loss is considerably higher than validation loss. Check for distribution shifts "
-            "between validation and test datasets.",
-        )
-    if val_score is not None and test_score is not None and val_score < 0.55 and test_score < 0.55:
-        return (
-            "UNDERFITTING / POOR PERFORMANCE",
-            "Both validation and test attribute scores are low. Model requires further training.",
-        )
-    if score_gap is not None and abs(score_gap) <= 0.08 and loss_gap <= 0.15:
-        return (
-            "GOOD GENERALIZATION",
-            "Validation and test metrics are closely aligned. Model performs consistently on unseen data.",
-        )
-    return (
-        "MIXED / NEEDS REVIEW",
-        "Metrics do not exhibit a distinct pattern. Review individual category scores and box IoU.",
-    )
-
-
-# -----------------------------------------------------------------------------
-# 4. Stage 1 GUI Window (Validation vs. Test Summary)
-# -----------------------------------------------------------------------------
-class EvaluationApp:
-    def __init__(self, root: tk.Tk):
+class EvalApp:
+    def __init__(self, root):
         self.root = root
-        self.root.title("Garment AI | Model Evaluation & Analysis")
-        self.root.geometry("1180x850")
-        self.root.minsize(950, 680)
+        self.root.title("Garment AI | Evaluation & Inspector")
+        self.root.geometry("1520x960")
+        self.root.minsize(1100, 750)
 
         self.bundle = None
-        self.val_result = None
-        self.test_result = None
+        self.val_result = self.test_result = None
+        self.entries = []
+        self.current = 0
+        self.pred_boxes = {}
+        self.current_image = None
+        self.photo = None
+        self.display_mode = tk.StringVar(value="both")
 
         self.build_ui()
-        self.root.after(150, self.run_evaluation)
+        self.root.after(80, self.run_evaluation)
 
     def build_ui(self):
-        header = tk.Frame(self.root, bg="#202938", padx=18, pady=15)
+        header = tk.Frame(self.root, bg=BG_DARK, padx=16, pady=10)
         header.pack(fill=tk.X)
-        tk.Label(header, text="GARMENT AI  /  MODEL EVALUATION (STAGE 1)", bg="#202938", fg="white", font=FONT_TITLE).pack(anchor="w")
-        tk.Label(header, text="Validation Set (Model Selection) vs. Test Set (Unseen Evaluation)", bg="#202938", fg="#d6deea", font=FONT_SUBTITLE).pack(anchor="w", pady=(4, 0))
+        tk.Label(header, text="GARMENT AI  —  EVALUATION & INSPECTOR",
+                 bg=BG_DARK, fg="white", font=FONT_TITLE).pack(side=tk.LEFT)
+        tk.Button(header, text="Re-run Evaluation", command=self.run_evaluation,
+                  bg="#16a36a", fg="white", relief=tk.FLAT, padx=12, pady=3).pack(side=tk.RIGHT)
 
-        self.progress = ttk.Progressbar(self.root, mode="indeterminate")
-        self.progress.pack(fill=tk.X, padx=18, pady=(15, 5))
+        main = tk.Frame(self.root)
+        main.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
 
-        self.status = tk.Label(self.root, text="Preparing evaluation...", anchor="w", padx=18, font=FONT_BODY)
-        self.status.pack(fill=tk.X)
+        # Left panel – metrics
+        left = tk.Frame(main, width=520)
+        left.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 10))
+        left.pack_propagate(False)
 
-        self.content = tk.Frame(self.root, padx=18, pady=12)
-        self.content.pack(fill=tk.BOTH, expand=True)
-
-        self.metrics_text = tk.Text(self.content, wrap=tk.WORD, font=FONT_MONO, height=25, padx=16, pady=14, bg="#f8fafc", fg="#0f172a")
+        tk.Label(left, text="Metrics (Validation vs Test)", font=FONT_TITLE).pack(anchor="w")
+        self.metrics_text = tk.Text(left, wrap=tk.WORD, font=FONT_MONO, height=32,
+                                    bg=BG_LIGHT, padx=10, pady=8)
         self.metrics_text.pack(fill=tk.BOTH, expand=True)
-        self.metrics_text.insert(tk.END, "Evaluating saved checkpoint on validation and test datasets...\n")
+        self.metrics_text.insert(tk.END, "Running evaluation...\n")
         self.metrics_text.config(state=tk.DISABLED)
 
-        footer = tk.Frame(self.root, padx=18, pady=14)
-        footer.pack(fill=tk.X)
-        tk.Button(footer, text="Re-run evaluation", command=self.run_evaluation, font=FONT_BODY).pack(side=tk.LEFT)
+        # Right panel – image inspector
+        right = tk.Frame(main)
+        right.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.next_button = tk.Button(
-            footer,
-            text="Next: Image Inspector (Stage 2)  →",
-            command=self.open_test_window,
-            state=tk.DISABLED,
-            bg="#16a36a",
-            fg="white",
-            font=FONT_BODY,
-            padx=16,
-            pady=8,
-        )
-        self.next_button.pack(side=tk.RIGHT)
+        top = tk.Frame(right)
+        top.pack(fill=tk.X)
+        self.counter = tk.Label(top, text="Image 0 / 0", font=FONT_TITLE)
+        self.counter.pack(side=tk.LEFT)
+        tk.Button(top, text="← Prev", command=self.prev_image).pack(side=tk.RIGHT, padx=3)
+        tk.Button(top, text="Next →", command=self.next_image).pack(side=tk.RIGHT)
 
-    def set_report(self, text: str):
+        mode_f = tk.Frame(right)
+        mode_f.pack(fill=tk.X, pady=3)
+        for txt, val in [("Both", "both"), ("GT only", "gt_only"), ("Pred only", "pred_only")]:
+            tk.Radiobutton(mode_f, text=txt, variable=self.display_mode,
+                           value=val, command=self.update_image).pack(side=tk.LEFT, padx=4)
+
+        self.image_label = tk.Label(right, bg="#e2e8f0", text="Waiting for evaluation...")
+        self.image_label.pack(fill=tk.BOTH, expand=True, pady=4)
+
+        tk.Button(right, text="Run Prediction on this image", command=self.predict_current,
+                  bg="#16a36a", fg="white", font=("Segoe UI", 11, "bold"),
+                  padx=10, pady=5).pack(fill=tk.X)
+
+        self.result_text = tk.Text(right, height=11, wrap=tk.WORD, font=FONT_MONO,
+                                   bg=BG_LIGHT, padx=8, pady=6)
+        self.result_text.pack(fill=tk.X, pady=(4, 0))
+
+        self.status = tk.Label(self.root, text="Ready", anchor="w", padx=12, pady=5)
+        self.status.pack(fill=tk.X)
+
+    def set_metrics(self, text):
         self.metrics_text.config(state=tk.NORMAL)
         self.metrics_text.delete("1.0", tk.END)
         self.metrics_text.insert(tk.END, text)
         self.metrics_text.config(state=tk.DISABLED)
 
     def run_evaluation(self):
-        self.next_button.config(state=tk.DISABLED)
-        self.progress.start(12)
-        self.status.config(text="Loading model and evaluating datasets. Please wait...")
+        self.status.config(text="Evaluating...")
         self.root.update_idletasks()
-
         try:
             model_path = ROOT / "model.pt"
             val_ann = ROOT / "annotations_validation.json"
             test_ann = ROOT / "annotations_test.json"
-
             for p in (model_path, val_ann, test_ann):
                 if not p.is_file():
-                    raise FileNotFoundError(f"Required file not found:\n{p}")
+                    raise FileNotFoundError(f"Missing: {p}")
 
-            model, spec, transform, device, has_boxes = load_bundle(model_path)
-            if not has_boxes:
-                raise ValueError("Checkpoint has no bounding-box prediction heads.")
-
-            size = int(torch.load(model_path, map_location="cpu", weights_only=False).get("size", 224))
-
-            self.val_result = evaluate_split(model, spec, device, val_ann, size)
-            self.test_result = evaluate_split(model, spec, device, test_ann, size)
+            model, spec, transform, device, has_boxes, size = load_bundle(model_path)
             self.bundle = (model, spec, transform, device, has_boxes)
 
-            title, explanation = assess_generalization(self.val_result, self.test_result)
-            va, ts = self.val_result, self.test_result
+            va = evaluate_split(model, spec, device, val_ann, size)
+            ts = evaluate_split(model, spec, device, test_ann, size)
+            self.val_result, self.test_result = va, ts
+
+            # Verdict
+            gap = (va["mean_class"] - ts["mean_class"]) if va["mean_class"] and ts["mean_class"] else None
+            if gap is not None and gap > 0.12:
+                verdict = "Possible overfitting (Val >> Test)"
+            elif va["mean_class"] is not None and va["mean_class"] < 0.55:
+                verdict = "Underfitting / low performance"
+            elif gap is not None and abs(gap) < 0.08:
+                verdict = "Good generalization"
+            else:
+                verdict = "Mixed – inspect details & boxes"
 
             lines = [
-                "MODEL EVALUATION SNAPSHOT — (VALIDATION vs TEST)",
-                "================================================================================",
-                f"Device: {device}",
-                f"Architecture: {model.__class__.__name__}",
+                "VALIDATION  vs  TEST",
+                "=" * 58,
+                f"Device   : {device}",
+                f"Images   : Val {va['images']}   |   Test {ts['images']}",
                 "",
-                "DATASET SUMMARY",
-                f"• Validation Images: {va['images']}",
-                f"• Test Images:       {ts['images']}",
+                f"{'Metric':<22}{'Val':>14}{'Test':>14}",
+                "-" * 58,
+                f"{'Loss':<22}{va['loss']:>14.4f}{ts['loss']:>14.4f}",
+                f"{'Mean Attribute':<22}{fmt(va['mean_class']):>14}{fmt(ts['mean_class']):>14}",
+                f"{'Mean Box IoU':<22}{fmt(va['mean_iou']):>14}{fmt(ts['mean_iou']):>14}",
+                f"{'Combined Score':<22}{fmt(va['combined']):>14}{fmt(ts['combined']):>14}",
                 "",
-                "OVERALL METRICS",
-                f"{'Metric':<32}{'VALIDATION':>22}{'TEST':>22}",
-                "--------------------------------------------------------------------------------",
-                f"{'Loss':<32}{va['loss']:>22.4f}{ts['loss']:>22.4f}",
-                f"{'Mean Attribute Score':<32}{fmt_pct(va['mean_class']):>22}{fmt_pct(ts['mean_class']):>22}",
-                f"{'Mean Box IoU':<32}{fmt_pct(va['mean_iou']):>22}{fmt_pct(ts['mean_iou']):>22}",
-                "",
-                "PER-CATEGORY ATTRIBUTE ACCURACY",
-                f"{'Category':<32}{'VALIDATION':>22}{'TEST':>22}",
-                "--------------------------------------------------------------------------------",
+                "Per-category Attribute (exact counts)",
+                "-" * 58,
             ]
             for k in spec:
-                lines.append(f"{k:<32}{fmt_pct(va['class_metrics'].get(k)):>22}{fmt_pct(ts['class_metrics'].get(k)):>22}")
+                va_c = va["counts"].get(k, "—")
+                ts_c = ts["counts"].get(k, "—")
+                va_a = va["class_metrics"].get(k)
+                ts_a = ts["class_metrics"].get(k)
+                va_s = f"{va_c} = {va_a:.1%}" if va_a is not None else va_c
+                ts_s = f"{ts_c} = {ts_a:.1%}" if ts_a is not None else ts_c
+                lines.append(f"{k:<22}{va_s:>18}{ts_s:>18}")
+
+            lines += ["", "Per-category Box IoU", "-" * 58]
+            for k in spec:
+                lines.append(f"{k:<22}{fmt(va['per_head_iou'].get(k)):>14}"
+                             f"{fmt(ts['per_head_iou'].get(k)):>14}")
 
             lines += [
                 "",
-                "PER-CATEGORY BOUNDING-BOX IoU",
-                f"{'Category':<32}{'VALIDATION':>22}{'TEST':>22}",
-                "--------------------------------------------------------------------------------",
+                "=" * 58,
+                "VERDICT",
+                verdict,
+                "",
+                "Note: Combined Score = 0.5*Attribute + 0.5*BoxIoU",
+                "Low Box IoU (especially sleeves) pulls the score down.",
             ]
-            for k in spec:
-                lines.append(f"{k:<32}{fmt_pct(va['per_head_iou'].get(k)):>22}{fmt_pct(ts['per_head_iou'].get(k)):>22}")
+            self.set_metrics("\n".join(lines))
+            self.status.config(text=f"Done | {verdict}")
+            self.load_test_images()
 
-            lines += [
-                "",
-                "================================================================================",
-                "METRIC EXPLANATIONS",
-                "================================================================================",
-                "1. Loss:",
-                "   • Lower is better. Represents the combined prediction and localization error.",
-                "",
-                "2. Mean Attribute Score:",
-                f"   • Current: Validation = {fmt_pct(va['mean_class'])} | Test = {fmt_pct(ts['mean_class'])}",
-                "   • Average accuracy of predicting garment classification attributes.",
-                "",
-                "3. Mean Box IoU:",
-                f"   • Current: Validation = {fmt_pct(va['mean_iou'])} | Test = {fmt_pct(ts['mean_iou'])}",
-                "   • Intersection over Union (overlap ratio) between predicted and ground-truth boxes.",
-                "",
-                "================================================================================",
-                "GENERALIZATION ASSESSMENT",
-                "================================================================================",
-                title,
-                explanation,
-                "",
-                "Next Step:",
-                "• Click 'Next: Image Inspector (Stage 2)' to review individual images with box overlays.",
-            ]
+        except Exception as e:
+            self.set_metrics(f"ERROR\n\n{type(e).__name__}: {e}")
+            self.status.config(text="Evaluation failed")
+            messagebox.showerror("Error", str(e))
 
-            self.set_report("\n".join(lines))
-            self.status.config(text=f"Evaluation complete  |  Device: {device}")
-            self.next_button.config(state=tk.NORMAL)
-
-        except Exception as exc:
-            self.status.config(text="Evaluation failed.")
-            self.set_report(f"EVALUATION ERROR\n\n{type(exc).__name__}: {exc}")
-            messagebox.showerror("Evaluation Error", str(exc))
-        finally:
-            self.progress.stop()
-
-    def open_test_window(self):
-        if self.bundle is None:
-            messagebox.showwarning("Warning", "Please run Stage 1 successfully first.")
-            return
-        TestSetWindow(self.root, self.bundle)
-
-
-# -----------------------------------------------------------------------------
-# 5. Stage 2 GUI Window (Visual Inspector & Display Controls)
-# -----------------------------------------------------------------------------
-class TestSetWindow(tk.Toplevel):
-    def __init__(self, parent: tk.Tk, bundle: tuple):
-        super().__init__(parent)
-        self.title("Garment AI | Stage 2 - Image Inspector")
-        self.geometry("1480x920")
-        self.minsize(1100, 720)
-
-        self.model, self.spec, self.transform, self.device, self.has_boxes = bundle
-
+    def load_test_images(self):
+        data = json.loads((ROOT / "annotations_test.json").read_text(encoding="utf-8"))
+        raw = data.get("image_root", "")
+        self.image_root = Path(raw) if raw else ROOT / "dataset" / "test"
+        self.entries = list(data.get("images", {}).items())
         self.current = 0
-        self.entries = []
-        self.image_root = Path()
-        self.photo = None
-        self.current_image = None
-        self.current_path = None
-        self.pred_boxes = {}
+        if self.entries:
+            self.show_image()
 
-        # Display Modes: "both", "gt_only", "pred_only"
-        self.display_mode = tk.StringVar(value="both")
-
-        self.build_ui()
-        self.load_test_annotations()
-
-    def build_ui(self):
-        header = tk.Frame(self, bg="#202938", padx=16, pady=12)
-        header.pack(fill=tk.X)
-        tk.Label(header, text="STAGE 2 — Test Set Image Inspector", bg="#202938", fg="white", font=FONT_TITLE).pack(anchor="w")
-
-        body = tk.Frame(self)
-        body.pack(fill=tk.BOTH, expand=True, padx=12, pady=12)
-
-        left = tk.Frame(body, bg="#e2e8f0")
-        left.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        self.image_label = tk.Label(left, bg="#e2e8f0", text="Loading image...")
-        self.image_label.pack(fill=tk.BOTH, expand=True)
-
-        right = tk.Frame(body, width=460, padx=14)
-        right.pack(side=tk.RIGHT, fill=tk.Y)
-        right.pack_propagate(False)
-
-        self.counter = tk.Label(right, text="Image 0/0", font=("Segoe UI", 12, "bold"))
-        self.counter.pack(anchor="w", pady=(2, 4))
-
-        self.path_label = tk.Label(right, text="", wraplength=430, justify=tk.LEFT, font=FONT_SUBTITLE, fg="#475569")
-        self.path_label.pack(anchor="w", pady=(0, 6))
-
-        # Box Display Mode Control Box
-        mode_frame = tk.LabelFrame(right, text=" Bounding Box Display Mode ", font=("Segoe UI", 10, "bold"), padx=10, pady=8)
-        mode_frame.pack(fill=tk.X, pady=(0, 10))
-
-        tk.Radiobutton(mode_frame, text="Both (GT & Model Pred)", variable=self.display_mode, value="both", command=self.update_image_display, font=FONT_BODY).pack(anchor="w", pady=2)
-        tk.Radiobutton(mode_frame, text="Ground Truth Only (Green)", variable=self.display_mode, value="gt_only", command=self.update_image_display, font=FONT_BODY).pack(anchor="w", pady=2)
-        tk.Radiobutton(mode_frame, text="Model Predict Only (Red)", variable=self.display_mode, value="pred_only", command=self.update_image_display, font=FONT_BODY).pack(anchor="w", pady=2)
-
-        nav = tk.Frame(right)
-        nav.pack(fill=tk.X, pady=4)
-        tk.Button(nav, text="← Previous", command=self.previous, font=FONT_BODY).pack(side=tk.LEFT, expand=True, fill=tk.X)
-        tk.Button(nav, text="Next →", command=self.next, font=FONT_BODY).pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(8, 0))
-
-        tk.Button(right, text="Run Prediction & Compare", command=self.run_current, bg="#16a36a", fg="white", font=("Segoe UI", 11, "bold"), padx=10, pady=8).pack(fill=tk.X, pady=8)
-
-        self.result_text = tk.Text(right, height=22, wrap=tk.WORD, font=FONT_MONO, padx=8, pady=8, bg="#f8fafc")
-        self.result_text.pack(fill=tk.BOTH, expand=True)
-
-        self.footer = tk.Label(self, text="", anchor="w", padx=14, pady=6, font=FONT_SUBTITLE)
-        self.footer.pack(fill=tk.X)
-
-    def load_test_annotations(self):
-        ann_path = ROOT / "annotations_test.json"
-        if not ann_path.is_file():
-            messagebox.showerror("Missing file", f"Could not find:\n{ann_path}")
-            self.destroy()
-            return
-        try:
-            data = json.loads(ann_path.read_text(encoding="utf-8"))
-            raw_root = data.get("image_root", "")
-            self.image_root = Path(raw_root) if raw_root else ROOT / "dataset" / "test"
-
-            self.entries = list(data.get("images", {}).items())
-            if not self.entries:
-                raise ValueError("No images found in annotations_test.json")
-            self.show_current()
-        except Exception as exc:
-            messagebox.showerror("Error", str(exc))
-            self.destroy()
-
-    def show_current(self):
+    def show_image(self):
         if not self.entries:
             return
-
-        rel_path, _ = self.entries[self.current]
-        self.counter.config(text=f"Image {self.current + 1} / {len(self.entries)}")
-        self.path_label.config(text=rel_path)
-
-        path = resolve_image_path(self.image_root, rel_path)
-        self.current_path = path
+        rel, info = self.entries[self.current]
+        self.counter.config(text=f"Image {self.current+1} / {len(self.entries)}")
+        path = resolve_image_path(self.image_root, rel)
         self.pred_boxes = {}
-
+        self.current_info = info
         if path is None:
-            self.image_label.config(image="", text=f"Image not found:\n{rel_path}")
-            self.result_text.delete("1.0", tk.END)
-            self.result_text.insert(tk.END, "Check dataset folder paths.")
+            self.image_label.config(image="", text=f"Not found:\n{rel}")
             return
-
         try:
             self.current_image = Image.open(path).convert("RGB")
-        except Exception as exc:
-            self.image_label.config(image="", text=f"Could not open image:\n{exc}")
-            return
+            self.update_image()
+            self.result_text.delete("1.0", tk.END)
+            self.result_text.insert(tk.END, "Click 'Run Prediction' to compare.")
+        except Exception as e:
+            self.image_label.config(image="", text=str(e))
 
-        self.update_image_display()
-        self.result_text.delete("1.0", tk.END)
-        self.result_text.insert(tk.END, "Ground-truth annotations loaded.\n\nClick 'Run Prediction & Compare' to evaluate this image.")
-        self.footer.config(text=f"File: {path.name}")
-
-    def update_image_display(self):
+    def update_image(self):
         if self.current_image is None:
             return
-
+        img = self.current_image.copy()
+        draw = ImageDraw.Draw(img)
+        w, h = img.size
         mode = self.display_mode.get()
-        image = self.current_image.copy()
-        draw = ImageDraw.Draw(image)
-        w, h = image.size
-        info = self.entries[self.current][1]
 
-        # 1. Draw Ground-Truth Boxes (Green)
         if mode in ("both", "gt_only"):
-            for region in info.get("regions", []):
+            for region in self.current_info.get("regions", []):
                 box = region.get("box")
                 if not box or len(box) != 4:
                     continue
-                x1, y1, x2, y2 = [int(v) for v in box]
-                draw.rectangle((x1, y1, x2, y2), outline=BOX_RGB_GT, width=max(2, w // 250))
-                draw.text((x1 + 3, max(0, y1 - 18)), "GROUND TRUTH", fill=BOX_RGB_GT)
+                x1, y1, x2, y2 = map(int, box)
+                draw.rectangle((x1, y1, x2, y2), outline=GT_COLOR, width=3)
+                label = ",".join(f"{k}:{v}" for k, v in region.get("attributes", {}).items())[:22]
+                draw.text((x1+2, max(0, y1-15)), label or "GT", fill=GT_COLOR)
 
-        # 2. Draw Model Prediction Boxes (Red)
         if mode in ("both", "pred_only") and self.pred_boxes:
-            for key, box in self.pred_boxes.items():
-                draw.rectangle(tuple(box), outline=BOX_RGB_PRED, width=max(2, w // 250))
-                draw.text((box[0] + 3, min(h - 18, box[1] + 3)), f"PRED {key}", fill=BOX_RGB_PRED)
+            for key, boxes in self.pred_boxes.items():
+                blist = boxes if isinstance(boxes[0], (list, tuple)) else [boxes]
+                for i, b in enumerate(blist):
+                    draw.rectangle(tuple(b), outline=PRED_COLOR, width=3)
+                    lbl = f"P:{key}" if len(blist) == 1 else f"P:{key}{i+1}"
+                    draw.text((b[0]+2, min(h-15, b[1]+2)), lbl, fill=PRED_COLOR)
 
-        available_w = max(200, self.winfo_width() - 500)
-        available_h = max(200, self.winfo_height() - 150)
-        image.thumbnail((available_w, available_h))
-
-        self.photo = ImageTk.PhotoImage(image)
+        max_w = max(400, self.image_label.winfo_width()-20)
+        max_h = max(300, self.image_label.winfo_height()-20)
+        img.thumbnail((max_w, max_h))
+        self.photo = ImageTk.PhotoImage(img)
         self.image_label.config(image=self.photo, text="")
 
-    def run_current(self):
-        if self.current_image is None:
+    def predict_current(self):
+        if self.current_image is None or self.bundle is None:
             return
-
+        model, spec, transform, device, _ = self.bundle
         try:
-            tensor = self.transform(self.current_image).unsqueeze(0).to(self.device)
+            tensor = transform(self.current_image).unsqueeze(0).to(device)
             with torch.inference_mode():
-                output = self.model(tensor)
+                out = model(tensor)
+            probs, norm_boxes = decode(out, spec)
 
-            probs, normalized_boxes = decode(output, self.spec)
             w, h = self.current_image.size
-
             self.pred_boxes = {}
-            for key, box in normalized_boxes.items():
-                self.pred_boxes[key] = [
-                    max(0, min(w, round(box[0] * w))),
-                    max(0, min(h, round(box[1] * h))),
-                    max(0, min(w, round(box[2] * w))),
-                    max(0, min(h, round(box[3] * h))),
-                ]
-
-            info = self.entries[self.current][1]
-            regions = info.get("regions", [])
-            gt_by_key = {}
-            for region in regions:
-                for key, value in region.get("attributes", {}).items():
-                    gt_by_key[key] = {"value": value, "box": region.get("box")}
-
-            lines = ["MODEL PREDICTION VS. GROUND TRUTH", "=" * 42]
-            correct, compared = 0, 0
-            ious = []
-
-            for key, config in self.spec.items():
-                lines.append(f"\n[{key.upper()}]")
-                pred_options = probs.get(key, {})
-
-                if config["mode"] == "single":
-                    pred_value = max(pred_options, key=pred_options.get) if pred_options else "N/A"
-                    pred_score = pred_options.get(pred_value, 0)
-                    lines.append(f"Predicted: {pred_value} ({pred_score:.1%})")
-                    if key in gt_by_key:
-                        gt_value = gt_by_key[key]["value"]
-                        is_correct = pred_value == gt_value
-                        compared += 1
-                        correct += int(is_correct)
-                        lines.append(f"Ground truth: {gt_value}")
-                        lines.append(f"Match: {'CORRECT' if is_correct else 'INCORRECT'}")
+            for key, box in norm_boxes.items():
+                if key == "sleeves" and isinstance(box, list):
+                    self.pred_boxes[key] = [
+                        [max(0, min(w, round(b[0]*w))), max(0, min(h, round(b[1]*h))),
+                         max(0, min(w, round(b[2]*w))), max(0, min(h, round(b[3]*h)))]
+                        for b in box]
                 else:
-                    pred_value = [name for name, score in pred_options.items() if score >= 0.5]
-                    lines.append(f"Predicted: {pred_value if pred_value else 'No labels above 50%'}")
-                    if key in gt_by_key:
-                        gt_value = gt_by_key[key]["value"] or []
-                        if isinstance(gt_value, str):
-                            gt_value = [gt_value]
-                        pred_set, gt_set = set(pred_value), set(gt_value)
-                        denom = len(pred_set | gt_set)
-                        jaccard = len(pred_set & gt_set) / denom if denom else 1.0
-                        compared += 1
-                        correct += int(pred_set == gt_set)
-                        lines.append(f"Ground truth: {gt_value}")
-                        lines.append(f"Exact Match: {'CORRECT' if pred_set == gt_set else 'INCORRECT'}")
-                        lines.append(f"Set IoU: {jaccard:.1%}")
+                    self.pred_boxes[key] = [
+                        max(0, min(w, round(box[0]*w))), max(0, min(h, round(box[1]*h))),
+                        max(0, min(w, round(box[2]*w))), max(0, min(h, round(box[3]*h)))]
 
-                if key in gt_by_key and gt_by_key[key].get("box") and key in self.pred_boxes:
-                    gt_box = gt_by_key[key]["box"]
-                    iou = box_iou_xyxy(self.pred_boxes[key], gt_box)
-                    ious.append(iou)
-                    lines.append(f"Box IoU: {iou:.1%}")
-                elif key in self.pred_boxes:
-                    lines.append("Box IoU: N/A (no matching GT region)")
+            lines = ["Prediction vs Ground Truth", "="*42]
+            gt_map = {}
+            for r in self.current_info.get("regions", []):
+                for k, v in r.get("attributes", {}).items():
+                    gt_map[k] = v
 
-            lines += [
-                "",
-                "=" * 42,
-                f"Attribute Accuracy: {correct}/{compared} ({correct/compared:.1%})" if compared else "Attribute Accuracy: N/A",
-                f"Mean Box IoU: {sum(ious)/len(ious):.1%}" if ious else "Mean Box IoU: N/A",
-            ]
+            for key, cfg in spec.items():
+                lines.append(f"\n[{key.upper()}]")
+                p = probs.get(key, {})
+                if cfg["mode"] == "single":
+                    pred = max(p, key=p.get) if p else "—"
+                    lines.append(f"Pred : {pred} ({p.get(pred,0):.0%})")
+                    if key in gt_map:
+                        lines.append(f"GT   : {gt_map[key]}")
+                        lines.append("Match: " + ("YES" if pred == gt_map[key] else "NO"))
+                else:
+                    pred_list = [n for n, s in p.items() if s >= 0.5]
+                    lines.append(f"Pred : {pred_list or '—'}")
+                    if key in gt_map:
+                        gt_val = gt_map[key] if isinstance(gt_map[key], list) else [gt_map[key]]
+                        lines.append(f"GT   : {gt_val}")
 
             self.result_text.delete("1.0", tk.END)
             self.result_text.insert(tk.END, "\n".join(lines))
-            self.update_image_display()
+            self.update_image()
+        except Exception as e:
+            messagebox.showerror("Prediction error", str(e))
 
-            avg_iou_str = f"{sum(ious)/len(ious):.1%}" if ious else "N/A"
-            self.footer.config(text=f"Evaluated {compared} attributes | Mean Box IoU: {avg_iou_str}")
-
-        except Exception as exc:
-            messagebox.showerror("Error", f"{type(exc).__name__}: {exc}")
-
-    def next(self):
-        if self.current < len(self.entries) - 1:
+    def next_image(self):
+        if self.current < len(self.entries)-1:
             self.current += 1
-            self.show_current()
+            self.show_image()
 
-    def previous(self):
+    def prev_image(self):
         if self.current > 0:
             self.current -= 1
-            self.show_current()
+            self.show_image()
 
 
-# -----------------------------------------------------------------------------
-# 6. Main Entry Point
-# -----------------------------------------------------------------------------
 if __name__ == "__main__":
     root = tk.Tk()
-    EvaluationApp(root)
+    EvalApp(root)
     root.mainloop()

@@ -5134,6 +5134,328 @@
           }
         }
       ]
+    },
+    "SHEIN_Tube_Tops_00906.jpg": {
+      "regions": [
+        {
+          "box": [
+            330,
+            558,
+            891,
+            1465
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "gray",
+                "rgb": [
+                  160,
+                  121,
+                  102
+                ],
+                "hex": "#a07966",
+                "fraction": 0.364
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  106,
+                  80,
+                  64
+                ],
+                "hex": "#6a5040",
+                "fraction": 0.34
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  52,
+                  35,
+                  23
+                ],
+                "hex": "#342317",
+                "fraction": 0.262
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  218,
+                  206,
+                  194
+                ],
+                "hex": "#dacec2",
+                "fraction": 0.033
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            472,
+            868,
+            587,
+            1364
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            245,
+            558,
+            1010,
+            857
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            898,
+            578,
+            1141,
+            1478
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            186,
+            591,
+            324,
+            1476
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00702.jpg": {
+      "regions": [
+        {
+          "box": [
+            240,
+            204,
+            1111,
+            1577
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "charcoal",
+                "rgb": [
+                  55,
+                  48,
+                  42
+                ],
+                "hex": "#37302a",
+                "fraction": 0.349
+              },
+              {
+                "name": "black",
+                "rgb": [
+                  27,
+                  24,
+                  22
+                ],
+                "hex": "#1b1816",
+                "fraction": 0.259
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  91,
+                  81,
+                  69
+                ],
+                "hex": "#5b5145",
+                "fraction": 0.247
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  132,
+                  119,
+                  102
+                ],
+                "hex": "#847766",
+                "fraction": 0.145
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            673,
+            578,
+            799,
+            1388
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            114,
+            180,
+            1213,
+            616
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            344,
+            580,
+            1062,
+            1312
+          ],
+          "attributes": {
+            "pattern": [
+              "graphic"
+            ]
+          }
+        },
+        {
+          "box": [
+            990,
+            297,
+            1307,
+            1406
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            0,
+            47,
+            231,
+            1508
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
+    },
+    "SHEIN_Tube_Tops_00033.jpg": {
+      "regions": [
+        {
+          "box": [
+            488,
+            558,
+            880,
+            1138
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "white",
+                "rgb": [
+                  231,
+                  230,
+                  234
+                ],
+                "hex": "#e7e6ea",
+                "fraction": 0.395
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  199,
+                  132,
+                  91
+                ],
+                "hex": "#c7845b",
+                "fraction": 0.292
+              },
+              {
+                "name": "brown",
+                "rgb": [
+                  120,
+                  65,
+                  33
+                ],
+                "hex": "#784121",
+                "fraction": 0.177
+              },
+              {
+                "name": "light gray",
+                "rgb": [
+                  172,
+                  163,
+                  160
+                ],
+                "hex": "#aca3a0",
+                "fraction": 0.135
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            670,
+            724,
+            709,
+            920
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            414,
+            551,
+            985,
+            749
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            393,
+            616,
+            468,
+            1382
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            886,
+            564,
+            1051,
+            1382
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
     }
   }
 }

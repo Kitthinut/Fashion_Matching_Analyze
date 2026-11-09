@@ -5540,6 +5540,122 @@
           ]
         }
       ]
+    },
+    "SHEIN_Tube_Tops_00896.jpg": {
+      "regions": [
+        {
+          "box": [
+            312,
+            108,
+            974,
+            1490
+          ],
+          "attributes": {
+            "length": "cropped"
+          },
+          "analysis": {
+            "colors": [
+              {
+                "name": "black",
+                "rgb": [
+                  17,
+                  14,
+                  9
+                ],
+                "hex": "#110e09",
+                "fraction": 0.528
+              },
+              {
+                "name": "khaki",
+                "rgb": [
+                  180,
+                  167,
+                  149
+                ],
+                "hex": "#b4a795",
+                "fraction": 0.187
+              },
+              {
+                "name": "gray",
+                "rgb": [
+                  130,
+                  118,
+                  103
+                ],
+                "hex": "#827667",
+                "fraction": 0.147
+              },
+              {
+                "name": "charcoal",
+                "rgb": [
+                  74,
+                  65,
+                  54
+                ],
+                "hex": "#4a4136",
+                "fraction": 0.139
+              }
+            ]
+          }
+        },
+        {
+          "box": [
+            560,
+            490,
+            666,
+            1321
+          ],
+          "attributes": {
+            "type": "no button"
+          }
+        },
+        {
+          "box": [
+            78,
+            45,
+            1325,
+            576
+          ],
+          "attributes": {
+            "neck": "off shoulder"
+          }
+        },
+        {
+          "box": [
+            315,
+            492,
+            864,
+            1251
+          ],
+          "attributes": {
+            "pattern": [
+              "dot"
+            ]
+          }
+        },
+        {
+          "box": [
+            1030,
+            85,
+            1340,
+            576
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        },
+        {
+          "box": [
+            49,
+            222,
+            274,
+            1494
+          ],
+          "attributes": {
+            "sleeves": "sleeveless"
+          }
+        }
+      ]
     }
   }
 }

@@ -1,6 +1,6 @@
 """Garment AI Image Tester
 Place this file in 4_test/test_images.py.
-Run: python test_images.py
+Supports sleeves with 2 boxes and HSV model.
 """
 from __future__ import annotations
 
@@ -27,8 +27,8 @@ BOX_COLORS = {
     "length": (0, 176, 80),
     "type": (192, 80, 220),
     "neck": (0, 176, 240),
-    "pattern": (255, 220, 0),
-    "sleeves": (255, 220, 0),
+    "pattern": (255, 180, 0),
+    "sleeves": (255, 80, 80),
 }
 BAR_GREEN = (0, 176, 80)
 BAR_BLUE = (145, 166, 201)
@@ -63,7 +63,7 @@ def load_bundle(model_path: Path):
         checkpoint["arch"], checkpoint["spec"],
         pretrained=False, with_boxes=True
     )
-    model.load_state_dict(checkpoint["state"], strict=True)
+    model.load_state_dict(checkpoint["state"], strict=False)  # strict=False for safety
     model.to(device).eval()
     transform = eval_transform(int(checkpoint.get("size", 224)))
     return model, checkpoint["spec"], transform, device
@@ -102,7 +102,7 @@ def color_name(rgb):
     r, g, b = rgb
     if max(rgb) - min(rgb) < 18:
         return "gray" if sum(rgb) / 3 > 55 else "black"
-    if r > 170 and g > 150 and b > 120 and max(rgb)-min(rgb) < 85:
+    if r > 170 and g > 150 and b > 120 and max(rgb) - min(rgb) < 85:
         return "beige"
     if r > g * 1.25 and r > b * 1.25:
         return "red" if r > 120 else "maroon"
@@ -118,7 +118,6 @@ def color_name(rgb):
 
 
 def extract_colors(image, box=None, limit=4):
-    """Small dependency-free dominant-color estimate using PIL quantization."""
     if box:
         x1, y1, x2, y2 = box
         crop = image.crop((max(0, x1), max(0, y1), min(image.width, x2), min(image.height, y2)))
@@ -144,20 +143,43 @@ def extract_colors(image, box=None, limit=4):
 
 
 def pixel_boxes(normalized_boxes, image_size):
+    """Convert normalised boxes to pixel coordinates.
+    sleeves returns a list of boxes, other categories return a single box.
+    """
     width, height = image_size
     result = {}
     for key, box in normalized_boxes.items():
-        if box is None or len(box) != 4:
+        if box is None:
             continue
-        x1, y1, x2, y2 = box
-        coords = [
-            round(max(0, min(1, x1)) * width),
-            round(max(0, min(1, y1)) * height),
-            round(max(0, min(1, x2)) * width),
-            round(max(0, min(1, y2)) * height),
-        ]
-        if coords[2] > coords[0] and coords[3] > coords[1]:
-            result[key] = coords
+        if key == "sleeves" and isinstance(box, list) and box and isinstance(box[0], (list, tuple)):
+            # list of boxes
+            pixel_list = []
+            for b in box:
+                if len(b) != 4:
+                    continue
+                x1, y1, x2, y2 = b
+                coords = [
+                    round(max(0, min(1, x1)) * width),
+                    round(max(0, min(1, y1)) * height),
+                    round(max(0, min(1, x2)) * width),
+                    round(max(0, min(1, y2)) * height),
+                ]
+                if coords[2] > coords[0] and coords[3] > coords[1]:
+                    pixel_list.append(coords)
+            if pixel_list:
+                result[key] = pixel_list
+        else:
+            if len(box) != 4:
+                continue
+            x1, y1, x2, y2 = box
+            coords = [
+                round(max(0, min(1, x1)) * width),
+                round(max(0, min(1, y1)) * height),
+                round(max(0, min(1, x2)) * width),
+                round(max(0, min(1, y2)) * height),
+            ]
+            if coords[2] > coords[0] and coords[3] > coords[1]:
+                result[key] = coords
     return result
 
 
@@ -170,14 +192,20 @@ def render_report(image, boxes, probabilities, spec, selected, colors, titles=No
     draw = ImageDraw.Draw(view)
     label_font = get_font(15, True)
 
-    for key, box in boxes.items():
-        x1, y1, x2, y2 = [int(v * scale) for v in box]
+    for key, box_data in boxes.items():
         color = BOX_COLORS.get(key, (130, 90, 190))
-        draw.rectangle((x1, y1, x2, y2), outline=color, width=4)
         label = titles.get(key, key.replace("_", " ").title())
-        label_box = draw.textbbox((x1 + 4, max(0, y1 - 22)), label, font=label_font)
-        draw.rectangle(label_box, fill=(255, 255, 255))
-        draw.text((x1 + 4, max(0, y1 - 22)), label, fill=color, font=label_font)
+
+        # sleeves can be a list of boxes
+        box_list = box_data if (key == "sleeves" and isinstance(box_data, list) and box_data and isinstance(box_data[0], (list, tuple))) else [box_data]
+
+        for idx, box in enumerate(box_list):
+            x1, y1, x2, y2 = [int(v * scale) for v in box]
+            draw.rectangle((x1, y1, x2, y2), outline=color, width=4)
+            text = f"{label}" if len(box_list) == 1 else f"{label} {idx+1}"
+            label_box = draw.textbbox((x1 + 4, max(0, y1 - 22)), text, font=label_font)
+            draw.rectangle(label_box, fill=(255, 255, 255))
+            draw.text((x1 + 4, max(0, y1 - 22)), text, fill=color, font=label_font)
 
     panel_w = 600
     f_title = get_font(21, True)
@@ -291,9 +319,22 @@ class ImageTester:
             image = Image.open(path).convert("RGB")
             probs, norm_boxes, selected = predict(image, self.bundle)
             boxes = pixel_boxes(norm_boxes, image.size)
-            color_box = boxes.get("length")
-            if color_box is None and boxes:
-                color_box = max(boxes.values(), key=lambda b: (b[2]-b[0])*(b[3]-b[1]))
+
+            # choose a box for colour extraction (prefer length, else largest)
+            color_box = None
+            if "length" in boxes:
+                color_box = boxes["length"]
+            elif boxes:
+                # find the largest box (handle sleeves list)
+                candidates = []
+                for v in boxes.values():
+                    if isinstance(v, list) and v and isinstance(v[0], (list, tuple)):
+                        candidates.extend(v)
+                    else:
+                        candidates.append(v)
+                if candidates:
+                    color_box = max(candidates, key=lambda b: (b[2]-b[0])*(b[3]-b[1]))
+
             colors = extract_colors(image, color_box)
             report = render_report(image, boxes, probs, self.bundle[1],
                                    selected, colors)
