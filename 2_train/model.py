@@ -9,7 +9,7 @@ import torch.nn.functional as F
 from torchvision import models
 
 TARGET_W = 384
-TARGET_H = 224
+TARGET_H = 288
 TARGET_SIZE = (TARGET_W, TARGET_H)
 
 

@@ -160,12 +160,12 @@ def get_transforms(train=True, size=DEFAULT_TARGET_SIZE):
         return T.Compose([
             T.Resize(resize_dim),
             T.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.05),
-            T.Lambda(lambda img: _to_hsv_tensor(img)),
+            T.Lambda(_to_hsv_tensor),
             T.Normalize(MEAN, STD),
         ])
     return T.Compose([
         T.Resize(resize_dim),
-        T.Lambda(lambda img: _to_hsv_tensor(img)),
+        T.Lambda(_to_hsv_tensor),
         T.Normalize(MEAN, STD),
     ])
 

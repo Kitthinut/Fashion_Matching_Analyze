@@ -26,9 +26,23 @@ EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
 NONE = "__none__"
 
 
+def parse_target_size(size_str):
+    """Parses width and height from inputs like '384x288', '384,288', or single ints."""
+    if isinstance(size_str, (list, tuple)) and len(size_str) == 2:
+        return (int(size_str[0]), int(size_str[1]))
+    if isinstance(size_str, str):
+        size_str = size_str.lower().replace("x", ",").replace(" ", "")
+        if "," in size_str:
+            parts = size_str.split(",")
+            return (int(parts[0]), int(parts[1]))
+    val = int(size_str)
+    return (val, val)
+
+
 class Annotator:
-    def __init__(self, win, folder, ann_path):
+    def __init__(self, win, folder, ann_path, target_size=(288, 384)):
         self.win, self.folder, self.ann_path = win, Path(folder), Path(ann_path)
+        self.target_size = target_size  # (Width, Height) e.g., (384, 288)
         self.schema = load_schema()
         self.files = sorted(
             p.relative_to(self.folder).as_posix()
@@ -44,6 +58,7 @@ class Annotator:
             else {"images": {}}
         )
         self.data["image_root"] = str(self.folder.resolve())
+        self.data["target_size"] = list(self.target_size)
         self.trash = self.folder.resolve().parent / "deleted_pictures"
         self.idx, self.start, self.cur_box, self.box_id = 0, None, None, None
         self.vars = {}
@@ -54,7 +69,7 @@ class Annotator:
     def build_ui(self):
         """Build canvas + right-side category / region / nav controls."""
         w = self.win
-        w.title("Garment Annotator")
+        w.title(f"Garment Annotator — Target Res: {self.target_size[0]}x{self.target_size[1]}")
         w.geometry("1380x900")
         self.canvas = tk.Canvas(w, bg="#222", cursor="crosshair")
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -207,7 +222,7 @@ class Annotator:
         box.pack()
         tk.Label(
             box,
-            text=f"{n} pictures | {len(done)} labelled | {n - len(done)} left",
+            text=f"{n} pictures | {len(done)} labelled | {n - len(done)} left\nTarget Size: {self.target_size[0]}x{self.target_size[1]} (W x H)",
             font=("Arial", 10, "bold"),
         ).pack(anchor="w")
 
@@ -329,7 +344,11 @@ class Annotator:
         return self.data["images"].setdefault(self.files[self.idx], {"regions": []})
 
     def show_image(self):
-        self.img = Image.open(self.folder / self.files[self.idx]).convert("RGB")
+        """Loads and resizes image to specified target size first."""
+        raw_img = Image.open(self.folder / self.files[self.idx]).convert("RGB")
+        # Resize image to target resolution (Width, Height)
+        self.img = raw_img.resize(self.target_size, Image.Resampling.LANCZOS)
+        
         cw = max(self.canvas.winfo_width(), 400)
         ch = max(self.canvas.winfo_height(), 400)
         self.scale = min(cw / self.img.width, ch / self.img.height)
@@ -368,8 +387,8 @@ class Annotator:
         self.title.config(
             text=(
                 f"[{self.idx + 1}/{len(self.files)}] {self.files[self.idx]} "
-                f"({len(e['regions'])} regions)\n"
-                f"Labelled: {done}/{len(self.files)}"
+                f"({self.target_size[0]}x{self.target_size[1]})\n"
+                f"({len(e['regions'])} regions) | Labelled: {done}/{len(self.files)}"
             )
         )
         self.rl.delete(0, "end")
@@ -507,16 +526,20 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("folder", nargs="?", default=ROOT / "dataset" / "train")
     ap.add_argument("--ann", default=None, help="annotations JSON path")
+    ap.add_argument("--size", default="384x288", help="Target size format '384x288' (Width x Height)")
     a = ap.parse_args()
+    
     folder = Path(a.folder)
-    # Default ann next to split name: annotations_train.json etc.
+    target_size = parse_target_size(a.size)
+    
     if a.ann:
         ann = Path(a.ann)
     else:
-        split = folder.name  # train / validation / test
+        split = folder.name
         ann = ROOT / f"annotations_{split}.json"
         if not ann.exists() and (folder / "annotations.json").exists():
             ann = folder / "annotations.json"
+            
     root = tk.Tk()
-    Annotator(root, folder, ann)
+    Annotator(root, folder, ann, target_size=target_size)
     root.mainloop()

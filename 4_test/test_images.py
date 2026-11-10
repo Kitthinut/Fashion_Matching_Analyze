@@ -1,6 +1,7 @@
 """Garment AI Image Tester
 Place this file in 4_test/test_images.py.
-Supports sleeves with 2 boxes and HSV model.
+Uses the exact same inference path as validate_test.py, and shows the image
+resized to the model input size (what the network actually sees).
 """
 
 from __future__ import annotations
@@ -34,6 +35,13 @@ BOX_COLORS = {
 BAR_GREEN = (0, 176, 80)
 BAR_BLUE = (145, 166, 201)
 BAR_BG = (225, 225, 225)
+
+# Must match training / validate_test.py (was 0.30 before, which made results differ)
+MULTI_THRESHOLD = 0.5
+
+# Model input size (H, W). Image is resized to this before showing.
+# Must equal the size the model was trained with (train.py --size 288 384).
+EXPECTED_SIZE = (384, 288)
 
 
 def get_device():
@@ -73,28 +81,36 @@ def load_bundle(model_path: Path):
     if missing:
         raise ValueError(f"Checkpoint is missing required keys: {sorted(missing)}")
 
-    has_boxes = _has_boxes(checkpoint["state"], bool(checkpoint.get("has_boxes", False)))
-    if not has_boxes:
+    if not _has_boxes(checkpoint["state"], bool(checkpoint.get("has_boxes", False))):
         raise ValueError("This checkpoint does not contain bounding-box heads.")
 
     size = parse_size(checkpoint.get("size", DEFAULT_TARGET_SIZE))
-    crop_h = size[0] if isinstance(size, tuple) else size
+
+    # Build the model exactly like training / validate_test.py.
+    # (The old code passed crop_size=..., which training never used, so the
+    #  classifier heads saw differently sized crops than they were trained on.)
     model = MultiHeadNet(
         checkpoint["arch"], checkpoint["spec"],
         pretrained=False, with_boxes=True,
-        crop_size=max(64, crop_h // 2)
     )
-    model.load_state_dict(checkpoint["state"], strict=False)
+
+    # strict=False hides mismatches: missing keys = layers left RANDOMLY initialised.
+    # Report them instead of failing silently.
+    load_result = model.load_state_dict(checkpoint["state"], strict=False)
+    missing_keys = list(load_result.missing_keys)
+    unexpected_keys = list(load_result.unexpected_keys)
+
     model.to(device).eval()
     transform = eval_transform(size)
-    return model, checkpoint["spec"], transform, device
+    return model, checkpoint["spec"], transform, device, size, (missing_keys, unexpected_keys)
 
 
 def predict(image, bundle):
-    model, spec, transform, device = bundle
+    model, spec, transform, device = bundle[:4]
     tensor = transform(image).unsqueeze(0).to(device)
+    input_hw = tuple(tensor.shape[-2:])  # (H, W) the model really receives
     with torch.inference_mode():
-        output = model(tensor)
+        output = model(tensor, use_gt_for_cls=False)  # same as validation
     probabilities, normalized_boxes = decode(output, spec)
     selected = {}
     for key, config in spec.items():
@@ -102,8 +118,8 @@ def predict(image, bundle):
         if config["mode"] == "single":
             selected[key] = max(values, key=values.get)
         else:
-            selected[key] = [name for name, score in values.items() if score >= 0.30]
-    return probabilities, normalized_boxes, selected
+            selected[key] = [name for name, score in values.items() if score >= MULTI_THRESHOLD]
+    return probabilities, normalized_boxes, selected, input_hw
 
 
 def get_font(size, bold=False):
@@ -163,8 +179,18 @@ def extract_colors(image, box=None, limit=4):
     return result
 
 
+def _to_pixels(b, width, height):
+    x1, y1, x2, y2 = b
+    return [
+        round(max(0, min(1, x1)) * width),
+        round(max(0, min(1, y1)) * height),
+        round(max(0, min(1, x2)) * width),
+        round(max(0, min(1, y2)) * height),
+    ]
+
+
 def pixel_boxes(normalized_boxes, image_size):
-    """Convert normalised boxes to pixel coordinates.
+    """Convert normalised boxes to pixel coordinates for an image of image_size (W, H).
     sleeves returns a list of boxes, other categories return a single box.
     """
     width, height = image_size
@@ -173,42 +199,28 @@ def pixel_boxes(normalized_boxes, image_size):
         if box is None:
             continue
         if key == "sleeves" and isinstance(box, list) and box and isinstance(box[0], (list, tuple)):
-            pixel_list = []
-            for b in box:
-                if len(b) != 4:
-                    continue
-                x1, y1, x2, y2 = b
-                coords = [
-                    round(max(0, min(1, x1)) * width),
-                    round(max(0, min(1, y1)) * height),
-                    round(max(0, min(1, x2)) * width),
-                    round(max(0, min(1, y2)) * height),
-                ]
-                if coords[2] > coords[0] and coords[3] > coords[1]:
-                    pixel_list.append(coords)
+            pixel_list = [c for c in (_to_pixels(b, width, height) for b in box if len(b) == 4)
+                          if c[2] > c[0] and c[3] > c[1]]
             if pixel_list:
                 result[key] = pixel_list
         else:
             if len(box) != 4:
                 continue
-            x1, y1, x2, y2 = box
-            coords = [
-                round(max(0, min(1, x1)) * width),
-                round(max(0, min(1, y1)) * height),
-                round(max(0, min(1, x2)) * width),
-                round(max(0, min(1, y2)) * height),
-            ]
+            coords = _to_pixels(box, width, height)
             if coords[2] > coords[0] and coords[3] > coords[1]:
                 result[key] = coords
     return result
 
 
-def render_report(image, boxes, probabilities, spec, selected, colors, titles=None):
+def render_report(image, boxes, probabilities, spec, selected, colors,
+                  titles=None, caption=None):
+    """image = the RESIZED model-input image; boxes are in its pixel coordinates."""
     titles = titles or {}
     target_h = 720
     scale = min(target_h / image.height, 760 / image.width)
+    # NEAREST keeps the real model-input pixels visible when upscaled for display
     view = image.resize((max(1, int(image.width * scale)),
-                         max(1, int(image.height * scale))))
+                         max(1, int(image.height * scale))), Image.NEAREST)
     draw = ImageDraw.Draw(view)
     label_font = get_font(15, True)
 
@@ -225,6 +237,15 @@ def render_report(image, boxes, probabilities, spec, selected, colors, titles=No
             label_box = draw.textbbox((x1 + 4, max(0, y1 - 22)), text, font=label_font)
             draw.rectangle(label_box, fill=(255, 255, 255))
             draw.text((x1 + 4, max(0, y1 - 22)), text, fill=color, font=label_font)
+
+    # caption bar showing original size -> model input size
+    if caption:
+        cap_h = 30
+        with_cap = Image.new("RGB", (view.width, view.height + cap_h), (32, 41, 56))
+        with_cap.paste(view, (0, 0))
+        ImageDraw.Draw(with_cap).text((8, view.height + 7), caption,
+                                      fill="white", font=get_font(14))
+        view = with_cap
 
     panel_w = 600
     f_title = get_font(21, True)
@@ -316,9 +337,28 @@ class ImageTester:
         model_path = ROOT / "model.pt"
         try:
             self.bundle = load_bundle(model_path)
+            model, _, _, device, size, (missing, unexpected) = self.bundle
             self.status.config(
-                text=f"Model ready  |  {self.bundle[0].__class__.__name__}  |  Device: {self.bundle[3]}"
+                text=f"Model ready  |  {model.__class__.__name__}  |  Device: {device}"
+                     f"  |  Trained size (H, W): {size}"
+                     f"  |  missing keys: {len(missing)}  unexpected: {len(unexpected)}"
             )
+            if tuple(size) != EXPECTED_SIZE:
+                messagebox.showwarning(
+                    "Input size mismatch",
+                    f"model.pt was trained at {size[0]}x{size[1]} (H x W), but you expect "
+                    f"{EXPECTED_SIZE[0]}x{EXPECTED_SIZE[1]}.\n\nImages will be resized to the "
+                    f"trained size. To use {EXPECTED_SIZE[0]}x{EXPECTED_SIZE[1]}, retrain with:\n"
+                    f"python train.py --size {EXPECTED_SIZE[0]} {EXPECTED_SIZE[1]}"
+                )
+            if missing:
+                messagebox.showwarning(
+                    "Weights not fully loaded",
+                    f"{len(missing)} layers were NOT found in model.pt and are randomly "
+                    f"initialised, so predictions will be wrong.\n\n"
+                    f"First missing keys:\n" + "\n".join(missing[:8]) +
+                    "\n\nThis usually means model.py differs from the one used for training."
+                )
         except Exception as exc:
             self.status.config(text="Model could not be loaded.")
             messagebox.showerror("Model loading error", str(exc))
@@ -336,15 +376,19 @@ class ImageTester:
             return
         try:
             image = Image.open(path).convert("RGB")
-            probs, norm_boxes, selected = predict(image, self.bundle)
-            boxes = pixel_boxes(norm_boxes, image.size)
+            probs, norm_boxes, selected, (in_h, in_w) = predict(image, self.bundle)
+
+            # Resize to the model input size BEFORE showing (what the network sees)
+            resized = image.resize((in_w, in_h), Image.BILINEAR)
+            boxes_view = pixel_boxes(norm_boxes, resized.size)   # drawn on the resized image
+            boxes_orig = pixel_boxes(norm_boxes, image.size)     # used for colour sampling
 
             color_box = None
-            if "length" in boxes:
-                color_box = boxes["length"]
-            elif boxes:
+            if "length" in boxes_orig:
+                color_box = boxes_orig["length"]
+            elif boxes_orig:
                 candidates = []
-                for v in boxes.values():
+                for v in boxes_orig.values():
                     if isinstance(v, list) and v and isinstance(v[0], (list, tuple)):
                         candidates.extend(v)
                     else:
@@ -353,13 +397,20 @@ class ImageTester:
                     color_box = max(candidates, key=lambda b: (b[2]-b[0])*(b[3]-b[1]))
 
             colors = extract_colors(image, color_box)
-            report = render_report(image, boxes, probs, self.bundle[1],
-                                   selected, colors)
+            caption = (f"Original {image.height}x{image.width}  ->  "
+                       f"model input {in_h}x{in_w} (H x W)")
+            if (in_h, in_w) != EXPECTED_SIZE:
+                caption += f"  |  expected {EXPECTED_SIZE[0]}x{EXPECTED_SIZE[1]}, retrain needed"
+            report = render_report(resized, boxes_view, probs, self.bundle[1],
+                                   selected, colors, caption=caption)
             self.current_image = image
             self.report = report
             self.report_path = None
             self.show_report()
-            self.status.config(text=f"Prediction complete  |  {Path(path).name}  |  {self.bundle[3]}")
+            self.status.config(
+                text=f"Prediction complete  |  {Path(path).name}  |  {self.bundle[3]}"
+                     f"  |  resized {image.height}x{image.width} -> {in_h}x{in_w} (H x W)"
+            )
         except Exception as exc:
             messagebox.showerror("Prediction error", f"{type(exc).__name__}: {exc}")
 
